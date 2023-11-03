@@ -1,0 +1,1 @@
+For all classic Objects (classes, interfaces, etc).
