@@ -1,0 +1,1 @@
+Non-code resources like assets, configuration files, properties files, and XMLs.
