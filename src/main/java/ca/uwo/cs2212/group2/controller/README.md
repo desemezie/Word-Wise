@@ -1,0 +1,1 @@
+For classes that handle user input.

@@ -1,0 +1,1 @@
+For application-specific configuration classes, like database or security config.
