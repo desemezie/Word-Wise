@@ -1,1 +1,1 @@
-For all classic Objects (classes, interfaces, etc).
+Contains all domain-specific class, like entities or Plain Old Java Objects.

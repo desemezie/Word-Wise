@@ -1,0 +1,1 @@
+For classes that implement the factory pattern. Please don't make these unless they're absolutely necessary I hate factories so much.
