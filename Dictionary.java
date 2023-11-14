@@ -14,6 +14,7 @@ public class Dictionary {
         Dictionary_Hashtable = new Hashtable<>();
         loadDictionaryFromFile(filename);
 
+
     }
 
     // Method to add a word to the dictionary
