@@ -1,4 +1,4 @@
-package ca.uwo.cs2212.group2.model.metrics;
+package ca.uwo.cs2212.group2.model;
 
 import com.google.gson.Gson;
 

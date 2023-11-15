@@ -1,4 +1,4 @@
-package ca.uwo.cs2212.group2.model.TextProcessor;
+package ca.uwo.cs2212.group2.model;
 
 import java.io.BufferedReader;
 import java.io.File;
