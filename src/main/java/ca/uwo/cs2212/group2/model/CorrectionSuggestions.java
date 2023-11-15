@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group2.model.correctionSuggestions;
+
 public class CorrectionSuggestions{
     private String word;
     private int distance;
