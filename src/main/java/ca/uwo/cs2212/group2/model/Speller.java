@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group2.model;
+
 // Incomplete speller object, currently only has a spellcheck function
 //test
 
