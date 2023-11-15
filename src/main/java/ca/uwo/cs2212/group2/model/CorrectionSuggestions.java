@@ -1,4 +1,4 @@
-package ca.uwo.cs2212.group2.model.correctionSuggestions;
+package ca.uwo.cs2212.group2.model;
 
 public class CorrectionSuggestions{
     private String word;
