@@ -1,3 +1,4 @@
+package ca.uwo.cs2212.group2.model;
 
 import java.util.*;
 
