@@ -75,6 +75,7 @@ public class TextProcessor {
 						
 						
 						words.add(word);
+						// make word object for each word
 						Word newWord = new Word(word);
 						this.words.add(newWord);
 						this.wordCount++;
