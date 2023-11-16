@@ -1,7 +1,14 @@
 package ca.uwo.cs2212.group2.model;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
 import com.google.gson.Gson;
 
+/**
+ *
+ */
 public class Metrics {
 
     // Document metrics
@@ -36,18 +43,21 @@ public class Metrics {
     /**
      * Constructor with known values for each parameter.
      *
-     * @param numberOfCharacters
-     * @param numberOfLines
-     * @param numberOfWords
-     * @param totalNumberOfErrors
-     * @param currentNumberOfErrors
-     * @param totalNumberOfAcceptedCorrections
-     * @param totalNumberOfManualCorrections
-     * @param numberOfWordsInUserDictionary
+     * @param numberOfCharacters               the number of characters
+     * @param numberOfLines                    the number of lines
+     * @param numberOfWords                    the number of words
+     * @param totalNumberOfErrors              the total number of errors
+     * @param currentNumberOfErrors            the current number of errors
+     * @param totalNumberOfAcceptedCorrections the total number of accepted
+     *                                         corrections
+     * @param totalNumberOfManualCorrections   the total number of manual
+     *                                         corrections
+     * @param numberOfWordsInUserDictionary    the number of words in the user
+     *                                         dictionary
      */
     public Metrics(int numberOfCharacters, int numberOfLines, int numberOfWords, int totalNumberOfErrors,
-                   int currentNumberOfErrors, int totalNumberOfAcceptedCorrections,
-                   int totalNumberOfManualCorrections, int numberOfWordsInUserDictionary) {
+            int currentNumberOfErrors, int totalNumberOfAcceptedCorrections,
+            int totalNumberOfManualCorrections, int numberOfWordsInUserDictionary) {
         this.numberOfCharacters = numberOfCharacters;
         this.numberOfLines = numberOfLines;
         this.numberOfWords = numberOfWords;
@@ -59,26 +69,35 @@ public class Metrics {
     }
 
     /**
-     * Factory method that creates a Metrics object from a JSON string.
+     * Factory method that creates a Metrics object from a JSON file.
      * 
-     * @param json
-     * @return the Metrics object created from the JSON string.
+     * @param filename the name of the file to load the Metrics object from.
+     * @return the Metrics object created from the JSON file.
+     * @throws IOException
      */
-    public static Metrics fromJson(String json) {
+    public static Metrics loadFromFile(String filename) throws IOException {
         Gson gson = new Gson();
-        return gson.fromJson(json, Metrics.class);
+        try (FileReader reader = new FileReader(filename)) {
+            return gson.fromJson(reader, Metrics.class);
+        }
     }
 
     /**
-     * Converts the Metrics object to a JSON string.
+     * Saves the Metrics object to a file in JSON format.
      * 
-     * @return the JSON version of the Metrics object as a String.
+     * @param filename the name of the file to save the Metrics object to.
+     * @throws IOException
      */
-    public String toJson() {
+    public void saveToFile(String filename) throws IOException {
         Gson gson = new Gson();
-        return gson.toJson(this);
+        try (FileWriter writer = new FileWriter(filename)) {
+            gson.toJson(this, writer);
+        } catch (IOException e) {
+            System.out.println("Error saving Metrics to file named " + filename + " with error: " + e.getMessage());
+            throw e;
+        }
     }
-    
+
     @Override
     public String toString() {
         return "Metrics{" +
