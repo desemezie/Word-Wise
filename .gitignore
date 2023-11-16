@@ -33,6 +33,8 @@ build/
 
 ### VS Code ###
 .vscode/
+!.vscode/extensions.json
+
 
 ### Mac OS ###
 .DS_Store
