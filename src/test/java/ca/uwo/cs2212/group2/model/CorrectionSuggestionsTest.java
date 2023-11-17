@@ -9,10 +9,11 @@ public class CorrectionSuggestionsTest {
     @Test 
     public void testCorrectionSuggestions(){
         CorrectionSuggestions cs = new CorrectionSuggestions("star",3);
-        Assert.assertEquals("star",cs.getWord());
-        Assert.assertEquals(3,cs.getDistance());
-
-
-
+        Assertions.assertEquals("star",cs.getWord());
+        Assertions.assertEquals(3,cs.getDistance());
+        cs.setWord("run");
+        cs.setDistance(1);
+        Assertions.assertEquals("run",cs.getWord());
+        Assertions.assertEquals(1,cs.getDistance());
     }
 }
