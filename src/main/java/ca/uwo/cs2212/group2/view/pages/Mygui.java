@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group2.view.pages;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,7 +37,7 @@ public class Mygui implements ActionListener {
         popButton.setOpaque(true);
         popButton.setForeground(new Color(0xffffff));
         popButton.setBackground(new Color(0x993399));
-       
+
         button = new JButton();
         button.setBounds(50,100,200,100);
         button.addActionListener(this);
@@ -88,7 +90,7 @@ public class Mygui implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Spellchecker");
         frame.add(panel);
-        
+
         frame.setSize(600,500);
         frame.setVisible(true);
 
@@ -127,13 +129,13 @@ public class Mygui implements ActionListener {
         }
 
         }
-        
 
-     
 
-    public static void main(String[] args) {  
-        new Mygui();  
-    }  
-} 
-    
+
+
+    public static void main(String[] args) {
+        new Mygui();
+    }
+}
+
 
