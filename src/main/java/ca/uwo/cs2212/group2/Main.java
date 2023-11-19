@@ -1,6 +1,5 @@
 package ca.uwo.cs2212.group2;
 
-import ca.uwo.cs2212.group2.view.pages.*;
 import ca.uwo.cs2212.group2.model.*;
 import java.util.*;
 
@@ -9,7 +8,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
 
-//        new GUI();
+        // new GUI();
 
         // TESTING
         CorrectionSuggestions cs1 = new CorrectionSuggestions("happy", 4);
