@@ -1,12 +1,15 @@
+package ca.uwo.cs2212.group2.view.pages;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.border.Border;
+import java.io.File;
 
 public class Mygui implements ActionListener {
     private JFrame frame;
-    private JButton button;
+    private JButton button; 
     private JButton button2;
     private JButton popButton;
     private JPanel panel;
@@ -15,6 +18,8 @@ public class Mygui implements ActionListener {
     private JRadioButton engCa;
     private JLabel label1;
     private JLabel label2;
+    // Create a file chooser
+    final JFileChooser fileChooser = new JFileChooser();
     
     Mygui(){  
 
@@ -32,7 +37,7 @@ public class Mygui implements ActionListener {
         popButton.setOpaque(true);
         popButton.setForeground(new Color(0xffffff));
         popButton.setBackground(new Color(0x993399));
-       
+
         button = new JButton();
         button.setBounds(50,100,200,100);
         button.addActionListener(this);
@@ -79,28 +84,35 @@ public class Mygui implements ActionListener {
         panel.add(engUS);
         panel.add(engUK);
         panel.add(engCa);
-
         panel.setBounds(0,0,600,500);
 
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Spellchecker");
         frame.add(panel);
-        
+
         frame.setSize(600,500);
         frame.setVisible(true);
+
+        
 
     }  
 
     @Override
     public void actionPerformed(ActionEvent e){
+
         if(e.getSource() == button){
             //do something when create file is clicked
             System.out.println("create file");
         }
         else if(e.getSource() == button2){
             //do something when upload file is clicked
-            System.out.println("upload file");
+            int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    System.out.println(selectedFile.getPath());
+                    // You can perform operations on the selected file here
+            }
         }
         else if(e.getSource() == engUS){
             System.out.println("us");
@@ -117,13 +129,13 @@ public class Mygui implements ActionListener {
         }
 
         }
-        
 
-     
 
-    public static void main(String[] args) {  
-        new Mygui();  
-    }  
-} 
-    
+
+
+    public static void main(String[] args) {
+        new Mygui();
+    }
+}
+
 

@@ -1,32 +1,25 @@
 package ca.uwo.cs2212.group2;
 
-import ca.uwo.cs2212.group2.view.pages.*;
-import ca.uwo.cs2212.group2.model.*;
-import java.util.*;
-
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+/**
+ * This class is the entry point for the application. It contains the main method that is executed
+ * when the application is started. It is responsible for bootstrapping the application and
+ * initializing and cleaning up resources.
+ */
 public class Main {
-    public static void main(String[] args) {
+  public static void main(String[] args) {
+    init();
+    Runtime.getRuntime().addShutdownHook(new Thread(Main::destroy));
+  }
 
-//        new GUI();
+  /** Lifecycle hook to perform initialization when the application is starting up. */
+  private static void init() {
+    // Load configurations
+    // Set up logging
+    // Initialize MVC components
+  }
 
-        // TESTING
-        CorrectionSuggestions cs1 = new CorrectionSuggestions("happy", 4);
-        CorrectionSuggestions cs2 = new CorrectionSuggestions("FROG", 2);
-        System.out.println(cs1.getWord());
-        System.out.println(cs2.getDistance());
-        cs1.setWord("bye");
-        cs2.setDistance(0);
-        System.out.println(cs1.getWord());
-        System.out.println(cs2.getDistance());
-        Word w1 = new Word("apple");
-        Word w2 = new Word("pear");
-        System.out.println(w1.getContent());
-        w1.setContent("dog");
-        System.out.println(w1.getContent());
-        w2.setOption("star", 4);
-        w2.setOption("moon", 0);
-        System.out.println(Arrays.toString(w2.getOption()));
-    }
+  /** Lifecycle hook to perform cleanup when the application is shutting down. */
+  private static void destroy() {
+    // Perform any cleanup tasks
+  }
 }

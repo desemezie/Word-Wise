@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/** Unit tests for Metrics class */
 class MetricsTest {
 
   private static final String TEST_FILE = "test_metrics.json";
