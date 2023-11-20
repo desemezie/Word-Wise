@@ -15,7 +15,7 @@ public class Word{
         this.options = new ArrayList<CorrectionSuggestions>();
 
     }
-
+    
     public boolean isBegining(){
         return beginingOfSentence;
     }
