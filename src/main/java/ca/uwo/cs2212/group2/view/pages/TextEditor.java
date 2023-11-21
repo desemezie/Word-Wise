@@ -9,6 +9,9 @@ public class TextEditor extends JFrame {
 
     private JTextArea textArea;
 
+    /**
+     * 
+     */
     public TextEditor() {
         setTitle("Simple Text Editor");
         setSize(800, 600);
@@ -23,7 +26,7 @@ public class TextEditor extends JFrame {
         
         
         // Create a panel to hold components
-        JPanel panel = new JPanel();
+        final JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
         // Create a JTextArea for text editing
