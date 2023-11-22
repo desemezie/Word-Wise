@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group2.model;
+import java.util.PriorityQueue;
 
-public class CorrectionSuggestions{
+public class CorrectionSuggestions implements Comparable<CorrectionSuggestions>{
     private String word;
     private int distance;
 
@@ -24,6 +25,13 @@ public class CorrectionSuggestions{
     public void setDistance(int newDistance){
         this.distance = newDistance;
     }
+
+    // Comparator for the for priority queue least to greatest
+	public int compareTo(CorrectionSuggestions o) {
+		if(this.getDistance() > o.getDistance()) return 1;
+		if(this.getDistance() < o.getDistance()) return -1;
+		return 0;
+	}
 
 
 }

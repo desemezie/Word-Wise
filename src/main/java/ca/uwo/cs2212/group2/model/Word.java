@@ -84,20 +84,9 @@ public class Word {
    * Adds a correction suggestion to the word. If the maximum number of suggestions is reached,
    * replaces the least relevant suggestion.
    *
-   * @param content The suggested correction content.
-   * @param distance The distance metric indicating the relevance of the suggestion.
-   * @throws IllegalArgumentException if content is null or empty, or if distance is negative.
+   * @param option the CorrectionSuggestion object passed to the function
    */
-  public void setOption(String content, int distance) throws IllegalArgumentException {
-    if (content == null || content.isEmpty()) {
-      throw new IllegalArgumentException("Correction content must not be null or empty.");
-    }
-    if (distance < 0) {
-      throw new IllegalArgumentException("Distance must be non-negative.");
-    }
-
-    CorrectionSuggestions option = new CorrectionSuggestions(content, distance);
-
+  public void setOption(CorrectionSuggestions option){
     if (options.size() < MAX_NUMBER_OF_CORRECTION_SUGGESTIONS) {
       options.add(option);
     } else {
