@@ -8,12 +8,12 @@ import com.google.gson.Gson;
 /**
  * Represents and manages various metrics associated with document processing.
  *
- * <p>This class tracks a variety of metrics including the number of characters, lines, words,
- * errors, corrections, and user dictionary words in a document. It provides functionality to load
- * these metrics from and save them to a file in JSON format.
- *
- * <p>Metrics include document-based metrics (characters, lines, words), spelling-based metrics
- * (errors and corrections), and dictionary-based metrics (words in the user dictionary).
+ * @author Ryan Hecht
+ *     <p>This class tracks a variety of metrics including the number of characters, lines, words,
+ *     errors, corrections, and user dictionary words in a document. It provides functionality to
+ *     load these metrics from and save them to a file in JSON format.
+ *     <p>Metrics include document-based metrics (characters, lines, words), spelling-based metrics
+ *     (errors and corrections), and dictionary-based metrics (words in the user dictionary).
  */
 public class Metrics {
 
@@ -106,6 +106,9 @@ public class Metrics {
     }
   }
 
+  /**
+   * @return a string representation of the Metrics object.
+   */
   @Override
   public String toString() {
     return "Metrics{"

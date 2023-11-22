@@ -7,8 +7,10 @@ import static ca.uwo.cs2212.group2.constants.ModelConstants.MAX_NUMBER_OF_CORREC
 /**
  * Represents a word with its content and correction features.
  *
- * <p>This class provides functionalities to handle a word's content, whether it is correct, its
- * position in a sentence, and possible correction suggestions.
+ * @author Shaylan Pratt
+ * @author Ryan Hecht
+ *     <p>This class provides functionalities to handle a word's content, whether it is correct, its
+ *     position in a sentence, and possible correction suggestions.
  */
 public class Word {
   private String content;

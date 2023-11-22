@@ -10,9 +10,11 @@ import java.util.Scanner;
 /**
  * Processes text from a file, providing statistics and manipulations on the text.
  *
- * <p>This class can parse text files and provide information such as line count, word count, and
- * character count (with and without spaces). It also identifies and marks specific words based on
- * their placement in the text (e.g., words after a period).
+ * @author Annabel Irani
+ * @author Ryan Hecht
+ *     <p>This class can parse text files and provide information such as line count, word count,
+ *     and character count (with and without spaces). It also identifies and marks specific words
+ *     based on their placement in the text (e.g., words after a period).
  */
 public class TextProcessor {
   private int lineCount;
