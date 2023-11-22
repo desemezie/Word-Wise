@@ -3,6 +3,7 @@ package ca.uwo.cs2212.group2.model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class Dictionary {
@@ -30,11 +31,11 @@ public class Dictionary {
     }
 
     // Method to check if a word is in the dictionary
-    public void checkWord(String word) {
+    public boolean checkWord(String word) {
         if (Dictionary_Hashtable.containsKey(word.toLowerCase())) {
-            System.out.println(word + " is in the dictionary.");
+            return true;
         } else {
-            System.out.println(word + " is not in the dictionary.");
+            return false;
         }
     }
 
@@ -50,6 +51,12 @@ public class Dictionary {
         }
     }
 
+    //Method to get the enumeration of keys out of the object
+    public Enumeration<String> getKeys()
+    {
+    	return this.Dictionary_Hashtable.keys();
+    }
+    
     public static void main(String[] args) {
         // Example usage
         Dictionary dictionary = new Dictionary("words.txt");
