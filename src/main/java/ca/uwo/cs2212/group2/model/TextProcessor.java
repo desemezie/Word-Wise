@@ -146,8 +146,8 @@ public class TextProcessor {
   }
 
   /**
-   * 
-   * @return list of all words in the text file as Word objectss
+   *
+   * @return list of all words in the text file as Word objects
    */
 	public List<Word> getWords(){
 		return this.words;
