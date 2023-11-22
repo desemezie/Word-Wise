@@ -108,8 +108,9 @@ public class Mygui implements ActionListener {
 
         frame.setVisible(true);
 
+        
+
     }  
-    
 
     @Override
     public void actionPerformed(ActionEvent e){
