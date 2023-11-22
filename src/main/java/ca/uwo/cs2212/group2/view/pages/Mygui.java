@@ -11,13 +11,17 @@ public class Mygui implements ActionListener {
     private JFrame frame;
     private JButton button; 
     private JButton button2;
-    private JButton popButton;
+    private PopupFactory pf;
+    private JButton close;
     private JPanel panel;
+    private JPanel poppanel;
     private JRadioButton engUS;
     private JRadioButton engUK;
     private JRadioButton engCa;
     private JLabel label1;
     private JLabel label2;
+    private Popup p;
+
     // Create a file chooser
     final JFileChooser fileChooser = new JFileChooser();
     
@@ -25,23 +29,32 @@ public class Mygui implements ActionListener {
 
         frame = new JFrame();
 
-        label1 = new JLabel("Welcome to our Spellchecker application!");
-        label2 = new JLabel("Click to get started!");
-
-        popButton = new JButton("Welcome! Click to continue.");
-        popButton.setBounds(100,50,400,300);
-        popButton.addActionListener(this);
-        popButton.setFocusable(false);
-        Border b = BorderFactory.createLineBorder(new Color(0x732673));
-        popButton.setBorder(b);
-        popButton.setOpaque(true);
-        popButton.setForeground(new Color(0xffffff));
-        popButton.setBackground(new Color(0x993399));
+        poppanel = new JPanel(new BorderLayout());
+        poppanel.setSize(800, 500);
+        label1 = new JLabel("<html><div style='text-align: center;'>Welcome to our Spellchecker application! To begin, you can choose to upload an existing .txt or .html file or create your own here.</div></html>");
+        Font newLabelFont = new Font(label1.getFont().getName(), label1.getFont().getStyle(), 20);
+        label1.setFont(newLabelFont);
+        label1.setForeground(Color.WHITE);
+        close = new JButton("Begin!");
+        Font newCloseFont = new Font(close.getFont().getName(), close.getFont().getStyle(), 20);
+        close.setPreferredSize(new Dimension(150, 75));
+        close.setMaximumSize(new Dimension(150, 75));
+        close.setFont(newCloseFont);
+        close.setForeground(new Color(0x993399));
+        close.addActionListener(this);
+        poppanel.add(label1, BorderLayout.CENTER); // Position label at the top
+        poppanel.add(close, BorderLayout.SOUTH); // Position button at the bottom
+        poppanel.setBackground(new Color(0x993399));
+        poppanel.setPreferredSize(new Dimension(800, 500));
+        pf = PopupFactory.getSharedInstance();
+        p = pf.getPopup(frame,poppanel,300,100);
 
         button = new JButton();
-        button.setBounds(50,100,200,100);
+        button.setBounds(150,100,400,300);
         button.addActionListener(this);
         button.setText("New File");
+        Font newButtonFont=new Font(button.getFont().getName(),button.getFont().getStyle(),20);
+        button.setFont(newButtonFont);
         button.setFocusable(false);
         button.setBorderPainted(false);
         button.setOpaque(true);
@@ -49,9 +62,10 @@ public class Mygui implements ActionListener {
         button.setBackground(new Color(0x993399));
 
         button2 = new JButton();
-        button2.setBounds(350,100,200,100);
+        button2.setBounds(880,100,400,300);
         button2.addActionListener(this);
         button2.setText("Upload File");
+        button2.setFont(newButtonFont);
         button2.setFocusable(false);
         button2.setBorderPainted(false);
         button2.setOpaque(true);
@@ -71,27 +85,27 @@ public class Mygui implements ActionListener {
         group.add(engUS);
         group.add(engUK);
         group.add(engCa);
-        engUS.setBounds(200, 250, 200, 30);
-        engUK.setBounds(200, 280, 200, 30);
-        engCa.setBounds(200, 310, 200, 30);
+        engUS.setBounds(597, 500, 200, 30);
+        engUK.setBounds(597, 550, 200, 30);
+        engCa.setBounds(597, 600, 200, 30);
 
         panel = new JPanel();
         panel.setBackground(new Color(0xebebe0));
         panel.setLayout(null);
-        panel.add(popButton);
         panel.add(button);
         panel.add(button2);
         panel.add(engUS);
         panel.add(engUK);
         panel.add(engCa);
-        panel.setBounds(0,0,600,500);
+        panel.setBounds(0,0,1594,1030);
 
         frame.setLayout(null);
+        frame.setSize(1594,1030);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Spellchecker");
         frame.add(panel);
+        p.show();
 
-        frame.setSize(600,500);
         frame.setVisible(true);
 
         
@@ -123,19 +137,16 @@ public class Mygui implements ActionListener {
         else if(e.getSource() == engCa){
             System.out.println("OH CANADA");
         }
-        else if(e.getSource() == popButton){
-            popButton.setVisible(false);
-            popButton.invalidate();
+        else if(e.getSource() == close){
+            p.hide();
         }
 
         }
-
-
-
 
     public static void main(String[] args) {
         new Mygui();
     }
+
 }
 
 
