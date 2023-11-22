@@ -31,11 +31,11 @@ public class Dictionary {
     }
 
     // Method to check if a word is in the dictionary
-    public void checkWord(String word) {
+    public boolean checkWord(String word) {
         if (Dictionary_Hashtable.containsKey(word.toLowerCase())) {
-            System.out.println(word + " is in the dictionary.");
+            return true;
         } else {
-            System.out.println(word + " is not in the dictionary.");
+            return false;
         }
     }
 
