@@ -1,59 +1,142 @@
 package ca.uwo.cs2212.group2.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
+import static ca.uwo.cs2212.group2.constants.ModelConstants.MAX_NUMBER_OF_CORRECTION_SUGGESTIONS;
 
-public class Word{
-    private String content;
-    private boolean correct;
-    private boolean beginingOfSentence;
-    private ArrayList<CorrectionSuggestions> options;
+/**
+ * Represents a word with its content and correction features.
+ *
+ * <p>This class provides functionalities to handle a word's content, whether it is correct, its
+ * position in a sentence, and possible correction suggestions.
+ */
+public class Word {
+  private String content;
+  private boolean correct;
+  private boolean beginningOfSentence;
+  private ArrayList<CorrectionSuggestions> options;
 
-    public Word(String content){
-        this.content = content;
-        this.correct = true;
-        this.beginingOfSentence = false;
-        this.options = new ArrayList<CorrectionSuggestions>();
+  /**
+   * Initializes a new Word instance with the specified content.
+   *
+   * <p>By default, the word is marked as correct, not at the beginning of a sentence, and with no
+   * correction suggestions.
+   *
+   * @param content The actual word in string form, without additional metadata.
+   */
+  public Word(String content) {
+    this.content = content;
+    this.correct = true;
+    this.beginningOfSentence = false;
+    this.options = new ArrayList<CorrectionSuggestions>();
+  }
 
+  /**
+   * @param obj An object (either a String or a word)
+   * @return True if the contents of the other word are equal the contents of this word
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    Word other = (Word) obj;
+    return Objects.equals(this.content, other.content);
+  }
+
+  /**
+   * Hashes the word based on its content.
+   *
+   * @return a hash code value for the word
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.content);
+  }
+
+  /**
+   * Returns a string representation of the word and it's metadata. To simply see a string
+   * representation of the contents of the word, call Word.getContent.toString().
+   *
+   * @return A string representation of the word and it's metadata.
+   */
+  @Override
+  public String toString() {
+    return "Word{"
+        + "content='"
+        + this.content
+        + '\''
+        + ", correct="
+        + this.correct
+        + ", beginningOfSentence="
+        + this.beginningOfSentence
+        + ", options="
+        + this.options
+        + '}';
+  }
+
+  /**
+   * Adds a correction suggestion to the word. If the maximum number of suggestions is reached,
+   * replaces the least relevant suggestion.
+   *
+   * @param content The suggested correction content.
+   * @param distance The distance metric indicating the relevance of the suggestion.
+   * @throws IllegalArgumentException if content is null or empty, or if distance is negative.
+   */
+  public void setOption(String content, int distance) throws IllegalArgumentException {
+    if (content == null || content.isEmpty()) {
+      throw new IllegalArgumentException("Correction content must not be null or empty.");
+    }
+    if (distance < 0) {
+      throw new IllegalArgumentException("Distance must be non-negative.");
     }
 
-    public boolean isBegining(){
-        return beginingOfSentence;
-    }
+    CorrectionSuggestions option = new CorrectionSuggestions(content, distance);
 
-    public void setBegining(){
-        this.beginingOfSentence = true;
+    if (options.size() < MAX_NUMBER_OF_CORRECTION_SUGGESTIONS) {
+      options.add(option);
+    } else {
+      System.out.println("Too many options");
     }
+  }
 
-    public boolean isWrong(){
-        return correct;
+  /**
+   * Returns the correction suggestions for the word.
+   *
+   * @return An array of correction suggestions.
+   */
+  public String[] getOption() {
+    String[] arr = new String[MAX_NUMBER_OF_CORRECTION_SUGGESTIONS];
+    for (int i = 0; i < options.size(); i++) {
+      arr[i] = options.get(i).getWord();
     }
+    return arr;
+  }
 
-    public void setCorrect(boolean x){
-        this.correct = x;
-    }
+  public boolean isBeginning() {
+    return beginningOfSentence;
+  }
 
-    // Changed to accept CorrectionSuggestion directly
-    public void setOption(CorrectionSuggestions option){
-        //CorrectionSuggestions option = new CorrectionSuggestions(content, distance);
-        if (options.size()<4){
-            options.add(option);
-        }
-    }
+  public void setBeginning(boolean beginningOfSentence) {
+    this.beginningOfSentence = beginningOfSentence;
+  }
 
-    public String[] getOption(){
-        String[] arr = new String[4];
-        for(int i=0; i<options.size(); i++){
-            arr[i]=options.get(i).getWord();
-        }
-        return arr;
-    }
+  public boolean getCorrect() {
+    return correct;
+  }
 
-    public String getContent(){
-        return content;
-    }
+  public void setCorrect(boolean correct) {
+    this.correct = correct;
+  }
 
-    public void setContent(String newContent){
-        this.content = newContent;
-    }
+  public String getContent() {
+    return content;
+  }
 
+  public void setContent(String newContent) {
+    this.content = newContent;
+  }
 }

@@ -1,0 +1,1 @@
+For shared components (i.e. buttons, modals, etc) that are used across multiple views.
