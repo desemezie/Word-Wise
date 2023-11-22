@@ -142,4 +142,12 @@ public class TextProcessor {
   public int getWordCount() {
     return wordCount;
   }
+
+  /**
+   * 
+   * @return list of all words in the text file as Word objectss
+   */
+	public List<Word> getWords(){
+		return this.words;
+	}
 }
