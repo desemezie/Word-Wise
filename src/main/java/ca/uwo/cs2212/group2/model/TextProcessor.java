@@ -59,9 +59,7 @@ public class TextProcessor {
         String line = scan.nextLine();
         this.lineCount++;
         this.charCountNoSpace += getNumCharNoSpace(line);
-        // System.out.println("Char count = "+line.length());
         this.charCountWithSpace += line.length();
-        // System.out.println("Line: "+ line);
 
         String[] lineWords = line.split("\\s+|,|\\;|\\(|\\)|\\{|\\}|\\:");
 
