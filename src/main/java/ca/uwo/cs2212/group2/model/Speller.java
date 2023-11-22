@@ -84,6 +84,10 @@ public class Speller {
 			System.out.println(String.format("Input text %s not found", inText));
 			x.printStackTrace();
 		}
+		catch(Exception s)
+		{
+			s.printStackTrace();
+		}
 		return null;
 	}
 	/**
@@ -250,16 +254,9 @@ public class Speller {
 			Path dpath = dir.resolve("dict.txt");
 			
 			// Make the default dictionary object
-			try 
-			{
-				Dictionary dict = new Dictionary(dpath.toString());
-				System.out.println("default dict found");
-			} catch (FileNotFoundException e) 
-			{
-				// This should never fire
-				e.printStackTrace();
-				return null;
-			}
+			Dictionary dict = new Dictionary(dpath.toString());
+			System.out.println("default dict found");
+
 			
 			// Check if userdict exists
 			if(fileExists("userdict.txt"))
@@ -268,24 +265,16 @@ public class Speller {
 				Path udpath = dir.resolve("userdict.txt");
 				
 				// Make the default dictionary object
-				try 
-				{
-					Dictionary dict = new Dictionary(dpath.toString());
-					Dictionary udict = new Dictionary(udpath.toString());
-					System.out.println("userdict found");
+				//Dictionary dict = new Dictionary(dpath.toString());
+				Dictionary udict = new Dictionary(udpath.toString());
+				System.out.println("userdict found");
 					
-					// Add all words in udict to dict
-					transferWords(udict, dict);
-					//Sanity check
-					System.out.println(dict.checkWord("foo"));
-					return dict;
-				} 
-				catch (FileNotFoundException e) 
-				{
-					// This should never fire
-					e.printStackTrace();
-					return null;
-				}
+				// Add all words in udict to dict
+				transferWords(udict, dict);
+				//Sanity check
+				System.out.println(dict.checkWord("foo"));
+				return dict;
+				
 			}
 			else
 			{
@@ -297,7 +286,7 @@ public class Speller {
 					Files.createFile(upath);
 					System.out.println("Userdict not found, blank userdict created");
 					// No transfer required
-					Dictionary dict = new Dictionary(dpath.toString());
+					//Dictionary dict = new Dictionary(dpath.toString());
 					return dict;
 				}
 				catch(IOException x )
