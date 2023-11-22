@@ -32,8 +32,9 @@ public class Word{
         this.correct = x;
     }
 
-    public void setOption(String content, int distance){
-        CorrectionSuggestions option = new CorrectionSuggestions(content, distance);
+    // Changed to accept CorrectionSuggestion directly
+    public void setOption(CorrectionSuggestions option){
+        //CorrectionSuggestions option = new CorrectionSuggestions(content, distance);
         if (options.size()<4){
             options.add(option);
         }
