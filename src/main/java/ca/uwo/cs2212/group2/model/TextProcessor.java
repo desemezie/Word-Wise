@@ -2,15 +2,11 @@ package ca.uwo.cs2212.group2.model;
 
 import java.io.BufferedReader;
 import java.io.File;
-//import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-//import java.io.FileReader;
-//import java.io.IOException;
-//import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.Arrays;
 import java.util.Scanner;
+
 
 
 public class TextProcessor {
@@ -20,38 +16,53 @@ public class TextProcessor {
 	private int wordCount;
 	private int charCountWithSpace;
 	private int charCountNoSpace;
-	List<String> lineWords = new ArrayList<String>();
-	
+	List<Word> words = new ArrayList<Word>();
+
+
+	/**
+	 * 
+	 * @param fileName the string name of file to be proccessed
+	 * @throws FileNotFoundException
+	 */
 	public TextProcessor(String fileName) throws FileNotFoundException {
 	
 		try {
-			System.out.println("File: "+ fileName);
-			lines = this.parse(fileName);
-			System.out.println("Line count: "+ lineCount+"\nWord Count: " + this.wordCount);
+			//System.out.println("File: "+ fileName);
 			
-			System.out.println("!-----------------!");
-			System.out.println("-----"+this.charCountWithSpace+"-----");
-			System.out.println("\n");
-			for (String line: this.lineWords) {
-				// make word object here
+			lines = this.parse(fileName);
+			
+			//System.out.println("Line count: "+ lineCount+"\nWord Count: " + this.wordCount);
+			
+			//System.out.println("!-----------------!");
+			
+			//System.out.println("-----"+this.charCountWithSpace+"-----");
+			
+			//System.out.println("\n");
+			
+			//for (Word word: this.words) {
 				
-				System.out.println(line);
-			}
+				
+				//System.out.println(word.getContent());
+			//}
 			this.wordCount = lines.size();
-			System.out.println("--------------");
-			printWordsAfterPeriod();
-			System.out.println();
-			for (String line: this.lineWords) {
-				// make word object here
-				
-				System.out.println(line);
-			}
+			//System.out.println("--------------");
+			wordsAfterPeriod();
+			//System.out.println();
+			
+			//for (Word word: this.words) {
+				//System.out.println("-");
+				//System.out.println(word.getContent());
+			//}
 		}catch (Exception e) {
 			System.out.println("Error: "+e);
 		}
 		
 	}
-	
+	/**
+	 * 
+	 * @param fileName2 the name of the file to be parsed(The user text file)
+	 * @return nothing, just modifies this object's word list attribute
+	 */
 	public List<String> parse(String fileName2){
 		List<String> words = new ArrayList<String>();
 		this.lineCount = 0;
@@ -59,9 +70,10 @@ public class TextProcessor {
 			while (scan.hasNextLine()) {
 				String line = scan.nextLine();
 				this.lineCount++;
-				System.out.println("Char count = "+line.length());
+				this.charCountNoSpace += getNumCharNoSpace(line);
+				//System.out.println("Char count = "+line.length());
 				this.charCountWithSpace += line.length();
-				
+				//System.out.println("Line: "+ line);
 				
 				
 				String[] lineWords = line.split("\\s+|,|\\;|\\(|\\)|\\{|\\}|\\:");
@@ -70,8 +82,11 @@ public class TextProcessor {
 				
 				for (String word : lineWords) {
 					if (word != "") {
+						
+						
 						words.add(word);
-						this.lineWords.add(word);
+						Word newWord = new Word(word);
+						this.words.add(newWord);
 						this.wordCount++;
 						
 					}
@@ -86,20 +101,34 @@ public class TextProcessor {
 		return words;
 	}
 	
-	public void printWordsAfterPeriod() {
+	/**
+	 * 
+	 * @param line a line with words, spaces, punctuation
+	 * @return number of characters of the sentence excluding spaces " "
+	 */
+	private long getNumCharNoSpace(String line) {
+		
+		return line.chars().filter(c -> !Character.isWhitespace(c)).count();
+		
+	}
+	
+	/**
+	 * Marks words which occur after period as having to  be checked for propoer capitalization
+	 */
+	public void wordsAfterPeriod() {
         boolean afterPeriod = false;
 
-        for (String word : this.lineWords) {
+        for (Word word : this.words) {
             if (afterPeriod) {
             	// change words instance variable to True
-                System.out.println("Capital: "+word);
+                //System.out.println("Capital: "+word.getContent());
                 afterPeriod = false; // Reset after printing
             }
 
-            if (word.charAt(word.length()-1) == '.' || word.charAt(word.length()-1) == '!' || word.charAt(word.length()-1) == '?') {
+            if (word.getContent().charAt(word.getContent().length()-1) == '.' || word.getContent().charAt(word.getContent().length()-1) == '!' || word.getContent().charAt(word.getContent().length()-1) == '?') {
             	
             	afterPeriod = true;
-            	// word.setContent(word.substring(0,(word.length -1));
+            	word.setContent(word.getContent().substring(0,(word.getContent().length() - 1 )));
             }
         }
     }
@@ -154,11 +183,17 @@ public class TextProcessor {
 	
 	}
 	
+	// Added this to get the word list out of object
+	public List<Word> getWords(){
+		return this.words;
+	}
 	
-	
+	/*
 	public static void main(String[] args) throws FileNotFoundException {
 		TextProcessor file = new TextProcessor("test2.txt");
-
+		System.out.println(file.getCharCountNoSpace());
+		System.out.println(file.getCharCountWithSpace());
 	}
+	*/
 
 }
