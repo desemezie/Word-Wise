@@ -118,6 +118,8 @@ public class Mygui implements ActionListener {
         if(e.getSource() == button){
             //do something when create file is clicked
             System.out.println("create file");
+            //SpellCheckerUI window = new createAndShowGUI(); 
+
         }
         else if(e.getSource() == button2){
             //do something when upload file is clicked
