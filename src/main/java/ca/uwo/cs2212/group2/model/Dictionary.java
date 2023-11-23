@@ -32,7 +32,7 @@ public class Dictionary {
 
     // Method to check if a word is in the dictionary
     public boolean checkWord(String word) {
-        if (Dictionary_Hashtable.containsKey(word.toLowerCase())) {
+        if (Dictionary_Hashtable.containsKey(word)) {
             return true;
         } else {
             return false;
