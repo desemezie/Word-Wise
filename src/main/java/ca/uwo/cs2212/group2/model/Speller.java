@@ -1,4 +1,4 @@
-//package ca.uwo.cs2212.group2.model;
+package ca.uwo.cs2212.group2.model;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
