@@ -18,10 +18,14 @@ import java.util.Scanner;
  *     based on their placement in the text (e.g., words after a period).
  */
 public class TextProcessor {
+
+
+
   private int lineCount;
   private int wordCount;
   private long charCountWithSpace;
   private long charCountNoSpace;
+
 
   // Internal
   private static BufferedReader text;
