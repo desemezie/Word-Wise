@@ -1,5 +1,8 @@
 package ca.uwo.cs2212.group2.view.pages;
 
+import ca.uwo.cs2212.group2.view.components.HelpPopup;
+import ca.uwo.cs2212.group2.view.components.WelcomePopup;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +18,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static ca.uwo.cs2212.group2.constants.ViewConstants.PRIMARY_COLOUR;
+
 public class FinishedGUI {
 
   // frame and panels defined for cardlayout
@@ -27,15 +32,9 @@ public class FinishedGUI {
   // objects defined for main page
   private static JButton button;
   private static JButton button2;
-  private static PopupFactory pf;
-  private static JButton close;
-  private static JPanel poppanel;
   private static JRadioButton engUS;
   private static JRadioButton engUK;
   private static JRadioButton engCa;
-  private static JLabel label1;
-  private static JLabel label2;
-  private static Popup pop;
   static final JFileChooser fileChooser = new JFileChooser();
 
   // colours and objects defined for landing page
@@ -48,39 +47,18 @@ public class FinishedGUI {
   private static String filePath;
   private static Popup p;
 
+  public static void init() {}
+
+  public FinishedGUI() {
+    Create();
+  }
+
   /** This method creates the GUI */
   public static void Create() {
 
     panelCont.setLayout(cl); // set the layout for the container panel
-
-    // now add the main gui stuff to panelMain
-    poppanel = new JPanel(new BorderLayout());
-    poppanel.setSize(800, 500);
-    label1 =
-        new JLabel(
-            "<html><div style='text-align: center;'>Welcome to our Spellchecker application! To begin, you can choose to upload an existing .txt or .html file or create your own here.</div></html>");
-    Font newLabelFont = new Font(label1.getFont().getName(), label1.getFont().getStyle(), 20);
-    label1.setFont(newLabelFont);
-    label1.setForeground(Color.WHITE);
-    close = new JButton("Begin!");
-    Font newCloseFont = new Font(close.getFont().getName(), close.getFont().getStyle(), 20);
-    close.setPreferredSize(new Dimension(150, 75));
-    close.setMaximumSize(new Dimension(150, 75));
-    close.setFont(newCloseFont);
-    close.setForeground(new Color(0x993399));
-    // close.addActionListener(this);
-    close.addActionListener(
-        new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-            pop.hide();
-          }
-        });
-    poppanel.add(label1, BorderLayout.CENTER); // Position label at the top
-    poppanel.add(close, BorderLayout.SOUTH); // Position button at the bottom
-    poppanel.setBackground(new Color(0x993399));
-    poppanel.setPreferredSize(new Dimension(800, 500));
-    pf = PopupFactory.getSharedInstance();
-    pop = pf.getPopup(frame, poppanel, 300, 100);
+    WelcomePopup.showWelcomeDialog(frame);
+    // Create the popup
 
     button = new JButton();
     button.setBounds(150, 100, 400, 300);
@@ -248,15 +226,10 @@ public class FinishedGUI {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setTitle("Spellchecker");
     frame.add(panelCont);
-    pop.show();
     frame.setVisible(true);
-
-    // frame.add(menuBar, BorderLayout.NORTH);
-    // frame.add(scrollPane, BorderLayout.CENTER);
-    // frame.setLocationRelativeTo(null);
-    // frame.setVisible(true);
-
   }
+
+  // CREATE ENDS HERE
 
   /**
    * This method opens a file and displays the content in the text area
@@ -433,33 +406,7 @@ public class FinishedGUI {
           p.show();
         }
         if (source.getText().equals("Number of Corrections")) {
-          JLabel label =
-              new JLabel("<html><font color = 'white'>Number of Corrections: 0</font></html> ");
-          label.setPreferredSize(new Dimension(200, 150));
-          p2.add(label);
-          p2.setBackground(MENU_BG_COLOR);
-          p2.setPreferredSize(new Dimension(375, 200));
-          // ImageIcon x = new ImageIcon("close");
-          JButton close = new JButton("close");
-          close.setBounds(500, 240, 20, 30);
-          close.addActionListener(
-              new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                  // TODO Auto-generated method stub
-                  p.hide();
-                }
-              });
-          p2.setLayout(new FlowLayout(FlowLayout.CENTER));
-          p2.add(close);
-
-          // Create the Popup with your JPanel
-          p = pf.getPopup(frame, p2, 520, 250);
-
-          p2.setSize(200, 200);
-          // Show the Popup
-          p.show();
+          HelpPopup.showHelpDialog(frame);
         }
 
         if (source.getText().equals("Metrics Related to Document")) {
@@ -606,16 +553,28 @@ public class FinishedGUI {
    * @return the menu item
    */
   private static JMenu createMenu(String title, String[] items, ActionListener action) {
+    return getjMenu(title, items, action, MENU_BG_COLOR, MENU_FONT);
+  }
+
+  public static JMenu getjMenu(
+      String title,
+      String[] items,
+      ActionListener action,
+      Color menuBackgroundColour,
+      Font menuFont) {
     JMenu menu = new JMenu(title);
     menu.setHorizontalAlignment(SwingConstants.CENTER);
-    menu.setForeground(Color.WHITE); // This sets the text color to white
-    menu.setBackground(MENU_BG_COLOR);
-    menu.setFont(MENU_FONT);
-    menu.setOpaque(true); // This is necessary for the background and foreground colors to show
+    menu.setForeground(Color.WHITE); // Sets the text color to white
+    menu.setBackground(menuBackgroundColour);
+    menu.setFont(menuFont);
+    menu.setOpaque(true); // Necessary for background and foreground colors to show
     menu.setBorder(new EmptyBorder(10, 10, 10, 10)); // Padding around the text
-    for (int i = 0; i < items.length; i++) {
-      JMenuItem item = new JMenuItem(items[i]);
+
+    for (String s : items) {
+      JMenuItem item = new JMenuItem(s);
       item.addActionListener(action);
+      item.setBackground(PRIMARY_COLOUR); // Set the background color for each menu item
+      item.setForeground(Color.WHITE); // Optionally, set the text color for each menu item
       menu.add(item);
     }
     return menu;
