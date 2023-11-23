@@ -1,4 +1,4 @@
-package ca.uwo.cs2212.group2.model;
+//package ca.uwo.cs2212.group2.model;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,7 +31,8 @@ public class Speller {
 		{
 			//used for testing with local file
 			TextProcessor testText = process(intext); 
-			usertext = new TextProcessor(intext);
+			//usertext = new TextProcessor(intext);
+			usertext = testText;
 		}
 		catch(Exception x)
 		{
@@ -50,7 +51,7 @@ public class Speller {
 			//lowercase the word before checking it
 			String wc = w.getContent().toLowerCase();
 			//Either it is not in the dictionary, or it is midcapitalized
-    		if((!dict.checkWord(wc)) || ismidcapped(wc))
+    		if((!dict.checkWord(wc)) || ismidcapped(w.getContent()))
     		{
     			// If word not in dict, add it to list of wrong words
     			wrongWords.add(w);
@@ -79,15 +80,16 @@ public class Speller {
 	 */
     private static boolean ismidcapped(String word)
 	{
-		for( int i = 1; i < word.length(); i++)
+    	boolean out = false;
+		for(int i = 1; i < word.length(); i++)
 		{
 			char c = word.charAt(i);
-			if(!Character.isUpperCase(c))
+			if(Character.isUpperCase(c))
 			{
-				return true;
+				out = true;
 			}
 		}
-		return false;
+		return out;
 	}
 	/**
 	 * 
