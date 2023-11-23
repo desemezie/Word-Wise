@@ -30,9 +30,10 @@ public class Speller {
 		try
 		{
 			//used for testing with local file
-			TextProcessor testText = process(intext); 
-			//usertext = new TextProcessor(intext);
-			usertext = testText;
+			//TextProcessor testText = process(intext);
+			//usertext = testText;
+			usertext = new TextProcessor(intext);
+			
 		}
 		catch(Exception x)
 		{
