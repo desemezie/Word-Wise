@@ -27,7 +27,17 @@ public class Speller {
     Metrics metric;
     public Speller(String intext){
         //1. Create textproccessor object out of given text
-    	usertext = process(intext);
+		try
+		{
+			//used for testing with local file
+			TextProcessor testText = process(intext); 
+			usertext = new TextProcessor(intext);
+		}
+		catch(Exception x)
+		{
+			System.out.println(String.format("User text file %s not found", intext));
+		}
+    	
         //2. Create dictionary from "userdict.txt" or "dict.txt"
         dict = loadDict();
 
@@ -36,8 +46,11 @@ public class Speller {
     	List<Word> wrongWords = new ArrayList<Word>();
     	List<Word> misCapped = new ArrayList<Word>();
     	for(Word w : textWords)
-    	{
-    		if(!(dict.checkWord(w.getContent())))
+    	{	
+			//lowercase the word before checking it
+			String wc = w.getContent().toLowerCase();
+			//Either it is not in the dictionary, or it is midcapitalized
+    		if((!dict.checkWord(wc)) || ismidcapped(wc))
     		{
     			// If word not in dict, add it to list of wrong words
     			wrongWords.add(w);
@@ -59,7 +72,23 @@ public class Speller {
         
     }
     
-    
+	/**
+	 * 
+	 * @param word word to be checked for capital letters in the middle
+	 * @return true if word has capital letters in the middle of it
+	 */
+    private static boolean ismidcapped(String word)
+	{
+		for( int i = 1; i < word.length(); i++)
+		{
+			char c = word.charAt(i);
+			if(!Character.isUpperCase(c))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * 
 	 * @param inText the name of the input text
@@ -90,6 +119,7 @@ public class Speller {
 		}
 		return null;
 	}
+
 	/**
 	 * 
 	 * @param w a word to be compared against dictionary
