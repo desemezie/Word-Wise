@@ -1,3 +1,4 @@
+package main.java.ca.uwo.cs2212.group2.view.pages;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -155,14 +156,7 @@ public class FinishedGUI  {
         engUK.setBounds(597, 550, 200, 30);
         engCa.setBounds(597, 600, 200, 30);
 
-        panelMain.setBackground(new Color(0xebebe0));
-        panelMain.setLayout(null);
-        panelMain.add(button);
-        panelMain.add(button2);
-        panelMain.add(engUS);
-        panelMain.add(engUK);
-        panelMain.add(engCa);
-        panelMain.setBounds(0,0,1594,1030);
+        
 
         //now add spellchecker gui stuff to panel landing
         //Be very careful here this code is for making sure the text is white
@@ -230,10 +224,18 @@ public class FinishedGUI  {
     
     
             // Adding components to panel finally after initializing 
-            panelLanding.setLayout(null);
-            panelLanding.setBounds(0,0,1594,1030);
+            //panelLanding.setLayout(null);
+            //panelLanding.setBounds(0,0,1594,1030);
             panelLanding.add(menuBar, BorderLayout.NORTH);
             panelLanding.add(scrollPane, BorderLayout.CENTER);
+            panelMain.setBackground(new Color(0xebebe0));
+            //panelMain.setLayout(null);
+            panelMain.add(button);
+            panelMain.add(button2);
+            panelMain.add(engUS);
+            panelMain.add(engUK);
+            panelMain.add(engCa);
+            //panelMain.setBounds(0,0,1594,1030);
 
             //add panelMain and panelLanding to panelCont
             panelCont.add(panelMain, "main");
@@ -241,13 +243,14 @@ public class FinishedGUI  {
             cl.show(panelCont, "main");
 
             //add panels to frame
+            frame.add(panelCont);
             frame.setLayout(null);
             frame.setSize(1594,1030);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setTitle("Spellchecker");
-            frame.add(panelCont);
-            pop.show();
             frame.setVisible(true);
+            pop.show();
+            
 
             //frame.add(menuBar, BorderLayout.NORTH);
             //frame.add(scrollPane, BorderLayout.CENTER);
