@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
 /**
  * Processes text from a file, providing statistics and manipulations on the text.
  *
@@ -19,13 +18,10 @@ import java.util.Scanner;
  */
 public class TextProcessor {
 
-
-
   private int lineCount;
   private int wordCount;
   private long charCountWithSpace;
   private long charCountNoSpace;
-
 
   // Internal
   private static BufferedReader text;
@@ -150,10 +146,9 @@ public class TextProcessor {
   }
 
   /**
-   *
    * @return list of all words in the text file as Word objects
    */
-	public List<Word> getWords(){
-		return this.words;
-	}
+  public List<Word> getWords() {
+    return this.words;
+  }
 }

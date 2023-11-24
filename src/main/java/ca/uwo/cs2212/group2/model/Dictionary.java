@@ -3,6 +3,7 @@ package ca.uwo.cs2212.group2.model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -32,7 +33,7 @@ public class Dictionary {
 
     // Method to check if a word is in the dictionary
     public boolean checkWord(String word) {
-        if (Dictionary_Hashtable.containsKey(word.toLowerCase())) {
+        if (Dictionary_Hashtable.containsKey(word)) {
             return true;
         } else {
             return false;
@@ -41,7 +42,9 @@ public class Dictionary {
 
     // Method to load words from a file into the hashtable
     private void loadDictionaryFromFile(String filename) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(
+                        this.getClass().getClassLoader().getResourceAsStream(filename)))) {
             String line;
             while ((line = br.readLine()) != null) {
                 addWord(line.trim());
@@ -50,6 +53,7 @@ public class Dictionary {
             e.printStackTrace();
         }
     }
+
 
     //Method to get the enumeration of keys out of the object
     public Enumeration<String> getKeys()
