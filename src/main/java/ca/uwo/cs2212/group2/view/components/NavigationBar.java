@@ -21,6 +21,7 @@ public class NavigationBar extends JMenuBar {
     "Number of Spelling Errors", "Number of Corrections", "Metrics Related to Document"
   };
   private static final String[] HELP_ITEMS = {"More Stuff"};
+  private static final int MENU_BAR_HEIGHT = 89;
 
   public NavigationBar(
       Dimension frameSize,
@@ -31,7 +32,7 @@ public class NavigationBar extends JMenuBar {
       ActionListener saveActionListener,
       ActionListener helpActionListener) {
     setPreferredSize(new Dimension(frameSize.width, MENU_BAR_HEIGHT));
-    setBackground(PRIMARY_COLOUR);
+    setBackground(Color.BLUE);//PRIMARY_COLOUR);
     setLayout(new GridLayout(1, 6, 0, 0)); // 6 items, no gaps
 
     add(createMenu("File", FILE_ITEMS, fileActionListener));
@@ -54,8 +55,8 @@ public class NavigationBar extends JMenuBar {
         });
     menuItem.setHorizontalAlignment(SwingConstants.CENTER);
     menuItem.setForeground(Color.WHITE); // This sets the text color to white
-    menuItem.setBackground(PRIMARY_COLOUR);
-    menuItem.setFont(MENU_FONT);
+    menuItem.setBackground(Color.BLUE);//PRIMARY_COLOUR);
+    //menuItem.setFont(MENU_FONT);
     menuItem.setOpaque(true); // This is necessary for the background and foreground colors to show
     menuItem.setBorder(new EmptyBorder(10, 10, 10, 10)); // Padding around the text
 
@@ -66,8 +67,8 @@ public class NavigationBar extends JMenuBar {
     JMenu menu = new JMenu(title);
     menu.setHorizontalAlignment(SwingConstants.CENTER);
     menu.setForeground(Color.WHITE); // This sets the text color to white
-    menu.setBackground(PRIMARY_COLOUR);
-    menu.setFont(MENU_FONT);
+    menu.setBackground(Color.BLUE);//PRIMARY_COLOUR );
+    //menu.setFont(MENU_FONT);
     menu.setOpaque(true); // This is necessary for the background and foreground colors to show
     menu.setBorder(new EmptyBorder(10, 10, 10, 10)); // Padding around the text
     for (int i = 0; i < items.length; i++) {
@@ -76,5 +77,47 @@ public class NavigationBar extends JMenuBar {
       menu.add(item);
     }
     return menu;
+  }
+
+
+  public JMenu getFileMenu() {
+    // Assuming that "File" is the first menu added to the NavigationBar
+    return (JMenu) getComponent(0);
+}
+
+public JMenu getSettingsMenu() {
+    // Assuming that "Settings" is the second menu added to the NavigationBar
+    return (JMenu) getComponent(1);
+}
+
+public JMenu getSpellCheckMenu() {
+    // Assuming that "Spell Check" is the third menu added to the NavigationBar
+    return (JMenu) getComponent(2);
+}
+
+public JMenu getMetricsMenu() {
+    // Assuming that "Metrics" is the fourth menu added to the NavigationBar
+    return (JMenu) getComponent(3);
+}
+
+public JMenu getSaveMenu() {
+    // Assuming that "Save" is the fifth menu added to the NavigationBar
+    return (JMenu) getComponent(4);
+}
+
+public JMenu getHelpMenu() {
+    // Assuming that "Help" is the sixth menu added to the NavigationBar
+    return (JMenu) getComponent(5);
+}
+
+  public static void main(String args[]){
+    JFrame frame = new JFrame();
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setSize(1594, 1030);
+    Dimension frameSize = frame.getSize();
+    NavigationBar nb = new NavigationBar(frameSize, null, null, null, null, null, null);
+    frame.add(nb);
+    frame.setVisible(true);
+
   }
 }
