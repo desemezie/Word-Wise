@@ -13,16 +13,17 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTextArea;
 
-import static ca.uwo.cs2212.group2.view.components.NavigationBar;
+import ca.uwo.cs2212.group2.view.components.NavigationBar;
 
-public class NavigationBarController {
+public class NavigationBarController  {
   private NavigationBar view;
   // private JFileChooser fileChooser;
   private JTextArea textArea;
   private static String filePath;
 
-  public NavigationBarController(NavigationBar view) {
+  public NavigationBarController(NavigationBar view, JTextArea textArea) {
     this.view = view;
+    this.textArea = textArea;
     attachListeners();
   }
 
@@ -172,4 +173,6 @@ public class NavigationBarController {
       }
     };
   }
+
+  
 }

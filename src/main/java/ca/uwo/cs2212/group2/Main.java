@@ -6,6 +6,9 @@ import ca.uwo.cs2212.group2.view.pages.LandingMenu;
 import ca.uwo.cs2212.group2.view.pages.SpellCheckerUI;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static ca.uwo.cs2212.group2.constants.ViewConstants.APP_HEIGHT;
 import static ca.uwo.cs2212.group2.constants.ViewConstants.APP_WIDTH;
@@ -59,10 +62,12 @@ public class Main {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(1594, 1030);
 
-    NavigationBar nb = new NavigationBar(frame.getSize());
-    NavigationBarController nbController = new NavigationBarController(nb);
+    JTextArea textArea = new JTextArea();
 
-    frame.add(nb);
+    NavigationBar nb = new NavigationBar(frame.getSize());
+    NavigationBarController nbController = new NavigationBarController(nb, textArea);
+    frame.setJMenuBar(nb);
+    frame.add(new JScrollPane(textArea), BorderLayout.CENTER);
     frame.setVisible(true);
   }
 

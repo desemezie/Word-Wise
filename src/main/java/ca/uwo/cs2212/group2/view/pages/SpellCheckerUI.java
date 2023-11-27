@@ -335,7 +335,7 @@ public class SpellCheckerUI {
         if (source.getText().equals("Save As")) {
           saveAsFile(textArea);
         }
-        if (sourc e.getText().equals("Save")) {
+        if (source.getText().equals("Save")) {
           try (FileWriter fileWriter = new FileWriter(filePath)) {
             fileWriter.write(textArea.getText());
             System.out.println("File saved successfully at: " + filePath);
