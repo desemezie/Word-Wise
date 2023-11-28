@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import javax.swing.*;
 
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
@@ -17,12 +16,19 @@ public class NavigationBarController {
   private JTextArea textArea;
   private static String filePath;
 
+  /**
+   * Constructor for the navigation bar controller.
+   *
+   * @param view the navigation bar view
+   * @param textArea the text area
+   */
   public NavigationBarController(NavigationBar view, JTextArea textArea) {
     this.view = view;
     this.textArea = textArea;
     attachListeners();
   }
 
+  /** Attaches listeners to the menu items. */
   private void attachListeners() {
     attachActionListenersToEachMenuItem(this.view.getFileMenu(), createFileActionListener());
     attachActionListenersToEachMenuItem(this.view.getSettingsMenu(), createSettingActionListener());
@@ -33,6 +39,11 @@ public class NavigationBarController {
     attachActionListenersToEachMenuItem(this.view.getHelpMenu(), createHelpActionListener());
   }
 
+  /**
+   * Saves the file as a new file.
+   *
+   * @param textArea the text area
+   */
   private static void saveAsFile(JTextArea textArea) {
     JFileChooser fileChooser = new JFileChooser();
     int result = fileChooser.showSaveDialog(null);
@@ -46,6 +57,11 @@ public class NavigationBarController {
     }
   }
 
+  /**
+   * Opens a file.
+   *
+   * @param textArea the text area
+   */
   private static void openFile(JTextArea textArea) {
     JFileChooser fileChooser = new JFileChooser();
     int result = fileChooser.showOpenDialog(null);
@@ -67,12 +83,23 @@ public class NavigationBarController {
     }
   }
 
+  /**
+   * Attaches the given action listener to each menu item in the given menu.
+   *
+   * @param menu the menu
+   * @param listener the action listener
+   */
   private static void attachActionListenersToEachMenuItem(JMenu menu, ActionListener listener) {
     for (int i = 0; i < menu.getItemCount(); i++) {
       menu.getItem(i).addActionListener(listener);
     }
   }
 
+  /**
+   * Creates an action listener for the file menu.
+   *
+   * @return the action listener
+   */
   private ActionListener createFileActionListener() {
     return new ActionListener() {
       @Override
@@ -101,6 +128,11 @@ public class NavigationBarController {
     };
   }
 
+  /**
+   * Creates an action listener for the save menu.
+   *
+   * @return the action listener
+   */
   private ActionListener createSaveActionListener() {
     return new ActionListener() {
       @Override
@@ -122,6 +154,11 @@ public class NavigationBarController {
     };
   }
 
+  /**
+   * Creates an action listener for the spell check menu.
+   *
+   * @return the action listener
+   */
   private ActionListener createSpellCheckActionListener() {
     return new ActionListener() {
       @Override
@@ -134,6 +171,11 @@ public class NavigationBarController {
     };
   }
 
+  /**
+   * Creates an action listener for the help menu.
+   *
+   * @return the action listener
+   */
   private ActionListener createHelpActionListener() {
     return new ActionListener() {
       @Override
@@ -146,6 +188,11 @@ public class NavigationBarController {
     };
   }
 
+  /**
+   * Creates an action listener for the metrics menu.
+   *
+   * @return the action listener
+   */
   private ActionListener createMetricsActionListener() {
     return new ActionListener() {
       @Override
@@ -165,6 +212,11 @@ public class NavigationBarController {
     };
   }
 
+  /**
+   * Creates an action listener for the settings menu.
+   *
+   * @return the action listener
+   */
   private ActionListener createSettingActionListener() {
     return new ActionListener() {
       @Override
