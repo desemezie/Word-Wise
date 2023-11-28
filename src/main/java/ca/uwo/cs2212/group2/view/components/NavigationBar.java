@@ -20,14 +20,12 @@ public class NavigationBar extends JMenuBar {
   private static final int MENU_BAR_HEIGHT = 89;
 
   // Instance variables for each menu
-  private JMenu fileMenu;
-  private JMenu settingsMenu;
-  private JMenu spellCheckMenu;
-  private JMenu metricsMenu;
-  private JMenu saveMenu;
-  private JMenu helpMenu;
-
-  private JMenuItem spellCheckMenuItem;
+  private final JMenu fileMenu;
+  private final JMenu settingsMenu;
+  private final JMenu spellCheckMenu;
+  private final JMenu metricsMenu;
+  private final JMenu saveMenu;
+  private final JMenu helpMenu;
 
   /**
    * Constructor for the navigation bar.
@@ -46,9 +44,6 @@ public class NavigationBar extends JMenuBar {
     metricsMenu = createMenu("Metrics", METRIC_ITEMS, null);
     saveMenu = createMenu("Save", new String[] {}, null);
     helpMenu = createMenu("Help", HELP_ITEMS, null);
-
-    spellCheckMenuItem = new JMenuItem("Spell Check");
-    spellCheckMenu.add(spellCheckMenuItem);
 
     add(fileMenu);
     add(settingsMenu);
@@ -89,28 +84,69 @@ public class NavigationBar extends JMenuBar {
     return menu;
   }
 
-  // Getters for each menu
-  public JMenu getFileMenu() {
-    return fileMenu;
+  /**
+   * Adds an action listener to each menu item in the navigation bar.
+   *
+   * @param listener the action listener
+   */
+  public void addFileMenuListener(ActionListener listener) {
+    for (int i = 0; i < fileMenu.getItemCount(); i++) {
+      fileMenu.getItem(i).addActionListener(listener);
+    }
   }
 
-  public JMenu getSettingsMenu() {
-    return settingsMenu;
+  /**
+   * Adds an action listener to each menu item in the navigation bar.
+   *
+   * @param listener the action listener
+   */
+  public void addSettingsMenuListener(ActionListener listener) {
+    for (int i = 0; i < settingsMenu.getItemCount(); i++) {
+      settingsMenu.getItem(i).addActionListener(listener);
+    }
   }
 
-  public JMenu getSpellCheckMenu() {
-    return spellCheckMenu;
+  /**
+   * Adds an action listener to each menu item in the navigation bar.
+   *
+   * @param listener the action listener
+   */
+  public void addSpellCheckMenuListener(ActionListener listener) {
+    for (int i = 0; i < spellCheckMenu.getItemCount(); i++) {
+      spellCheckMenu.getItem(i).addActionListener(listener);
+    }
   }
 
-  public JMenu getMetricsMenu() {
-    return metricsMenu;
+  /**
+   * Adds an action listener to each menu item in the navigation bar.
+   *
+   * @param listener the action listener
+   */
+  public void addMetricsMenuListener(ActionListener listener) {
+    for (int i = 0; i < metricsMenu.getItemCount(); i++) {
+      metricsMenu.getItem(i).addActionListener(listener);
+    }
   }
 
-  public JMenu getSaveMenu() {
-    return saveMenu;
+  /**
+   * Adds an action listener to each menu item in the navigation bar.
+   *
+   * @param listener the action listener
+   */
+  public void addSaveMenuListener(ActionListener listener) {
+    for (int i = 0; i < saveMenu.getItemCount(); i++) {
+      saveMenu.getItem(i).addActionListener(listener);
+    }
   }
 
-  public JMenu getHelpMenu() {
-    return helpMenu;
+  /**
+   * Adds an action listener to each menu item in the navigation bar.
+   *
+   * @param listener the action listener
+   */
+  public void addHelpMenuListener(ActionListener listener) {
+    for (int i = 0; i < helpMenu.getItemCount(); i++) {
+      helpMenu.getItem(i).addActionListener(listener);
+    }
   }
 }

@@ -30,13 +30,12 @@ public class NavigationBarController {
 
   /** Attaches listeners to the menu items. */
   private void attachListeners() {
-    attachActionListenersToEachMenuItem(this.view.getFileMenu(), createFileActionListener());
-    attachActionListenersToEachMenuItem(this.view.getSettingsMenu(), createSettingActionListener());
-    attachActionListenersToEachMenuItem(
-        this.view.getSpellCheckMenu(), createSpellCheckActionListener());
-    attachActionListenersToEachMenuItem(this.view.getMetricsMenu(), createMetricsActionListener());
-    attachActionListenersToEachMenuItem(this.view.getSaveMenu(), createSaveActionListener());
-    attachActionListenersToEachMenuItem(this.view.getHelpMenu(), createHelpActionListener());
+    this.view.addFileMenuListener(createFileActionListener());
+    this.view.addSettingsMenuListener(createSettingActionListener());
+    this.view.addSpellCheckMenuListener(createSpellCheckActionListener());
+    this.view.addMetricsMenuListener(createMetricsActionListener());
+    this.view.addSaveMenuListener(createSaveActionListener());
+    this.view.addHelpMenuListener(createHelpActionListener());
   }
 
   /**
@@ -80,18 +79,6 @@ public class NavigationBarController {
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }
-  }
-
-  /**
-   * Attaches the given action listener to each menu item in the given menu.
-   *
-   * @param menu the menu
-   * @param listener the action listener
-   */
-  private static void attachActionListenersToEachMenuItem(JMenu menu, ActionListener listener) {
-    for (int i = 0; i < menu.getItemCount(); i++) {
-      menu.getItem(i).addActionListener(listener);
     }
   }
 
