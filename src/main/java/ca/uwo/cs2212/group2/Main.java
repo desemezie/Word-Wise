@@ -10,8 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static ca.uwo.cs2212.group2.constants.ViewConstants.APP_HEIGHT;
-import static ca.uwo.cs2212.group2.constants.ViewConstants.APP_WIDTH;
+import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
 
 /**
  * This class is the entry point for the application. It contains the main method that is executed
@@ -30,10 +29,10 @@ public class Main {
     // Set up logging
     // Initialize MVC components
 
-    // Be very careful here this code is for making sure the text is white
-    // don't ask me how it works i used chatgtp
-    // i might need to look for a simpler way to do it
-    // this is where the code for making the text white ends
+    // Initialize the look and feel
+    initLookAndFeel();
+
+    System.out.println("Hello");
 
     SwingUtilities.invokeLater(
         () -> {
@@ -41,9 +40,11 @@ public class Main {
           frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
           NavigationBar navigationBar = new NavigationBar(new Dimension(800, 600));
+          NavigationBarController navigationBarController =
+              new NavigationBarController(navigationBar, new JTextArea());
 
           frame.setJMenuBar(navigationBar);
-          frame.setSize(800, 600);
+          frame.setSize(APP_WIDTH, APP_HEIGHT);
           frame.setLocationRelativeTo(null);
           frame.setVisible(true);
         });
@@ -52,5 +53,26 @@ public class Main {
   /** Lifecycle hook to perform cleanup when the application is shutting down. */
   private static void destroy() {
     // Perform any cleanup tasks
+  }
+
+  /**
+   * Initializes the look and feel of the application. This method will attempt to use the Nimbus
+   */
+  private static void initLookAndFeel() {
+    try {
+      for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+        if ("Nimbus".equals(info.getName())) {
+          UIManager.setLookAndFeel(info.getClassName());
+          break;
+        }
+      }
+    } catch (Exception e) {
+      // If Nimbus is not available, fall back to the default L&F.
+      try {
+        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      } catch (Exception ex) {
+        System.err.println("Failed to initialize the default look and feel.");
+      }
+    }
   }
 }
