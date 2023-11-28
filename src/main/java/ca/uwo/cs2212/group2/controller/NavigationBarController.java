@@ -15,7 +15,7 @@ import javax.swing.JTextArea;
 
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
 
-public class NavigationBarController  {
+public class NavigationBarController {
   private NavigationBar view;
   // private JFileChooser fileChooser;
   private JTextArea textArea;
@@ -55,7 +55,8 @@ public class NavigationBarController  {
     if (result == JFileChooser.APPROVE_OPTION) {
       java.io.File selected = fileChooser.getSelectedFile();
       filePath = selected.getAbsolutePath();
-      try (BufferedReader reader = new BufferedReader(new FileReader(fileChooser.getSelectedFile()))) {
+      try (BufferedReader reader =
+          new BufferedReader(new FileReader(fileChooser.getSelectedFile()))) {
         StringBuilder content = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -157,7 +158,6 @@ public class NavigationBarController  {
         if (source.getText().equals("Metrics Related to Document")) {
           // show metrics popup
         }
-
       }
     };
   }
@@ -173,6 +173,4 @@ public class NavigationBarController  {
       }
     };
   }
-
-  
 }
