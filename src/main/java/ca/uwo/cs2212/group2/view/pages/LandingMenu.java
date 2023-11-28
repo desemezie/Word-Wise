@@ -81,26 +81,4 @@ public class LandingMenu extends JPanel {
   public void addUploadFileButtonListener(ActionListener listener) {
     uploadFileButton.addActionListener(listener);
   }
-
-  //  @Override
-  //  public void actionPerformed(ActionEvent e) {
-  //
-  //    if (e.getSource() == button) {
-  //      // do something when create file is clicked
-  //      System.out.println("create file");
-  //    } else if (e.getSource() == button2) {
-  //      // do something when upload file is clicked
-  //      int returnValue = fileChooser.showOpenDialog(null);
-  //      if (returnValue == JFileChooser.APPROVE_OPTION) {
-  //        File selectedFile = fileChooser.getSelectedFile();
-  //        System.out.println(selectedFile.getPath());
-  //      }
-  //    } else if (e.getSource() == engUS) {
-  //      System.out.println("us");
-  //    } else if (e.getSource() == engUK) {
-  //      System.out.println("uk");
-  //    } else if (e.getSource() == engCa) {
-  //      System.out.println("OH CANADA");
-  //    }
-  //  }
 }
