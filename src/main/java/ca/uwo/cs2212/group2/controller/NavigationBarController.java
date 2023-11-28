@@ -7,11 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
 
@@ -28,12 +24,13 @@ public class NavigationBarController {
   }
 
   private void attachListeners() {
-    view.getFileMenu().addActionListener(createFileActionListener());
-    view.getSettingsMenu().addActionListener(createSettingActionListener());
-    view.getSpellCheckMenu().addActionListener(createSpellCheckActionListener());
-    view.getMetricsMenu().addActionListener(createMetricsActionListener());
-    view.getSaveMenu().addActionListener(createSaveActionListener());
-    view.getHelpMenu().addActionListener(createHelpActionListener());
+    attachActionListenersToEachMenuItem(this.view.getFileMenu(), createFileActionListener());
+    attachActionListenersToEachMenuItem(this.view.getSettingsMenu(), createSettingActionListener());
+    attachActionListenersToEachMenuItem(
+        this.view.getSpellCheckMenu(), createSpellCheckActionListener());
+    attachActionListenersToEachMenuItem(this.view.getMetricsMenu(), createMetricsActionListener());
+    attachActionListenersToEachMenuItem(this.view.getSaveMenu(), createSaveActionListener());
+    attachActionListenersToEachMenuItem(this.view.getHelpMenu(), createHelpActionListener());
   }
 
   private static void saveAsFile(JTextArea textArea) {
@@ -67,6 +64,12 @@ public class NavigationBarController {
       } catch (IOException e) {
         e.printStackTrace();
       }
+    }
+  }
+
+  private static void attachActionListenersToEachMenuItem(JMenu menu, ActionListener listener) {
+    for (int i = 0; i < menu.getItemCount(); i++) {
+      menu.getItem(i).addActionListener(listener);
     }
   }
 

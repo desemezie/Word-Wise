@@ -32,15 +32,19 @@ public class Main {
     // Initialize the look and feel
     initLookAndFeel();
 
+    System.out.println("Hello");
+
     SwingUtilities.invokeLater(
         () -> {
           JFrame frame = new JFrame("Navigation Bar Example");
           frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
           NavigationBar navigationBar = new NavigationBar(new Dimension(800, 600));
+          NavigationBarController navigationBarController =
+              new NavigationBarController(navigationBar, new JTextArea());
 
           frame.setJMenuBar(navigationBar);
-          frame.setSize(800, 600);
+          frame.setSize(APP_WIDTH, APP_HEIGHT);
           frame.setLocationRelativeTo(null);
           frame.setVisible(true);
         });

@@ -27,6 +27,8 @@ public class NavigationBar extends JMenuBar {
   private JMenu saveMenu;
   private JMenu helpMenu;
 
+  private JMenuItem spellCheckMenuItem;
+
   /**
    * Constructor for the navigation bar.
    *
@@ -44,6 +46,9 @@ public class NavigationBar extends JMenuBar {
     metricsMenu = createMenu("Metrics", METRIC_ITEMS, null);
     saveMenu = createMenu("Save", new String[] {}, null);
     helpMenu = createMenu("Help", HELP_ITEMS, null);
+
+    spellCheckMenuItem = new JMenuItem("Spell Check");
+    spellCheckMenu.add(spellCheckMenuItem);
 
     add(fileMenu);
     add(settingsMenu);
