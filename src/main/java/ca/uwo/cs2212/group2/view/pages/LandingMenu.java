@@ -14,11 +14,13 @@ public class LandingMenu extends JPanel implements ActionListener {
   private ButtonGroup languageGroup;
   private JFileChooser fileChooser;
 
+  /** Constructor for the landing menu. */
   public LandingMenu() {
     initializeComponents();
     layoutComponents();
   }
 
+  /** Initializes the components of the landing menu. */
   private void initializeComponents() {
     newFileButton = createButton("New File", 150, 100, 400, 300);
     uploadFileButton = createButton("Upload File", 880, 100, 400, 300);
