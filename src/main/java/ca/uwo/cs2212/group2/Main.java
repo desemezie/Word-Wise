@@ -1,17 +1,14 @@
 package ca.uwo.cs2212.group2;
 
+import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
+
+import ca.uwo.cs2212.group2.controller.LandingMenuController;
 import ca.uwo.cs2212.group2.controller.NavigationBarController;
 import ca.uwo.cs2212.group2.controller.ViewController;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
 import ca.uwo.cs2212.group2.view.pages.LandingMenu;
-import ca.uwo.cs2212.group2.view.pages.SpellCheckerUI;
-
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
+import javax.swing.*;
 
 /**
  * This class is the entry point for the application. It contains the main method that is executed
@@ -40,7 +37,9 @@ public class Main {
 
           ViewController viewController = new ViewController(frame);
 
-          JPanel landingMenu = new LandingMenu();
+          LandingMenu landingMenu = new LandingMenu();
+          LandingMenuController landingMenuController =
+              new LandingMenuController(landingMenu, viewController);
           JPanel mainPanel = new JPanel();
 
           viewController.addPanel(landingMenu, "LandingMenu");
@@ -52,8 +51,6 @@ public class Main {
 
           viewController.showPanel("LandingMenu");
           viewController.setMenuBar(navigationBar);
-          viewController.showMenuBar();
-          //          frame.setJMenuBar(navigationBar);
           frame.setSize(APP_WIDTH, APP_HEIGHT);
           frame.setLocationRelativeTo(null);
           frame.setVisible(true);
