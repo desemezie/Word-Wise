@@ -25,9 +25,12 @@ public class NavigationBarController  {
     this.view = view;
     this.textArea = textArea;
     attachListeners();
+    System.out.println("constructor"); 
   }
 
   private void attachListeners() {
+    System.out.println("attaching listenrs");
+
     view.getFileMenu().addActionListener(createFileActionListener());
     view.getSettingsMenu().addActionListener(createSettingActionListener());
     view.getSpellCheckMenu().addActionListener(createSpellCheckActionListener());
@@ -76,9 +79,11 @@ public class NavigationBarController  {
         JMenuItem source = (JMenuItem) e.getSource();
         System.out.println("File menu item clicked: " + source.getText());
         if (source.getText().equals("Open")) {
+          System.out.println("open a file");
           openFile(textArea);
         }
         if (source.getText().equals("New")) {
+          System.out.println("new file");
           textArea.setText("");
         }
         if (source.getText().equals("Save As")) {
