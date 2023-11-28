@@ -45,23 +45,44 @@ public class Speller {
 
         //3. Iterate through all words of textproccessor, calling spellcheck on the word
     	List<Word> textWords = usertext.getWords();
+    	//mark doubles
+    	doubleWords(textWords);
     	List<Word> wrongWords = new ArrayList<Word>();
+    	// STATISTICALS
+    	List<Word> midCapped = new ArrayList<Word>();
     	List<Word> misCapped = new ArrayList<Word>();
+    	List<Word> doubleWords = new ArrayList<Word>();
+    	//
     	for(Word w : textWords)
     	{	
 			//lowercase the word before checking it
 			String wc = w.getContent().toLowerCase();
-			//Either it is not in the dictionary, or it is midcapitalized
-    		if((!dict.checkWord(wc)) || ismidcapped(w.getContent()))
+			//Either it is not in the dictionary, OR it is midcapitalized, OR it at start of sentence OR is a double word 
+    		if((!dict.checkWord(wc)) || ismidcapped(w.getContent()) || w.isBeginning() || w.getDouble())
     		{
-    			// If word not in dict, add it to list of wrong words
+    			// All words are considered incorrect and will be spellchecked
     			wrongWords.add(w);
+    			
+    			//STATISTICALS
     			// If it is a sentence starter, add it to miscapped
     			if(w.isBeginning())
     			{
     				misCapped.add(w);
     				
     			} 
+    			// If it has capitals in the middle, add it to midcapped
+    			if(ismidcapped(w.getContent()))
+    			{
+    				midCapped.add(w);
+    			}
+    			// If it is a double word, add it to doubleWords
+    			if(w.getDouble())
+    			{
+    				doubleWords.add(w);
+    				// Add a blank correctionsuggestion representing deletion
+    				CorrectionSuggestions blank = new CorrectionSuggestions("", 0);
+    				w.setOption(blank);
+    			}
     		}
     	}
     	
@@ -73,7 +94,25 @@ public class Speller {
     	}
         
     }
-    
+    /**
+     * 
+     * @param inlist list of words
+     */
+	private static void doubleWords(List<Word> inlist)
+	{
+		String prev = "";
+		for(Word w : inlist)
+		{
+			//if this is a duplicate word
+			if(w.getContent().equals(prev))
+			{
+				//tag as double 
+				w.setDouble(true);	
+			}
+			prev = w.getContent();
+		}
+	}
+	
 	/**
 	 * 
 	 * @param word word to be checked for capital letters in the middle
@@ -137,6 +176,8 @@ public class Speller {
 		{
 			String dictword = keys.nextElement();
 			CorrectionSuggestions c = new CorrectionSuggestions(dictword, LevDam(w.getContent(), dictword));
+			// If the word is at the start of sentence, all options are capitalized
+			if(w.isBeginning()){ c.setWord(capitalize(c.getWord()));}
 			options.add(c);		
 		}
 		// Pull out the first 4 closest words out of the pq
@@ -148,6 +189,10 @@ public class Speller {
 			//Sanity Check
 			System.out.println(cj.getWord());
 		}
+	}
+	private static String capitalize(String s)
+	{
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
 	}
     /**
      * 

@@ -16,6 +16,7 @@ public class Word {
   private String content;
   private boolean correct;
   private boolean beginningOfSentence;
+  private boolean isDouble;
   private ArrayList<CorrectionSuggestions> options;
 
   /**
@@ -30,6 +31,7 @@ public class Word {
     this.content = content;
     this.correct = true;
     this.beginningOfSentence = false;
+    this.isDouble = false;
     this.options = new ArrayList<CorrectionSuggestions>();
   }
 
@@ -129,5 +131,12 @@ public class Word {
 
   public void setContent(String newContent) {
     this.content = newContent;
+  }
+
+  public Boolean getDouble(){
+    return this.isDouble;
+  }
+  public void setDouble(boolean v){
+    this.isDouble = v;
   }
 }
