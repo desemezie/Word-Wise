@@ -13,9 +13,9 @@ public class SimpleGUI {
     private static JButton button1;
     private static JButton button2;
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(SimpleGUI::create);
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(SimpleGUI::create);
+//    }
 
     public static void create() {
         panelCont.setLayout(cl);

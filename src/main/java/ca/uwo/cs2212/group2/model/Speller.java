@@ -18,7 +18,7 @@ import java.util.Hashtable;
 
 public class Speller {
     /*
-     * textproccessor usertext; 
+     * textproccessor usertext;
      * dictionary dict;
      * Metrics metric;
      */
@@ -33,49 +33,88 @@ public class Speller {
 			//TextProcessor testText = process(intext);
 			//usertext = testText;
 			usertext = new TextProcessor(intext);
-			
+
 		}
 		catch(Exception x)
 		{
 			System.out.println(String.format("User text file %s not found", intext));
 		}
-    	
+
         //2. Create dictionary from "userdict.txt" or "dict.txt"
         dict = loadDict();
 
         //3. Iterate through all words of textproccessor, calling spellcheck on the word
     	List<Word> textWords = usertext.getWords();
+    	//mark doubles
+    	doubleWords(textWords);
     	List<Word> wrongWords = new ArrayList<Word>();
+    	// STATISTICALS
+    	List<Word> midCapped = new ArrayList<Word>();
     	List<Word> misCapped = new ArrayList<Word>();
+    	List<Word> doubleWords = new ArrayList<Word>();
+    	//
     	for(Word w : textWords)
-    	{	
+    	{
 			//lowercase the word before checking it
 			String wc = w.getContent().toLowerCase();
-			//Either it is not in the dictionary, or it is midcapitalized
-    		if((!dict.checkWord(wc)) || ismidcapped(w.getContent()))
+			//Either it is not in the dictionary, OR it is midcapitalized, OR it at start of sentence OR is a double word
+    		if((!dict.checkWord(wc)) || ismidcapped(w.getContent()) || w.isBeginning() || w.getDouble())
     		{
-    			// If word not in dict, add it to list of wrong words
+    			// All words are considered incorrect and will be spellchecked
     			wrongWords.add(w);
+
+    			//STATISTICALS
     			// If it is a sentence starter, add it to miscapped
     			if(w.isBeginning())
     			{
     				misCapped.add(w);
-    				
-    			} 
+
+    			}
+    			// If it has capitals in the middle, add it to midcapped
+    			if(ismidcapped(w.getContent()))
+    			{
+    				midCapped.add(w);
+    			}
+    			// If it is a double word, add it to doubleWords
+    			if(w.getDouble())
+    			{
+    				doubleWords.add(w);
+    				// Add a blank correctionsuggestion representing deletion
+    				CorrectionSuggestions blank = new CorrectionSuggestions("", 0);
+    				w.setOption(blank);
+    			}
     		}
     	}
-    	
+
     	//4. For each incorrect word, run Levdam for each word in dictionary, and load correctionsuggestions
     	for(Word w : wrongWords)
     	{
     		makeCorrections(w, dict);
-    		
+
     	}
-        
+
     }
-    
+    /**
+     *
+     * @param inlist list of words
+     */
+	private static void doubleWords(List<Word> inlist)
+	{
+		String prev = "";
+		for(Word w : inlist)
+		{
+			//if this is a duplicate word
+			if(w.getContent().equals(prev))
+			{
+				//tag as double
+				w.setDouble(true);
+			}
+			prev = w.getContent();
+		}
+	}
+
 	/**
-	 * 
+	 *
 	 * @param word word to be checked for capital letters in the middle
 	 * @return true if word has capital letters in the middle of it
 	 */
@@ -93,7 +132,7 @@ public class Speller {
 		return out;
 	}
 	/**
-	 * 
+	 *
 	 * @param inText the name of the input text
 	 * @return a TextProccessor of that text
 	 */
@@ -102,7 +141,7 @@ public class Speller {
 		// Getting the path for the current directory
 		String directoryPath = System.getProperty("user.dir");
 		String fileName = inText;
-		
+
 		//Path objects for directory and file
 		Path directory = Paths.get(directoryPath);
 		Path filepath = directory.resolve(fileName);
@@ -124,7 +163,7 @@ public class Speller {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param w a word to be compared against dictionary
 	 */
 	private static void makeCorrections(Word w, Dictionary dict)
@@ -137,7 +176,9 @@ public class Speller {
 		{
 			String dictword = keys.nextElement();
 			CorrectionSuggestions c = new CorrectionSuggestions(dictword, LevDam(w.getContent(), dictword));
-			options.add(c);		
+			// If the word is at the start of sentence, all options are capitalized
+			if(w.isBeginning()){ c.setWord(capitalize(c.getWord()));}
+			options.add(c);
 		}
 		// Pull out the first 4 closest words out of the pq
 		System.out.println(String.format("CORRECTION OPTIONS FOR %s:", w.getContent()));
@@ -149,8 +190,12 @@ public class Speller {
 			System.out.println(cj.getWord());
 		}
 	}
+	private static String capitalize(String s)
+	{
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
+	}
     /**
-     * 
+     *
      * @param s1 origin string
      * @param s2 string to be compared to
      * @return Levenstein Damerau distance between two strings
@@ -166,7 +211,7 @@ public class Speller {
         if (s2 == null) {
             throw new NullPointerException("s2 must not be null");
         }
-        
+
         // No calculation required if it's the same word
         if (s1.equals(s2)) {
             return 0;
@@ -185,7 +230,7 @@ public class Speller {
         for (int d = 0; d < s2.length(); d++) {
             da.put(s2.charAt(d), 0);
         }
-        
+
         // A second matrix
         // Create the distance matrix H[0 .. s1.length+1][0 .. s2.length+1]
         int[][] h = new int[s1.length() + 2][s2.length() + 2];
@@ -238,26 +283,26 @@ public class Speller {
 			return val;
 		}
 	/**
-	 * 
-	 * @param inName 
+	 *
+	 * @param inName
 	 * @return true if the file exists in current directory
 	 */
 	private static boolean fileExists(String inName) {
 		// Getting the path for the current directory
 		String directoryPath = System.getProperty("user.dir");
 		String fileName = inName;
-		
+
 		//Path objects for directory and file
 		Path directory = Paths.get(directoryPath);
 		Path filepath = directory.resolve(fileName);
-		
+
 		//return
 		return Files.exists(filepath);
-		
+
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param origin The origin dictionary
 	 * @param destination The destination dictionary
 	 */
@@ -270,51 +315,51 @@ public class Speller {
 			String word = originKeys.nextElement();
 			destination.addWord(word);
 		}
-		
-		
+
+
 	}
 	/**
-	 * 
+	 *
 	 * @return merged dictionary if the dictionaries were successfully loaded
-	 * 	 
+	 *
 	 */
-	private Dictionary loadDict() 
+	private Dictionary loadDict()
 	{
 		if (fileExists("dict.txt"))
 		{
 			//Get path of file
 			Path dir = Paths.get(System.getProperty("user.dir"));
 			Path dpath = dir.resolve("dict.txt");
-			
+
 			// Make the default dictionary object
 			Dictionary dict = new Dictionary(dpath.toString());
 			System.out.println("default dict found");
 
-			
+
 			// Check if userdict exists
 			if(fileExists("userdict.txt"))
 			{
 				//Get path of file
 				Path udpath = dir.resolve("userdict.txt");
-				
+
 				// Make the default dictionary object
 				//Dictionary dict = new Dictionary(dpath.toString());
 				Dictionary udict = new Dictionary(udpath.toString());
 				System.out.println("userdict found");
-					
+
 				// Add all words in udict to dict
 				transferWords(udict, dict);
 				//Sanity check
 				System.out.println(dict.checkWord("foo"));
 				return dict;
-				
+
 			}
 			else
 			{
 				// Create an empty user dictionary file
 				String p = dir.toString() + "//userdict.txt";
 				Path upath = Paths.get(p);
-				try 
+				try
 				{
 					Files.createFile(upath);
 					System.out.println("Userdict not found, blank userdict created");
@@ -330,14 +375,11 @@ public class Speller {
 				}
 			}
 		}
-		else 
+		else
 		{
 			System.out.println("Def dict does not exist");
 			return null;
 		}
 	}
-	public static void main(String[] args)
-	{
-		Speller test = new Speller("inputfile.txt");
-	}
+
 }

@@ -88,12 +88,17 @@ public class TextProcessor {
   /** Marks words that need to be capitalized (i.e., words after a period) */
   private void wordsAfterPeriod() {
     boolean afterPeriod = false;
-
+    int count = 0;
     for (Word word : this.words) {
-      if (afterPeriod) {
+    	if (count == 0) {
+    		word.setBeginning(true);
+    	}
+    	
+    	if (afterPeriod) {
         // change words instance variable to True
+        word.setBeginning(afterPeriod);
         afterPeriod = false; // Reset after printing
-      }
+    	}
 
       if (word.getContent().charAt(word.getContent().length() - 1) == '.'
           || word.getContent().charAt(word.getContent().length() - 1) == '!'
@@ -103,6 +108,7 @@ public class TextProcessor {
         word.setContent(word.getContent().substring(0, (word.getContent().length() - 1)));
       }
     }
+    count++;
   }
 
   /**
