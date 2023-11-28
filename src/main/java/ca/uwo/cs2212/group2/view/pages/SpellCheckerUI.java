@@ -78,20 +78,20 @@ public class SpellCheckerUI {
         new MatteBorder(10, 345, 10, 345, MARGIN_COLOR)); // top, left, bottom, right
 
     // Adding components to frame finally after initializing
-    Dimension frameSize = frame.getSize();
-    NavigationBar navigationBar =
-        new NavigationBar(
-            frameSize,
-            createFileActionListener(),
-            createSettingActionListener(),
-            createSpellCheckActionListener(),
-            createMetricsActionListener(),
-            createSaveActionListener(),
-            createHelpActionListener());
-    frame.add(navigationBar, BorderLayout.NORTH);
-    frame.add(scrollPane, BorderLayout.CENTER);
-    frame.setLocationRelativeTo(null);
-    frame.setVisible(true);
+//    Dimension frameSize = frame.getSize();
+//    NavigationBar navigationBar =
+//        new NavigationBar(
+//            frameSize,
+//            createFileActionListener(),
+//            createSettingActionListener(),
+//            createSpellCheckActionListener(),
+//            createMetricsActionListener(),
+//            createSaveActionListener(),
+//            createHelpActionListener());
+//    frame.add(navigationBar, BorderLayout.NORTH);
+//    frame.add(scrollPane, BorderLayout.CENTER);
+//    frame.setLocationRelativeTo(null);
+//    frame.setVisible(true);
   }
 
   private static void openFile(JTextArea textArea) {
