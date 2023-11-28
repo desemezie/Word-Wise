@@ -26,13 +26,13 @@ public class HelpPopup extends JDialog {
 
     // Set up the content panel
     JPanel contentPanel = new JPanel();
-    contentPanel.setBackground(MENU_BACKGROUND_COLOUR);
-    contentPanel.setPreferredSize(new Dimension(400, 350));
+    contentPanel.setBackground(new Color(0x993399));
+    contentPanel.setPreferredSize(new Dimension(375, 200));
     contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
     // Set up the label with the help message
     JLabel helpLabel = new JLabel(MESSAGE_TEXT);
-    helpLabel.setPreferredSize(new Dimension(250, 250));
+    helpLabel.setPreferredSize(new Dimension(200, 150));
     contentPanel.add(helpLabel);
 
     // Set up the close button
@@ -61,4 +61,7 @@ public class HelpPopup extends JDialog {
     HelpPopup helpPopup = new HelpPopup(parentFrame);
     helpPopup.setVisible(true);
   }
+
+  
+  
 }
