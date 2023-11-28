@@ -65,6 +65,7 @@ public class NavigationBar extends JMenuBar {
     JMenu menu = new JMenu(title);
     menu.setHorizontalAlignment(SwingConstants.CENTER);
     menu.setBackground(PRIMARY_COLOUR);
+    menu.setForeground(Color.WHITE);
     menu.setFont(MENU_FONT);
     menu.setOpaque(true); // Necessary for the background and foreground colors to show
     menu.setBorder(new EmptyBorder(10, 10, 10, 10)); // Padding around the text
@@ -72,7 +73,8 @@ public class NavigationBar extends JMenuBar {
     for (String item : items) {
       JMenuItem menuItem = new JMenuItem(item);
       menuItem.setOpaque(true);
-      menuItem.setForeground(PRIMARY_COLOUR); // Set the foreground color to PRIMARY_COLOR
+      menuItem.setBackground(PRIMARY_COLOUR);
+      menuItem.setForeground(Color.WHITE); // Set the foreground color to PRIMARY_COLOR
       if (listener != null) {
         menuItem.addActionListener(listener);
       }
