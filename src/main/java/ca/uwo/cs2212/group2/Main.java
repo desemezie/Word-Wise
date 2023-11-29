@@ -3,6 +3,7 @@ package ca.uwo.cs2212.group2;
 import ca.uwo.cs2212.group2.controller.NavigationBarController;
 import ca.uwo.cs2212.group2.view.components.HelpPopup;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
+import ca.uwo.cs2212.group2.view.components.UserDictPopup;
 import ca.uwo.cs2212.group2.view.pages.LandingMenu;
 import ca.uwo.cs2212.group2.view.pages.SpellCheckerUI;
 import ca.uwo.cs2212.group2.view.components.MetricsPopup;
@@ -51,8 +52,10 @@ public class Main {
           frame.setVisible(true);
           //HelpPopup help = new HelpPopup(frame);
           //help.showHelpDialog(frame); 
-          MetricsPopup metrics = new MetricsPopup(frame);
-          metrics.showMetricsDialog(frame);
+          //MetricsPopup metrics = new MetricsPopup(frame);
+          //metrics.showMetricsDialog(frame);
+          UserDictPopup dict = new UserDictPopup(frame);
+          dict.showUserDict(frame);
 
         });
   }
