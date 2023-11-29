@@ -1,5 +1,6 @@
 package ca.uwo.cs2212.group2.controller;
 
+import ca.uwo.cs2212.group2.model.Speller;
 import ca.uwo.cs2212.group2.model.TextProcessor;
 import ca.uwo.cs2212.group2.model.Word;
 import ca.uwo.cs2212.group2.view.components.TextEditor;
@@ -16,11 +17,11 @@ import javax.swing.text.StyledDocument;
 
 public class TextEditorController {
   private final TextEditor textEditor;
-  private TextProcessor textProcessor;
+  private Speller speller;
 
   public TextEditorController(TextEditor textEditor) {
     this.textEditor = textEditor;
-    this.textProcessor = new TextProcessor();
+    this.speller = new Speller();
 
     initSubscriptions();
   }
@@ -30,14 +31,20 @@ public class TextEditorController {
 
     textEditor
         .getTextChanges()
-        .debounce(200, TimeUnit.MILLISECONDS) // Wait for 500ms of inactivity
-        .map(text -> textProcessor.parseString(text)) // Convert the string to a list of Words
-        .distinctUntilChanged() // Only emit if the list of Words has changed
+        .debounce(500, TimeUnit.MILLISECONDS) // Wait for 500ms of inactivity
+        .distinctUntilChanged()
+        .map(
+            text -> {
+              this.speller = new Speller();
+              speller.spellcheck(text);
+              return speller.getWrongWords();
+            }) // Convert the string to a list of Word
         .observeOn(swingScheduler)
         .subscribe(this::underlineMisspelledWords); // Process the list of Words
   }
 
   private void underlineMisspelledWords(List<Word> misspelledWords) {
+    System.out.println("hello!!!");
     StyledDocument doc = textEditor.getTextPane().getStyledDocument();
     SimpleAttributeSet attrs = new SimpleAttributeSet();
 
