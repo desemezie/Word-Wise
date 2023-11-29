@@ -1,5 +1,6 @@
 package ca.uwo.cs2212.group2.controller;
 
+import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -8,6 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.*;
 
+import org.w3c.dom.events.MouseEvent;
+
+// Speller import
+import ca.uwo.cs2212.group2.model.Speller;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
 
 public class NavigationBarController {
@@ -146,6 +151,8 @@ public class NavigationBarController {
    *
    * @return the action listener
    */
+
+   
   private ActionListener createSpellCheckActionListener() {
     return new ActionListener() {
       @Override
@@ -154,9 +161,40 @@ public class NavigationBarController {
         System.out.println("SpellCheck menu clicked: " + source.getText());
 
         // Implement your logic for the spell check action
+        /*
+         * create speller with filename as arg
+         * get Allwords
+         * for each word in Allwords, write it to the screen
+         *    if the word is marked incorrect:
+         *      the word should be written in a different color/font/whatever
+         * 
+         */
+
       }
     };
   }
+  //Ryans thing
+  //private MouseListener createSpellCheckActionListener() {
+    //return new MouseAdapter() {
+      //@Override
+      //public void mouseClicked(MouseEvent e) {
+        //textEditor.simulateSpellCheck();
+      //}
+    //};
+    //    return new ActionListener() {
+    //      @Override
+    //      public void actionPerformed(ActionEvent e) {
+    //        JMenuItem source = (JMenuItem) e.getSource();
+    //        System.out.println("SpellCheck menu clicked: " + source.getText());
+    //        if (isSaved == false) {
+    //          SavePopup save = new SavePopup();
+    //          save.showSaveDialog();
+    //        }
+    //
+    //        // Implement your logic for the spell check action
+    //      }
+    //    };
+  //}
 
   /**
    * Creates an action listener for the help menu.
