@@ -43,10 +43,10 @@ public class Main {
           LandingMenu landingMenu = new LandingMenu();
           LandingMenuController landingMenuController =
               new LandingMenuController(landingMenu, viewController);
+          TextEditor textEditor = new TextEditor(APP_DIMENSIONS);
           NavigationBar navigationBar = new NavigationBar(APP_DIMENSIONS);
           NavigationBarController navigationBarController =
-              new NavigationBarController(navigationBar, new JTextArea());
-          TextEditor textEditor = new TextEditor(APP_DIMENSIONS);
+              new NavigationBarController(navigationBar, textEditor.getTextArea());
 
           viewController.addPanel(landingMenu, "LandingMenu");
           viewController.addPanel(textEditor, "MainPanel");

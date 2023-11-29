@@ -38,4 +38,8 @@ public class TextEditor extends JPanel {
     this.setLayout(new BorderLayout());
     this.add(scrollPane, BorderLayout.CENTER); // Add the scrollPane to this panel
   }
+
+  public JTextArea getTextArea() {
+    return textArea;
+  }
 }
