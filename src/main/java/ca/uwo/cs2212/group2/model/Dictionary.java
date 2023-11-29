@@ -6,16 +6,46 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Objects;
 
 public class Dictionary {
 
   private Hashtable<String, Boolean> Dictionary_Hashtable;
 
   // Constructor that takes a filename for a dictionary file and initializes the HashTable
-  public Dictionary(String filename) {
-
+  public Dictionary(String filename, boolean isResource) {
     Dictionary_Hashtable = new Hashtable<>();
-    loadDictionaryFromFile(filename);
+    if (isResource) {
+      loadDictionaryFromResource(filename);
+    } else {
+      loadDictionaryFromFile(filename);
+    }
+  }
+
+  private void loadDictionaryFromFile(String filename) {
+    try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        addWord(line.trim());
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void loadDictionaryFromResource(String filename) {
+    try (BufferedReader br =
+        new BufferedReader(
+            new InputStreamReader(
+                Objects.requireNonNull(
+                    this.getClass().getClassLoader().getResourceAsStream(filename))))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        addWord(line.trim());
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   // Method to add a word to the dictionary
@@ -36,21 +66,6 @@ public class Dictionary {
       return true;
     } else {
       return false;
-    }
-  }
-
-  // Method to load words from a file into the hashtable
-  private void loadDictionaryFromFile(String filename) {
-    try (BufferedReader br =
-        new BufferedReader(
-            new InputStreamReader(
-                this.getClass().getClassLoader().getResourceAsStream(filename)))) {
-      String line;
-      while ((line = br.readLine()) != null) {
-        addWord(line.trim());
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
     }
   }
 
