@@ -46,6 +46,28 @@ public class HelpPopup extends JDialog {
     this.setLocationRelativeTo(parentFrame); // Center relative to the parent frame
   }
 
+  public HelpPopup() {
+
+    // Set up the content panel
+    JPanel contentPanel = new JPanel();
+    contentPanel.setBackground(new Color(0x993399));
+    contentPanel.setPreferredSize(new Dimension(400, 300));
+    contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+    // Set up the label with the help message
+    JLabel helpLabel = new JLabel(MESSAGE_TEXT);
+    helpLabel.setFont(
+        new Font(helpLabel.getFont().getName(), helpLabel.getFont().getStyle(), 13));
+    helpLabel.setPreferredSize(new Dimension(400, 300));
+    helpLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    contentPanel.add(helpLabel);
+    
+    // Add content panel to the dialog
+    this.add(contentPanel);
+    this.pack();
+    
+  }
+
   /**
    * Method to display the popup
    *
@@ -53,6 +75,11 @@ public class HelpPopup extends JDialog {
    */
   public static void showHelpDialog(JFrame parentFrame) {
     HelpPopup helpPopup = new HelpPopup(parentFrame);
+    helpPopup.setVisible(true);
+  }
+
+  public static void showHelpDialog() {
+    HelpPopup helpPopup = new HelpPopup();
     helpPopup.setVisible(true);
   }
 

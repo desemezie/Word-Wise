@@ -8,13 +8,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.*;
 
+import ca.uwo.cs2212.group2.view.components.AddWordPopup;
+import ca.uwo.cs2212.group2.view.components.CorrectionsPopup;
+import ca.uwo.cs2212.group2.view.components.HelpPopup;
+import ca.uwo.cs2212.group2.view.components.MetricsPopup;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
+import ca.uwo.cs2212.group2.view.components.SavePopup;
+import ca.uwo.cs2212.group2.view.components.SpellingErrorsPopup;
+import ca.uwo.cs2212.group2.view.components.UserDictPopup;
 
 public class NavigationBarController {
   private NavigationBar view;
   // private JFileChooser fileChooser;
   private JTextArea textArea;
   private static String filePath;
+  private static Boolean isSaved = false;
 
   /**
    * Constructor for the navigation bar controller.
@@ -104,10 +112,12 @@ public class NavigationBarController {
         }
         if (source.getText().equals("Save As")) {
           saveAsFile(textArea);
+          isSaved = true;
         }
         if (source.getText().equals("Save")) {
           try (FileWriter fileWriter = new FileWriter(filePath)) {
             fileWriter.write(textArea.getText());
+            isSaved = true; 
             System.out.println("File saved successfully at: " + filePath);
           } catch (IOException ex) {
             ex.printStackTrace();
@@ -129,10 +139,13 @@ public class NavigationBarController {
       public void actionPerformed(ActionEvent e) {
         JMenu source = (JMenu) e.getSource();
         System.out.println("Save menu clicked: " + source.getText());
+
+
         if (filePath != null) {
           try (FileWriter fileWriter = new FileWriter(filePath)) {
             fileWriter.write(textArea.getText());
             System.out.println("File saved successfully at: " + filePath);
+            isSaved=true;
           } catch (IOException ex) {
             ex.printStackTrace();
             System.err.println("Error saving the file.");
@@ -155,6 +168,10 @@ public class NavigationBarController {
       public void actionPerformed(ActionEvent e) {
         JMenuItem source = (JMenuItem) e.getSource();
         System.out.println("SpellCheck menu clicked: " + source.getText());
+        if(isSaved==false){
+          SavePopup save = new SavePopup();
+          save.showSaveDialog();
+        }
 
         // Implement your logic for the spell check action
       }
@@ -172,6 +189,8 @@ public class NavigationBarController {
       public void actionPerformed(ActionEvent e) {
         JMenuItem source = (JMenuItem) e.getSource();
         System.out.println("Help menu item clicked: " + source.getText());
+        HelpPopup help = new HelpPopup();
+        help.showHelpDialog(); 
 
         // Show help popup
       }
@@ -191,12 +210,18 @@ public class NavigationBarController {
         System.out.println("Metrics menu item clicked: " + source.getText());
         if (source.getText().equals("Number of Spelling Errors")) {
           // show spelling error popup
+          SpellingErrorsPopup spellpopup = new SpellingErrorsPopup();
+          spellpopup.showSpellingErrorsDialog();
         }
         if (source.getText().equals("Number of Corrections")) {
+          CorrectionsPopup popup = new CorrectionsPopup();
+          popup.showCorrectionsDialog(); 
           // show corrections popup
         }
         if (source.getText().equals("Metrics Related to Document")) {
           // show metrics popup
+          MetricsPopup metricspop = new MetricsPopup();
+          metricspop.showMetricsDialog();
         }
       }
     };
@@ -213,8 +238,20 @@ public class NavigationBarController {
       public void actionPerformed(ActionEvent e) {
         JMenuItem source = (JMenuItem) e.getSource();
         System.out.println("Settings menu item clicked: " + source.getText());
+        if (source.getText().equals("View User Dictionary")) {
+          UserDictPopup dictpopup = new UserDictPopup();
+          dictpopup.showUserDict();
+        }
+        else if(source.getText().equals("Exit Checker")){
+          //exit the checker
+        }
+        else if(source.getText().equals("Add Word To Dictionary")){
+          //add word to user dict
+          AddWordPopup word = new AddWordPopup();
+          word.showAddWordDialog();
+        }
 
-        // Implement your logic for the settings action
+        
       }
     };
   }

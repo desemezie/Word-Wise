@@ -16,7 +16,9 @@ public class NavigationBar extends JMenuBar {
   private static final String[] METRIC_ITEMS = {
     "Number of Spelling Errors", "Number of Corrections", "Metrics Related to Document"
   };
-  private static final String[] HELP_ITEMS = {"More Stuff"};
+  private static final String[] HELP_ITEMS = {"Help me"};
+  private static final String[] SAVE_ITEMS = {"Save my file"};
+  private static final String[] SPELLCHECK_ITEMS = {"Spellcheck"};
   private static final int MENU_BAR_HEIGHT = 89;
 
   // Instance variables for each menu
@@ -40,9 +42,9 @@ public class NavigationBar extends JMenuBar {
     // The controller will set appropriate listeners.
     fileMenu = createMenu("File", FILE_ITEMS, null);
     settingsMenu = createMenu("Settings", SETTING_ITEMS, null);
-    spellCheckMenu = createMenu("Spell Check", new String[] {}, null);
+    spellCheckMenu = createMenu("Spell Check", SPELLCHECK_ITEMS, null);
     metricsMenu = createMenu("Metrics", METRIC_ITEMS, null);
-    saveMenu = createMenu("Save", new String[] {}, null);
+    saveMenu = createMenu("Save", SAVE_ITEMS, null);
     helpMenu = createMenu("Help", HELP_ITEMS, null);
 
     add(fileMenu);
@@ -83,6 +85,9 @@ public class NavigationBar extends JMenuBar {
 
     return menu;
   }
+
+
+
 
   /**
    * Adds an action listener to each menu item in the navigation bar.
