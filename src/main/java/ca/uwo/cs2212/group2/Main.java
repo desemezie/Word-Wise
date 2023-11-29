@@ -6,6 +6,7 @@ import ca.uwo.cs2212.group2.controller.LandingMenuController;
 import ca.uwo.cs2212.group2.controller.NavigationBarController;
 import ca.uwo.cs2212.group2.controller.ViewController;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
+import ca.uwo.cs2212.group2.view.components.TextEditor;
 import ca.uwo.cs2212.group2.view.pages.LandingMenu;
 import java.awt.*;
 import javax.swing.*;
@@ -16,6 +17,8 @@ import javax.swing.*;
  * initializing and cleaning up resources.
  */
 public class Main {
+  private static final Dimension APP_DIMENSIONS = new Dimension(APP_WIDTH, APP_HEIGHT);
+
   public static void main(String[] args) {
     init();
     Runtime.getRuntime().addShutdownHook(new Thread(Main::destroy));
@@ -40,14 +43,13 @@ public class Main {
           LandingMenu landingMenu = new LandingMenu();
           LandingMenuController landingMenuController =
               new LandingMenuController(landingMenu, viewController);
-          JPanel mainPanel = new JPanel();
-
-          viewController.addPanel(landingMenu, "LandingMenu");
-          viewController.addPanel(mainPanel, "MainPanel");
-
-          NavigationBar navigationBar = new NavigationBar(new Dimension(APP_WIDTH, APP_HEIGHT));
+          NavigationBar navigationBar = new NavigationBar(APP_DIMENSIONS);
           NavigationBarController navigationBarController =
               new NavigationBarController(navigationBar, new JTextArea());
+          TextEditor textEditor = new TextEditor(APP_DIMENSIONS);
+
+          viewController.addPanel(landingMenu, "LandingMenu");
+          viewController.addPanel(textEditor, "MainPanel");
 
           viewController.showPanel("LandingMenu");
           viewController.setMenuBar(navigationBar);
