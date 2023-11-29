@@ -7,6 +7,7 @@ import ca.uwo.cs2212.group2.controller.NavigationBarController;
 import ca.uwo.cs2212.group2.controller.ViewController;
 import ca.uwo.cs2212.group2.view.components.HelpPopup;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
+import ca.uwo.cs2212.group2.view.components.SuggestionsPopup;
 import ca.uwo.cs2212.group2.view.components.TextEditor;
 import ca.uwo.cs2212.group2.view.components.UserDictPopup;
 import ca.uwo.cs2212.group2.view.pages.LandingMenu;
@@ -61,6 +62,11 @@ public class Main {
           frame.setSize(APP_WIDTH, APP_HEIGHT);
           frame.setLocationRelativeTo(null);
           frame.setVisible(true);
+
+
+
+          
+         
         });
   }
 
