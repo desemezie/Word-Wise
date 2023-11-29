@@ -1,19 +1,20 @@
 package ca.uwo.cs2212.group2;
 
+import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
+
+import ca.uwo.cs2212.group2.controller.LandingMenuController;
 import ca.uwo.cs2212.group2.controller.NavigationBarController;
+import ca.uwo.cs2212.group2.controller.ViewController;
 import ca.uwo.cs2212.group2.view.components.HelpPopup;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
+import ca.uwo.cs2212.group2.view.components.TextEditor;
 import ca.uwo.cs2212.group2.view.components.UserDictPopup;
 import ca.uwo.cs2212.group2.view.pages.LandingMenu;
+import java.awt.*;
 import ca.uwo.cs2212.group2.view.pages.SpellCheckerUI;
 import ca.uwo.cs2212.group2.view.components.MetricsPopup;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
 
 /**
  * This class is the entry point for the application. It contains the main method that is executed
@@ -21,6 +22,8 @@ import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
  * initializing and cleaning up resources.
  */
 public class Main {
+  private static final Dimension APP_DIMENSIONS = new Dimension(APP_WIDTH, APP_HEIGHT);
+
   public static void main(String[] args) {
     init();
     Runtime.getRuntime().addShutdownHook(new Thread(Main::destroy));
@@ -35,28 +38,29 @@ public class Main {
     // Initialize the look and feel
     initLookAndFeel();
 
-    System.out.println("Hello");
-
     SwingUtilities.invokeLater(
         () -> {
           JFrame frame = new JFrame("Navigation Bar Example");
           frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-          NavigationBar navigationBar = new NavigationBar(new Dimension(800, 600));
+          ViewController viewController = new ViewController(frame);
+
+          LandingMenu landingMenu = new LandingMenu();
+          LandingMenuController landingMenuController =
+              new LandingMenuController(landingMenu, viewController);
+          NavigationBar navigationBar = new NavigationBar(APP_DIMENSIONS);
           NavigationBarController navigationBarController =
               new NavigationBarController(navigationBar, new JTextArea());
+          TextEditor textEditor = new TextEditor(APP_DIMENSIONS);
 
-          frame.setJMenuBar(navigationBar);
+          viewController.addPanel(landingMenu, "LandingMenu");
+          viewController.addPanel(textEditor, "MainPanel");
+
+          viewController.showPanel("LandingMenu");
+          viewController.setMenuBar(navigationBar);
           frame.setSize(APP_WIDTH, APP_HEIGHT);
           frame.setLocationRelativeTo(null);
           frame.setVisible(true);
-          //HelpPopup help = new HelpPopup(frame);
-          //help.showHelpDialog(frame); 
-          //MetricsPopup metrics = new MetricsPopup(frame);
-          //metrics.showMetricsDialog(frame);
-          UserDictPopup dict = new UserDictPopup(frame);
-          dict.showUserDict(frame);
-
         });
   }
 
