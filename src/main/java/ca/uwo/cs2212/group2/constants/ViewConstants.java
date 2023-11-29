@@ -9,6 +9,8 @@ public class ViewConstants {
   public static final Color MENU_BACKGROUND_COLOUR = new Color(0xEBEBE0);
   public static final Color PRIMARY_BACKGROUND_COLOUR = Color.decode("#800080");
 
+  public static final Color TEXT_BACKGROUND_COLOUR = Color.WHITE;
+
   // Dimensions
   public static final int APP_WIDTH = 1600;
   public static final int APP_HEIGHT = 900;
