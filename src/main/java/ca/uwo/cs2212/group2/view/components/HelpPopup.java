@@ -10,11 +10,13 @@ import static ca.uwo.cs2212.group2.constants.ViewConstants.MENU_BACKGROUND_COLOU
 public class HelpPopup extends JDialog {
 
   private static final String MESSAGE_TEXT =
-      "<html><font color = 'white'>Welcome to our spellchecker! <br><br>"
-          + "We're so happy you're here. <br><br>"
+      "<html><font color = 'white'><center>Welcome to our spellchecker! <br><br>"
           + "There are 5 major tabs for navigating through the application: <br><br>"
           + "Settings, File, Spell Check, Metrics, Save. <br><br>"
-          + "Feel free to look around!!</font></html>";
+          + "To spellcheck your document, click spellcheck. <br><br>"
+          + "To view the metrics of your document, click metrics. <br><br>"
+          + "To add or remove a word from your dictionary, click settings. <br><br> "
+          + "To create a new file, open a file, or save your file, click file.</center> </font></html>";
 
   /**
    * Constructor for the help popup
@@ -27,29 +29,43 @@ public class HelpPopup extends JDialog {
     // Set up the content panel
     JPanel contentPanel = new JPanel();
     contentPanel.setBackground(new Color(0x993399));
-    contentPanel.setPreferredSize(new Dimension(375, 200));
+    contentPanel.setPreferredSize(new Dimension(400, 300));
     contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
     // Set up the label with the help message
     JLabel helpLabel = new JLabel(MESSAGE_TEXT);
-    helpLabel.setPreferredSize(new Dimension(200, 150));
+    helpLabel.setFont(
+        new Font(helpLabel.getFont().getName(), helpLabel.getFont().getStyle(), 13));
+    helpLabel.setPreferredSize(new Dimension(400, 300));
+    helpLabel.setHorizontalAlignment(SwingConstants.CENTER);
     contentPanel.add(helpLabel);
-
-    // Set up the close button
-    JButton closeButton = new JButton("Close");
-    closeButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            HelpPopup.this.dispose(); // Closes the popup
-          }
-        });
-    contentPanel.add(closeButton);
-
+    
     // Add content panel to the dialog
     this.add(contentPanel);
     this.pack();
     this.setLocationRelativeTo(parentFrame); // Center relative to the parent frame
+  }
+
+  public HelpPopup() {
+
+    // Set up the content panel
+    JPanel contentPanel = new JPanel();
+    contentPanel.setBackground(new Color(0x993399));
+    contentPanel.setPreferredSize(new Dimension(400, 300));
+    contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+    // Set up the label with the help message
+    JLabel helpLabel = new JLabel(MESSAGE_TEXT);
+    helpLabel.setFont(
+        new Font(helpLabel.getFont().getName(), helpLabel.getFont().getStyle(), 13));
+    helpLabel.setPreferredSize(new Dimension(400, 300));
+    helpLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    contentPanel.add(helpLabel);
+    
+    // Add content panel to the dialog
+    this.add(contentPanel);
+    this.pack();
+    
   }
 
   /**
@@ -59,6 +75,11 @@ public class HelpPopup extends JDialog {
    */
   public static void showHelpDialog(JFrame parentFrame) {
     HelpPopup helpPopup = new HelpPopup(parentFrame);
+    helpPopup.setVisible(true);
+  }
+
+  public static void showHelpDialog() {
+    HelpPopup helpPopup = new HelpPopup();
     helpPopup.setVisible(true);
   }
 

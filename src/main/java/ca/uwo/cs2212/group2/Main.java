@@ -5,10 +5,15 @@ import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
 import ca.uwo.cs2212.group2.controller.LandingMenuController;
 import ca.uwo.cs2212.group2.controller.NavigationBarController;
 import ca.uwo.cs2212.group2.controller.ViewController;
+import ca.uwo.cs2212.group2.view.components.HelpPopup;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
 import ca.uwo.cs2212.group2.view.components.TextEditor;
+import ca.uwo.cs2212.group2.view.components.UserDictPopup;
 import ca.uwo.cs2212.group2.view.pages.LandingMenu;
 import java.awt.*;
+import ca.uwo.cs2212.group2.view.pages.SpellCheckerUI;
+import ca.uwo.cs2212.group2.view.components.MetricsPopup;
+
 import javax.swing.*;
 
 /**
