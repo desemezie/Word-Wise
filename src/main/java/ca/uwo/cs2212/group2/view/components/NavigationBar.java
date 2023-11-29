@@ -13,7 +13,6 @@ public class NavigationBar extends JMenuBar {
   private static final String[] SETTING_ITEMS = {
     "View User Dictionary", "Exit Checker", "Add Word To Dictionary"
   };
-  private static final String[] SPELLCHECK_ITEMS = {"Spellcheck"};
   private static final String[] METRIC_ITEMS = {
     "Number of Spelling Errors", "Number of Corrections", "Metrics Related to Document"
   };
@@ -41,7 +40,7 @@ public class NavigationBar extends JMenuBar {
     // The controller will set appropriate listeners.
     fileMenu = createMenu("File", FILE_ITEMS, null);
     settingsMenu = createMenu("Settings", SETTING_ITEMS, null);
-    spellCheckMenu = createMenu("Spell Check", SPELLCHECK_ITEMS, null);
+    spellCheckMenu = createMenu("Spell Check", new String[] {}, null);
     metricsMenu = createMenu("Metrics", METRIC_ITEMS, null);
     saveMenu = createMenu("Save", new String[] {}, null);
     helpMenu = createMenu("Help", HELP_ITEMS, null);
