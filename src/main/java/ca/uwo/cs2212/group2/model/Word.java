@@ -17,6 +17,7 @@ public class Word {
   private boolean correct;
   private boolean beginningOfSentence;
   private boolean isDouble;
+  private int position;
   private ArrayList<CorrectionSuggestions> options;
 
   /**
@@ -33,6 +34,16 @@ public class Word {
     this.beginningOfSentence = false;
     this.isDouble = false;
     this.options = new ArrayList<CorrectionSuggestions>();
+    this.position = 0;
+  }
+
+  public Word(String content, int position) {
+    this.content = content;
+    this.correct = true;
+    this.beginningOfSentence = false;
+    this.isDouble = false;
+    this.options = new ArrayList<CorrectionSuggestions>();
+    this.position = position;
   }
 
   /**
@@ -88,7 +99,7 @@ public class Word {
    *
    * @param option the CorrectionSuggestion object passed to the function
    */
-  public void setOption(CorrectionSuggestions option){
+  public void setOption(CorrectionSuggestions option) {
     if (options.size() < MAX_NUMBER_OF_CORRECTION_SUGGESTIONS) {
       options.add(option);
     } else {
@@ -133,10 +144,19 @@ public class Word {
     this.content = newContent;
   }
 
-  public Boolean getDouble(){
+  public Boolean getDouble() {
     return this.isDouble;
   }
-  public void setDouble(boolean v){
+
+  public void setDouble(boolean v) {
     this.isDouble = v;
+  }
+
+  public int getPosition() {
+    return position;
+  }
+
+  public void setPosition(int position) {
+    this.position = position;
   }
 }

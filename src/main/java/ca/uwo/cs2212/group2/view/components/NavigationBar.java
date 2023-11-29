@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 
 import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
 
@@ -18,7 +19,7 @@ public class NavigationBar extends JMenuBar {
   };
   private static final String[] HELP_ITEMS = {"Help me"};
   private static final String[] SAVE_ITEMS = {"Save my file"};
-  private static final String[] SPELLCHECK_ITEMS = {"Spellcheck"};
+  private static final String[] SPELLCHECK_ITEMS = {};
   private static final int MENU_BAR_HEIGHT = 89;
 
   // Instance variables for each menu
@@ -86,9 +87,6 @@ public class NavigationBar extends JMenuBar {
     return menu;
   }
 
-
-
-
   /**
    * Adds an action listener to each menu item in the navigation bar.
    *
@@ -112,14 +110,12 @@ public class NavigationBar extends JMenuBar {
   }
 
   /**
-   * Adds an action listener to each menu item in the navigation bar.
+   * Adds a mouse listener to the spell check menu.
    *
-   * @param listener the action listener
+   * @param listener the mouse listener
    */
-  public void addSpellCheckMenuListener(ActionListener listener) {
-    for (int i = 0; i < spellCheckMenu.getItemCount(); i++) {
-      spellCheckMenu.getItem(i).addActionListener(listener);
-    }
+  public void addSpellCheckMenuMouseListener(MouseListener listener) {
+    spellCheckMenu.addMouseListener(listener);
   }
 
   /**

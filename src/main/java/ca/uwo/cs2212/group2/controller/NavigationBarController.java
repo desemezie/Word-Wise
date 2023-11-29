@@ -1,26 +1,21 @@
 package ca.uwo.cs2212.group2.controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import ca.uwo.cs2212.group2.view.components.*;
+import org.w3c.dom.Text;
+
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.*;
-
-import ca.uwo.cs2212.group2.view.components.AddWordPopup;
-import ca.uwo.cs2212.group2.view.components.CorrectionsPopup;
-import ca.uwo.cs2212.group2.view.components.HelpPopup;
-import ca.uwo.cs2212.group2.view.components.MetricsPopup;
-import ca.uwo.cs2212.group2.view.components.NavigationBar;
-import ca.uwo.cs2212.group2.view.components.SavePopup;
-import ca.uwo.cs2212.group2.view.components.SpellingErrorsPopup;
-import ca.uwo.cs2212.group2.view.components.UserDictPopup;
+import javax.swing.text.*;
 
 public class NavigationBarController {
   private NavigationBar view;
   // private JFileChooser fileChooser;
-  private JTextArea textArea;
+  private TextEditor textEditor;
+  private JTextPane textPane;
   private static String filePath;
   private static Boolean isSaved = false;
 
@@ -28,20 +23,21 @@ public class NavigationBarController {
    * Constructor for the navigation bar controller.
    *
    * @param view the navigation bar view
-   * @param textArea the text area
+   * @param textEditor the text area
    */
-  public NavigationBarController(NavigationBar view, JTextArea textArea) {
+  public NavigationBarController(NavigationBar view, TextEditor textEditor) {
     this.view = view;
-    this.textArea = textArea;
+    this.textEditor = textEditor;
+    this.textPane = textEditor.getTextPane();
     attachListeners();
-    System.out.println("constructor"); 
+    System.out.println("constructor");
   }
 
   /** Attaches listeners to the menu items. */
   private void attachListeners() {
     this.view.addFileMenuListener(createFileActionListener());
     this.view.addSettingsMenuListener(createSettingActionListener());
-    this.view.addSpellCheckMenuListener(createSpellCheckActionListener());
+    this.view.addSpellCheckMenuMouseListener(createSpellCheckActionListener());
     this.view.addMetricsMenuListener(createMetricsActionListener());
     this.view.addSaveMenuListener(createSaveActionListener());
     this.view.addHelpMenuListener(createHelpActionListener());
@@ -50,15 +46,15 @@ public class NavigationBarController {
   /**
    * Saves the file as a new file.
    *
-   * @param textArea the text area
+   * @param textPane the text area
    */
-  private static void saveAsFile(JTextArea textArea) {
+  private static void saveAsFile(JTextPane textPane) {
     JFileChooser fileChooser = new JFileChooser();
     int result = fileChooser.showSaveDialog(null);
     if (result == JFileChooser.APPROVE_OPTION) {
       java.io.File selectedFile = fileChooser.getSelectedFile();
       try (FileWriter fileWriter = new FileWriter(selectedFile)) {
-        fileWriter.write(textArea.getText());
+        fileWriter.write(textPane.getText());
       } catch (IOException ex) {
         ex.printStackTrace();
       }
@@ -68,9 +64,9 @@ public class NavigationBarController {
   /**
    * Opens a file.
    *
-   * @param textArea the text area
+   * @param textPane the text area
    */
-  private static void openFile(JTextArea textArea) {
+  private static void openFile(JTextPane textPane) {
     JFileChooser fileChooser = new JFileChooser();
     int result = fileChooser.showOpenDialog(null);
     if (result == JFileChooser.APPROVE_OPTION) {
@@ -83,8 +79,8 @@ public class NavigationBarController {
         while ((line = reader.readLine()) != null) {
           content.append(line).append("\n");
         }
-        // Assuming 'textArea' is the JTextArea component
-        textArea.setText(content.toString());
+        // Assuming 'textPane' is the JtextPane component
+        textPane.setText(content.toString());
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -104,20 +100,20 @@ public class NavigationBarController {
         System.out.println("File menu item clicked: " + source.getText());
         if (source.getText().equals("Open")) {
           System.out.println("open a file");
-          openFile(textArea);
+          openFile(textPane);
         }
         if (source.getText().equals("New")) {
           System.out.println("new file");
-          textArea.setText("");
+          textPane.setText("");
         }
         if (source.getText().equals("Save As")) {
-          saveAsFile(textArea);
+          saveAsFile(textPane);
           isSaved = true;
         }
         if (source.getText().equals("Save")) {
           try (FileWriter fileWriter = new FileWriter(filePath)) {
-            fileWriter.write(textArea.getText());
-            isSaved = true; 
+            fileWriter.write(textPane.getText());
+            isSaved = true;
             System.out.println("File saved successfully at: " + filePath);
           } catch (IOException ex) {
             ex.printStackTrace();
@@ -140,12 +136,11 @@ public class NavigationBarController {
         JMenu source = (JMenu) e.getSource();
         System.out.println("Save menu clicked: " + source.getText());
 
-
         if (filePath != null) {
           try (FileWriter fileWriter = new FileWriter(filePath)) {
-            fileWriter.write(textArea.getText());
+            fileWriter.write(textPane.getText());
             System.out.println("File saved successfully at: " + filePath);
-            isSaved=true;
+            isSaved = true;
           } catch (IOException ex) {
             ex.printStackTrace();
             System.err.println("Error saving the file.");
@@ -158,24 +153,30 @@ public class NavigationBarController {
   }
 
   /**
-   * Creates an action listener for the spell check menu.
+   * Creates a mouse listener for the spell check menu.
    *
-   * @return the action listener
+   * @return the mouse listener
    */
-  private ActionListener createSpellCheckActionListener() {
-    return new ActionListener() {
+  private MouseListener createSpellCheckActionListener() {
+    return new MouseAdapter() {
       @Override
-      public void actionPerformed(ActionEvent e) {
-        JMenuItem source = (JMenuItem) e.getSource();
-        System.out.println("SpellCheck menu clicked: " + source.getText());
-        if(isSaved==false){
-          SavePopup save = new SavePopup();
-          save.showSaveDialog();
-        }
-
-        // Implement your logic for the spell check action
+      public void mouseClicked(MouseEvent e) {
+        textEditor.simulateSpellCheck();
       }
     };
+    //    return new ActionListener() {
+    //      @Override
+    //      public void actionPerformed(ActionEvent e) {
+    //        JMenuItem source = (JMenuItem) e.getSource();
+    //        System.out.println("SpellCheck menu clicked: " + source.getText());
+    //        if (isSaved == false) {
+    //          SavePopup save = new SavePopup();
+    //          save.showSaveDialog();
+    //        }
+    //
+    //        // Implement your logic for the spell check action
+    //      }
+    //    };
   }
 
   /**
@@ -190,7 +191,7 @@ public class NavigationBarController {
         JMenuItem source = (JMenuItem) e.getSource();
         System.out.println("Help menu item clicked: " + source.getText());
         HelpPopup help = new HelpPopup();
-        help.showHelpDialog(); 
+        help.showHelpDialog();
 
         // Show help popup
       }
@@ -215,7 +216,7 @@ public class NavigationBarController {
         }
         if (source.getText().equals("Number of Corrections")) {
           CorrectionsPopup popup = new CorrectionsPopup();
-          popup.showCorrectionsDialog(); 
+          popup.showCorrectionsDialog();
           // show corrections popup
         }
         if (source.getText().equals("Metrics Related to Document")) {
@@ -241,17 +242,13 @@ public class NavigationBarController {
         if (source.getText().equals("View User Dictionary")) {
           UserDictPopup dictpopup = new UserDictPopup();
           dictpopup.showUserDict();
-        }
-        else if(source.getText().equals("Exit Checker")){
-          //exit the checker
-        }
-        else if(source.getText().equals("Add Word To Dictionary")){
-          //add word to user dict
+        } else if (source.getText().equals("Exit Checker")) {
+          // exit the checker
+        } else if (source.getText().equals("Add Word To Dictionary")) {
+          // add word to user dict
           AddWordPopup word = new AddWordPopup();
           word.showAddWordDialog();
         }
-
-        
       }
     };
   }

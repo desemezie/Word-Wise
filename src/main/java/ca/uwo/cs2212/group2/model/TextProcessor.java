@@ -48,6 +48,18 @@ public class TextProcessor {
     }
   }
 
+  public TextProcessor() {
+    this.words = new ArrayList<>();
+  }
+
+  public List<Word> parseString(String text) {
+    return this.words = new ArrayList<>();
+//    this.lines = new ArrayList<>();
+//    this.lines.add(text);
+//    this.wordCount = lines.size();
+//    wordsAfterPeriod();
+  }
+
   /**
    * Parses the provided file and extracts words and other text statistics.
    *
