@@ -10,6 +10,11 @@ public class ViewController {
   private JPanel cardPanel;
   private JMenuBar menuBar;
 
+  /**
+   * Constructor for the ViewController
+   *
+   * @param frame the frame to display the panels in
+   */
   public ViewController(JFrame frame) {
     this.frame = frame;
     this.cardLayout = new CardLayout();
@@ -17,6 +22,11 @@ public class ViewController {
     frame.add(cardPanel);
   }
 
+  /**
+   * Method to show a panel
+   *
+   * @param name the name of the panel to show
+   */
   public void showPanel(String name) {
     if ("MainPanel".equals(name)) {
       showMenuBar();
@@ -29,11 +39,11 @@ public class ViewController {
     frame.setLocationRelativeTo(null); // Center the frame
   }
 
-  public void showMenuBar() {
+  private void showMenuBar() {
     frame.setJMenuBar(menuBar);
   }
 
-  public void hideMenuBar() {
+  private void hideMenuBar() {
     frame.setJMenuBar(null);
   }
 
