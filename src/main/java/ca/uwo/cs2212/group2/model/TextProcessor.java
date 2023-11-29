@@ -53,11 +53,52 @@ public class TextProcessor {
   }
 
   public List<Word> parseString(String text) {
-    return this.words = new ArrayList<>();
-//    this.lines = new ArrayList<>();
-//    this.lines.add(text);
-//    this.wordCount = lines.size();
-//    wordsAfterPeriod();
+    this.words = new ArrayList<>();
+    this.lineCount = 0;
+    this.charCountWithSpace = 0;
+    this.charCountNoSpace = 0;
+    this.wordCount = 0;
+
+    String[] lines = text.split("\\r?\\n"); // Split by newline characters
+    int globalIndex = 0; // To keep track of the position in the entire text
+
+    for (String line : lines) {
+      this.lineCount++;
+      this.charCountNoSpace += getNumCharNoSpace(line);
+      this.charCountWithSpace += line.length();
+
+      String[] lineWords = line.split("\\s+|,|\\;|\\(|\\)|\\{|\\}|\\:");
+      globalIndex = processLineWords(lineWords, globalIndex, line);
+
+      if (globalIndex < text.length()) {
+        globalIndex++; // Account for the newline character
+      }
+    }
+
+    wordsAfterPeriod();
+    return this.words;
+  }
+
+  private int processLineWords(String[] lineWords, int startIndex, String line) {
+    int localIndex = 0;
+    boolean isFirstWord = true;
+
+    for (String wordContent : lineWords) {
+      if (!wordContent.isEmpty()) {
+        int wordStart = startIndex + line.indexOf(wordContent, localIndex);
+        Word word = new Word(wordContent, wordStart);
+        if (isFirstWord) {
+          word.setBeginning(true);
+          isFirstWord = false;
+        }
+        this.words.add(word);
+        this.wordCount++;
+
+        localIndex = line.indexOf(wordContent, localIndex) + wordContent.length();
+      }
+    }
+
+    return startIndex + line.length();
   }
 
   /**
