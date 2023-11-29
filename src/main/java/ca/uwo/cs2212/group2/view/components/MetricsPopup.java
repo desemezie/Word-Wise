@@ -1,4 +1,4 @@
-package main.java.ca.uwo.cs2212.group2.view.components;
+package ca.uwo.cs2212.group2.view.components;
 
 import javax.swing.*;
 
@@ -30,17 +30,6 @@ public class MetricsPopup extends JDialog {
     JLabel helpLabel = new JLabel(MESSAGE_TEXT);
     helpLabel.setPreferredSize(new Dimension(250, 250));
     contentPanel.add(helpLabel);
-
-    // Set up the close button
-    JButton closeButton = new JButton("Close");
-    closeButton.addActionListener(
-    new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        MetricsPopup.this.dispose(); // Closes the popup
-      }
-    });
-    contentPanel.add(closeButton);
 
     // Add content panel to the dialog
     this.add(contentPanel);

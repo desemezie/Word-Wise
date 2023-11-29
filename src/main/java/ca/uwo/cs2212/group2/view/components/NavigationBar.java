@@ -95,17 +95,6 @@ public class NavigationBar extends JMenuBar {
     }
   }
 
-<<<<<<< HEAD
-  
-
-  
-
-  public JMenu getFileMenu() {
-    // Assuming that "File" is the first menu added to the NavigationBar
-    System.out.println("getting file menu components");
-    System.out.println(getComponent(0));
-    return (JMenu) getComponent(0);
-=======
   /**
    * Adds an action listener to each menu item in the navigation bar.
    *
@@ -115,7 +104,6 @@ public class NavigationBar extends JMenuBar {
     for (int i = 0; i < settingsMenu.getItemCount(); i++) {
       settingsMenu.getItem(i).addActionListener(listener);
     }
->>>>>>> master
   }
 
   /**

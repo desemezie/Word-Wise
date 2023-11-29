@@ -1,9 +1,11 @@
 package ca.uwo.cs2212.group2;
 
 import ca.uwo.cs2212.group2.controller.NavigationBarController;
+import ca.uwo.cs2212.group2.view.components.HelpPopup;
 import ca.uwo.cs2212.group2.view.components.NavigationBar;
 import ca.uwo.cs2212.group2.view.pages.LandingMenu;
 import ca.uwo.cs2212.group2.view.pages.SpellCheckerUI;
+import ca.uwo.cs2212.group2.view.components.MetricsPopup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,6 +49,11 @@ public class Main {
           frame.setSize(APP_WIDTH, APP_HEIGHT);
           frame.setLocationRelativeTo(null);
           frame.setVisible(true);
+          //HelpPopup help = new HelpPopup(frame);
+          //help.showHelpDialog(frame); 
+          MetricsPopup metrics = new MetricsPopup(frame);
+          metrics.showMetricsDialog(frame);
+
         });
   }
 
