@@ -161,6 +161,7 @@ public class TextProcessor {
         afterPeriod = true;
         word.setContent(word.getContent().substring(0, (word.getContent().length() - 1)));
       }
+          count++;
     }
   }
 

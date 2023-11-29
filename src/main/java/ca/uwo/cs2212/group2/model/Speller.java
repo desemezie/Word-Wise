@@ -25,75 +25,114 @@ public class Speller {
     TextProcessor usertext;
     Dictionary dict;
     Metrics metric;
+    List<Word> incorrectWords;
+	List<Word> allWords;
+	String inText;
+	
+
     public Speller(String intext){
-        //1. Create textproccessor object out of given text
-		try
-		{
-			//used for testing with local file
-			//TextProcessor testText = process(intext);
-			//usertext = testText;
-			usertext = new TextProcessor(intext);
-
-		}
-		catch(Exception x)
-		{
-			System.out.println(String.format("User text file %s not found", intext));
-		}
-
-        //2. Create dictionary from "userdict.txt" or "dict.txt"
-        dict = loadDict();
-
-        //3. Iterate through all words of textproccessor, calling spellcheck on the word
-    	List<Word> textWords = usertext.getWords();
-    	//mark doubles
-    	doubleWords(textWords);
-    	List<Word> wrongWords = new ArrayList<Word>();
-    	// STATISTICALS
-    	List<Word> midCapped = new ArrayList<Word>();
-    	List<Word> misCapped = new ArrayList<Word>();
-    	List<Word> doubleWords = new ArrayList<Word>();
-    	//
-    	for(Word w : textWords)
-    	{
-			//lowercase the word before checking it
-			String wc = w.getContent().toLowerCase();
-			//Either it is not in the dictionary, OR it is midcapitalized, OR it at start of sentence OR is a double word
-    		if((!dict.checkWord(wc)) || ismidcapped(w.getContent()) || w.isBeginning() || w.getDouble())
-    		{
-    			// All words are considered incorrect and will be spellchecked
-    			wrongWords.add(w);
-
-    			//STATISTICALS
-    			// If it is a sentence starter, add it to miscapped
-    			if(w.isBeginning())
-    			{
-    				misCapped.add(w);
-
-    			}
-    			// If it has capitals in the middle, add it to midcapped
-    			if(ismidcapped(w.getContent()))
-    			{
-    				midCapped.add(w);
-    			}
-    			// If it is a double word, add it to doubleWords
-    			if(w.getDouble())
-    			{
-    				doubleWords.add(w);
-    				// Add a blank correctionsuggestion representing deletion
-    				CorrectionSuggestions blank = new CorrectionSuggestions("", 0);
-    				w.setOption(blank);
-    			}
-    		}
-    	}
-
-    	//4. For each incorrect word, run Levdam for each word in dictionary, and load correctionsuggestions
-    	for(Word w : wrongWords)
-    	{
-    		makeCorrections(w, dict);
-
-    	}
+        this.inText = intext;
+        allWords = new ArrayList<Word>();
+        incorrectWords = new ArrayList<Word>();
 
     }
+    
+    public List<Word> getAllwords(){
+    	return this.allWords;
+    }
+    
+    public List<Word> getWrongWords(){
+    	return this.incorrectWords;
+    }
+    private void spellcheck() {	
+    	String intext = this.inText;
+    	//1. Create textproccessor object out of given text
+    			try
+    			{
+    				//used for testing with local file
+    				//TextProcessor testText = process(intext);
+    				//usertext = testText;
+    				usertext = new TextProcessor(intext);
+
+    			}
+    			catch(Exception x)
+    			{
+    				System.out.println(String.format("User text file %s not found", intext));
+    			}
+
+    	        //2. Create dictionary from "userdict.txt" or "dict.txt"
+    	        dict = loadDict();
+
+    	        //3. Iterate through all words of textproccessor, calling spellcheck on the word
+    	    	List<Word> textWords = usertext.getWords();
+    	    	//mark doubles
+    	    	doubleWords(textWords);
+    	    	List<Word> wrongWords = new ArrayList<Word>();
+    	    	// STATISTICALS
+    	    	List<Word> midCapped = new ArrayList<Word>();
+    	    	List<Word> misCapped = new ArrayList<Word>();
+    	    	List<Word> doubleWords = new ArrayList<Word>();
+    	    	//
+    	    	for(Word w : textWords)
+    	    	{
+    				//lowercase the word before checking it
+    				String wc = w.getContent().toLowerCase();
+    				//Either it is not in the dictionary, OR it is midcapitalized, OR it at start of sentence OR is a double word
+    	    		if((!dict.checkWord(wc)) || isMidcapped(w.getContent()) || isMiscapped(w) || w.getDouble())
+    	    		{
+    	    			// All words considered incorrect and will be spellchecked
+    	    			makeCorrections(w, dict);
+    	    			wrongWords.add(w);
+
+    	    			//STATISTICALS
+    	    			// If it is a sentence starter, add it to miscapped
+    	    			if(isMiscapped(w))
+    	    			{
+    	    				misCapped.add(w);
+
+    	    			}
+    	    			// If it has capitals in the middle, add it to midcapped
+    	    			if(isMidcapped(w.getContent()))
+    	    			{
+    	    				midCapped.add(w);
+    	    			}
+    	    			// If it is a double word, add it to doubleWords
+    	    			if(w.getDouble())
+    	    			{
+    	    				doubleWords.add(w);
+    	    				// Add a blank correctionsuggestion representing deletion
+    	    				CorrectionSuggestions blank = new CorrectionSuggestions("", 0);
+    	    				w.setOption(blank);
+    	    			}
+
+    	    			//add it to incorrectWords
+    	    			this.incorrectWords.add(w);
+    	    		}
+	    			// add it to allWords
+	    			this.allWords.add(w);
+    	    	}
+    	    		    	
+    	    	/*
+    	    	//4. For each incorrect word, run Levdam for each word in dictionary, and load correctionsuggestions
+    	    	for(Word w : wrongWords)
+    	    	{
+    	    		makeCorrections(w, dict);
+
+    	    	}*/
+    }
+    // Checks if a word has a starting capital letter where it shouldn't
+    private static boolean isMiscapped(Word inword) {
+    	String w = inword.getContent();
+    	boolean isBeginning = inword.isBeginning();
+    	// either it is a starting word with no capitalization, or it is a non starter with a capitalization
+    	if(!isBeginning && Character.isUpperCase(w.charAt(0)) || isBeginning && !(Character.isUpperCase(w.charAt(0)))) {
+    		return true;
+    		
+    	}
+    	return false;
+    }
+    
+    
     /**
      *
      * @param inlist list of words
@@ -118,7 +157,7 @@ public class Speller {
 	 * @param word word to be checked for capital letters in the middle
 	 * @return true if word has capital letters in the middle of it
 	 */
-    private static boolean ismidcapped(String word)
+    private static boolean isMidcapped(String word)
 	{
     	boolean out = false;
 		for(int i = 1; i < word.length(); i++)
@@ -380,6 +419,24 @@ public class Speller {
 			System.out.println("Def dict does not exist");
 			return null;
 		}
+	}
+	
+	//testing
+	
+	public static void main(String[] args)
+	{
+		// Init the speller
+		Speller sp = new Speller("inputfile.txt");
+		
+		//Run the spellcheck
+		sp.spellcheck();
+		
+		//get all words
+		System.out.println(sp.getAllwords());
+		
+		//get incorrect words
+		System.out.println(sp.getWrongWords());
+		
 	}
 
 }
