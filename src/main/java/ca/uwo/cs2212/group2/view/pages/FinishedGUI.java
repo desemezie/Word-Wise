@@ -1,4 +1,4 @@
-package main.java.ca.uwo.cs2212.group2.view.pages;
+package ca.uwo.cs2212.group2.view.pages;
 
 // import javax.swing.*;
 // import java.awt.*;
@@ -18,7 +18,7 @@ package main.java.ca.uwo.cs2212.group2.view.pages;
 // import static ca.uwo.cs2212.group2.constants.ViewConstants.PRIMARY_COLOUR;
 
 /**
- * @deprecated
+ * @Deprecated
  */
 public class FinishedGUI {
   //
