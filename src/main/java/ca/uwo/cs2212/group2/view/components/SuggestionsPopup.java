@@ -1,5 +1,8 @@
 package ca.uwo.cs2212.group2.view.components;
 
+import ca.uwo.cs2212.group2.model.Word;
+import ca.uwo.cs2212.group2.service.WordsToIgnoreOnceService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,12 +22,21 @@ public class SuggestionsPopup extends JDialog {
   private JButton suggestion3Button;
   private JButton suggestion4Button;
   private SuggestionSelectedCallback callback;
+
+  private Word currentWord; // The word being processed
+
   private Speller speller;
   
   public SuggestionsPopup(
-      String sugg1, String sugg2, String sugg3, String sugg4, SuggestionSelectedCallback callback) {
+      Word word,
+      String sugg1,
+      String sugg2,
+      String sugg3,
+      String sugg4,
+      SuggestionSelectedCallback callback) {
 
-    
+    this.currentWord = word;
+
     // Set up the content panel
 
     JPanel contentPanel = new JPanel();
@@ -49,7 +61,14 @@ public class SuggestionsPopup extends JDialog {
     suggestion3Button.addActionListener(e -> callback.onSuggestionSelected(sugg3));
     suggestion4Button.addActionListener(e -> callback.onSuggestionSelected(sugg4));
     addToDictionaryButton.addActionListener(new ButtonClickListener());
-    ignoreOnceButton.addActionListener(new ButtonClickListener());
+    ignoreOnceButton.addActionListener(
+        event -> {
+          if (currentWord != null) {
+            System.out.println("IGNORING ONCE SET TO TRUE!");
+            WordsToIgnoreOnceService.getInstance().ignoreWordOnce(currentWord);
+            this.dispose();
+          }
+        });
     ignoreAlwaysButton.addActionListener(new ButtonClickListener());
     manualCorrectionButton.addActionListener(new ButtonClickListener());
 
@@ -100,7 +119,7 @@ public class SuggestionsPopup extends JDialog {
         word.showAddWordDialog(speller.getDict());
         
       } else if ("Ignore once".equals(source.getText())) {
-        // Handle ignore once button click
+
         System.out.println("Handling Ignore once");
       } else if ("Ignore always".equals(source.getText())) {
         // Handle ignore always button click

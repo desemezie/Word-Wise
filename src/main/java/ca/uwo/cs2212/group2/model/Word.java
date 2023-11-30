@@ -18,6 +18,8 @@ public class Word {
   private boolean beginningOfSentence;
   private boolean isDouble;
   private int position;
+
+  private boolean shouldBeIgnored;
   private ArrayList<CorrectionSuggestions> options;
 
   /**
@@ -35,6 +37,7 @@ public class Word {
     this.isDouble = false;
     this.options = new ArrayList<CorrectionSuggestions>();
     this.position = 0;
+    this.shouldBeIgnored = false;
   }
 
   public Word(String content, int position) {
@@ -44,6 +47,7 @@ public class Word {
     this.isDouble = false;
     this.options = new ArrayList<CorrectionSuggestions>();
     this.position = position;
+    this.shouldBeIgnored = false;
   }
 
   /**
@@ -166,5 +170,13 @@ public class Word {
 
   public void setPosition(int position) {
     this.position = position;
+  }
+
+  public boolean getShouldBeIgnored() {
+    return shouldBeIgnored;
+  }
+
+  public void setShouldBeIgnored(boolean shouldBeIgnored) {
+    this.shouldBeIgnored = shouldBeIgnored;
   }
 }
