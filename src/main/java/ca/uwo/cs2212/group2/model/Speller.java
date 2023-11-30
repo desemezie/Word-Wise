@@ -87,13 +87,16 @@ public class Speller {
 
     List<Word> wrongWords = new ArrayList<Word>();
     // STATISTICALS
+    List<Word> midCapped = new ArrayList<Word>();
+    List<Word> misCapped = new ArrayList<Word>();
     List<Word> doubleWords = new ArrayList<Word>();
 
     //
     for (Word w : this.uncheckedWords) {
       // lowercase the word before checking it
       String wc = w.getContent().toLowerCase();
-      // Either it is not in the dictionary, OR it is midcapitalized, OR it at start of sentence OR
+      // Either it is not in the dictionary, OR it is midcapitalized, OR it at start of sentence
+      // OR
       // is a double word
       if ((!dict.checkWord(wc)) || isMidcapped(w.getContent()) || isMiscapped(w) || w.getDouble()) {
         // All words considered incorrect and will be spellchecked
@@ -101,6 +104,14 @@ public class Speller {
         makeCorrections(w, dict);
         wrongWords.add(w);
 
+        // If it is a sentence starter, add it to miscapped
+        if (isMiscapped(w)) {
+          misCapped.add(w);
+        }
+        // If it has capitals in the middle, add it to midcapped
+        if (isMidcapped(w.getContent())) {
+          midCapped.add(w);
+        }
         // If it is a double word, add it to doubleWords
         if (w.getDouble()) {
           doubleWords.add(w);
@@ -141,13 +152,9 @@ public class Speller {
             word.setOptions(cachedIncorrectWord.getOptions());
             word.setCorrect(cachedIncorrectWord.getCorrect());
 
-            if (word.getCorrect()) {
-              System.err.println("Correct word found in wrong words list");
-            }
-
             this.incorrectWords.add(word);
             uncheckedWords.remove(word);
-            return cachedIncorrectWord; // You need to return the modified value
+            return cachedIncorrectWord; // Return the modified value
           });
     }
   }
