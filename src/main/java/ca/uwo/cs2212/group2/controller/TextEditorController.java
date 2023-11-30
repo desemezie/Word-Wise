@@ -166,6 +166,7 @@ public class TextEditorController {
       if (suggestions.length > 0) {
         SuggestionsPopup popup =
             new SuggestionsPopup(
+                word,
                 suggestions[0],
                 suggestions[1],
                 suggestions[2],
@@ -241,6 +242,11 @@ public class TextEditorController {
     StyleConstants.setUnderline(attrs, true);
 
     for (Word word : misspelledWords) {
+      if (word.getShouldBeIgnored()) {
+        System.out.println(word.getContent() + " should be ignored");
+        continue;
+      }
+      System.out.println("WORD SHOULD BE IGNORED? " + word.getShouldBeIgnored());
       doc.setCharacterAttributes(word.getPosition(), word.getContent().length(), attrs, false);
     }
   }
