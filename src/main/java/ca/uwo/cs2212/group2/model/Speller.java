@@ -136,6 +136,10 @@ public class Speller {
   private static boolean isMiscapped(Word inword) {
     String w = inword.getContent();
     boolean isBeginning = inword.isBeginning();
+    // Just ignore it if it is "I"
+    if(w.equals("I")){
+      return false;
+    }
     // either it is a starting word with no capitalization, or it is a non starter with a
     // capitalization
     if (!isBeginning && Character.isUpperCase(w.charAt(0))
