@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group2.view.components;
 
 import ca.uwo.cs2212.group2.model.Word;
+import ca.uwo.cs2212.group2.service.WordsToIgnoreOnceService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +59,7 @@ public class SuggestionsPopup extends JDialog {
         event -> {
           if (currentWord != null) {
             System.out.println("IGNORING ONCE SET TO TRUE!");
-            currentWord.setShouldBeIgnored(true);
+            WordsToIgnoreOnceService.getInstance().ignoreWordOnce(currentWord);
             this.dispose();
           }
         });

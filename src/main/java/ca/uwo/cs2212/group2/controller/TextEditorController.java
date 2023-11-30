@@ -2,6 +2,8 @@ package ca.uwo.cs2212.group2.controller;
 
 import ca.uwo.cs2212.group2.model.Speller;
 import ca.uwo.cs2212.group2.model.Word;
+import ca.uwo.cs2212.group2.model.WordIndex;
+import ca.uwo.cs2212.group2.service.WordsToIgnoreOnceService;
 import ca.uwo.cs2212.group2.view.components.SuggestionsPopup;
 import ca.uwo.cs2212.group2.view.components.TextEditor;
 import io.reactivex.rxjava3.core.Observable;
@@ -12,7 +14,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -242,12 +247,11 @@ public class TextEditorController {
     StyleConstants.setUnderline(attrs, true);
 
     for (Word word : misspelledWords) {
-      if (word.getShouldBeIgnored()) {
+      if (!WordsToIgnoreOnceService.getInstance().shouldIgnoreWord(word)) {
+        doc.setCharacterAttributes(word.getPosition(), word.getContent().length(), attrs, false);
+      } else {
         System.out.println(word.getContent() + " should be ignored");
-        continue;
       }
-      System.out.println("WORD SHOULD BE IGNORED? " + word.getShouldBeIgnored());
-      doc.setCharacterAttributes(word.getPosition(), word.getContent().length(), attrs, false);
     }
   }
 
