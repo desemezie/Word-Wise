@@ -122,7 +122,10 @@ public class Speller {
     Map<String, Word> incorrectWordMap = new HashMap<>();
 
     for (Word incorrectWord : this.previousIncorrectWords) {
-      incorrectWordMap.put(incorrectWord.getContent(), incorrectWord);
+      // Only put words in that are not doubles, if they're doubles they'll be added later
+      if (!incorrectWord.getDouble()) {
+        incorrectWordMap.put(incorrectWord.getContent(), incorrectWord);
+      }
     }
 
     for (Word word : this.allWords) {

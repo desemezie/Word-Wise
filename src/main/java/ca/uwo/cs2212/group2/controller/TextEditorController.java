@@ -42,31 +42,6 @@ public class TextEditorController {
     attachCaretListener();
   }
 
-  private void attachCaretListener() {
-    JTextPane textPane = textEditor.getTextPane();
-    textPane.addCaretListener(event -> resetCaretStyle(event.getDot()));
-  }
-
-  private void resetCaretStyle(int position) {
-    SwingUtilities.invokeLater(
-        () -> {
-          JTextPane textPane = textEditor.getTextPane();
-          StyledDocument doc = textPane.getStyledDocument();
-          SimpleAttributeSet attrs = new SimpleAttributeSet();
-          StyleConstants.setForeground(attrs, Color.BLACK);
-          StyleConstants.setUnderline(attrs, false);
-
-          try {
-            // Ensure the position is within the document's length
-            if (position < doc.getLength()) {
-              doc.setCharacterAttributes(position, 1, attrs, false);
-            }
-          } catch (Exception ex) {
-            ex.printStackTrace();
-          }
-        });
-  }
-
   /** Initializes the subscriptions for the text editor. */
   private void initSubscriptions() {
     Scheduler swingScheduler = Schedulers.from(SwingUtilities::invokeLater);
@@ -136,7 +111,7 @@ public class TextEditorController {
         int wordEnd = getWordEnd(doc, pos);
 
         String stringUnderMouse = doc.getText(wordStart, wordEnd - wordStart);
-        Word wordUnderMouse = findWordInSpeller(stringUnderMouse);
+        Word wordUnderMouse = findWordAtPosition(stringUnderMouse, wordStart);
         if (wordUnderMouse != null) {
           showSuggestionsDialogAtPosition(wordUnderMouse);
         }
@@ -232,14 +207,15 @@ public class TextEditorController {
   }
 
   /**
-   * THIS IS WRONG: WE DON'T CHECK FOR POSITION AT ALL HERE!
+   * Finds the word with the given content and position.
    *
-   * @param stringUnderMouse
-   * @return
+   * @param content the content
+   * @param position the position
+   * @return the word
    */
-  private Word findWordInSpeller(String stringUnderMouse) {
+  private Word findWordAtPosition(String content, int position) {
     for (Word word : speller.getWrongWords()) {
-      if (word.getContent().equals(stringUnderMouse)) {
+      if (word.getContent().equals(content) && word.getPosition() == position) {
         return word;
       }
     }
@@ -267,5 +243,36 @@ public class TextEditorController {
     for (Word word : misspelledWords) {
       doc.setCharacterAttributes(word.getPosition(), word.getContent().length(), attrs, false);
     }
+  }
+
+  /** Attaches a caret listener to the text pane. */
+  private void attachCaretListener() {
+    JTextPane textPane = textEditor.getTextPane();
+    textPane.addCaretListener(event -> resetCaretStyle(event.getDot()));
+  }
+
+  /**
+   * Resets the caret style at the given position.
+   *
+   * @param position the position
+   */
+  private void resetCaretStyle(int position) {
+    SwingUtilities.invokeLater(
+        () -> {
+          JTextPane textPane = textEditor.getTextPane();
+          StyledDocument doc = textPane.getStyledDocument();
+          SimpleAttributeSet attrs = new SimpleAttributeSet();
+          StyleConstants.setForeground(attrs, Color.BLACK);
+          StyleConstants.setUnderline(attrs, false);
+
+          try {
+            // Ensure the position is within the document's length
+            if (position < doc.getLength()) {
+              doc.setCharacterAttributes(position, 1, attrs, false);
+            }
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        });
   }
 }
