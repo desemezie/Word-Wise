@@ -17,6 +17,7 @@ public class Speller {
   private List<Word> allWords;
   private List<Word> uncheckedWords;
 
+
   /** Singleton instance of Speller */
   private Speller() {
     allWords = new ArrayList<Word>();
