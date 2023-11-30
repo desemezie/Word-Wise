@@ -41,6 +41,19 @@ public class Speller {
     return this.incorrectWords;
   }
 
+  public int[] getStats(){
+
+	if(this.usertext == null){
+		System.out.println("Usertext object not found");
+	}
+	// linecount, wordcount, charcountnospace
+	int[] result = new int[3];
+	result[0] = this.usertext.getLineCount();
+	result[1] = this.usertext.getWordCount();
+	result[2] = (int)this.usertext.getCharCountNoSpace();
+
+	return result;
+  }
   public void spellcheck(String inText) {
     String intext = inText;
     // 1. Create textproccessor object out of given text
