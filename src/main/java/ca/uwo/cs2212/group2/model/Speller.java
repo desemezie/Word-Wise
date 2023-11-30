@@ -31,6 +31,10 @@ public class Speller {
   public Speller() {
     allWords = new ArrayList<Word>();
     incorrectWords = new ArrayList<Word>();
+
+    // Things I moved
+    usertext = new TextProcessor();
+    dict = loadDict();
   }
 
   public List<Word> getAllwords() {
@@ -41,6 +45,23 @@ public class Speller {
     return this.incorrectWords;
   }
 
+  public Dictionary getDict() {
+	  return this.dict;
+  }
+  public int[] getStats(){
+
+	if(this.usertext == null){
+		System.out.println("Usertext object not found");
+	}
+	// linecount, wordcount, charcountnospace, incorrectwords
+	int[] result = new int[4];
+	result[0] = this.usertext.getLineCount(); //lines
+	result[1] = this.usertext.getWordCount(); //words
+	result[2] = (int)this.usertext.getCharCountNoSpace(); //chars
+	result[3] = incorrectWords.size(); //incorrect words
+
+	return result;
+  }
   public void spellcheck(String inText) {
     String intext = inText;
     // 1. Create textproccessor object out of given text
@@ -48,15 +69,14 @@ public class Speller {
       // used for testing with local file
       // TextProcessor testText = process(intext);
       // usertext = testText;
-      usertext = new TextProcessor();
+
       usertext.parseString(intext);
 
     } catch (Exception x) {
       System.out.println(String.format("User text file %s not found", intext));
     }
 
-    // 2. Create dictionary from "userdict.txt" or "dict.txt"
-    dict = loadDict();
+
 
     // 3. Iterate through all words of textproccessor, calling spellcheck on the word
     List<Word> textWords = usertext.getWords();
