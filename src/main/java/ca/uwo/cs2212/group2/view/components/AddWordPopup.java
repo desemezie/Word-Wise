@@ -4,11 +4,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import ca.uwo.cs2212.group2.model.*;
+
 public class AddWordPopup extends JDialog {
 
     private static final String MESSAGE_TEXT = "<html><font color = 'white'>Enter a word to add to your dictionary:</font></html>";
+    private Dictionary userDict; // Reference to the user dictionary
 
-    public AddWordPopup(){
+    public AddWordPopup(Dictionary userDict){
+        this.userDict=userDict; 
         // Set up the content panel
         JPanel contentPanel = new JPanel();
         contentPanel.setBackground(new Color(0x993399));
@@ -35,6 +39,7 @@ public class AddWordPopup extends JDialog {
                 // Add your logic here to handle the submitted word
                 String word = wordTextField.getText();
                 System.out.println("Submitted word: " + word);
+                userDict.addWord(word); 
                 // You can close the dialog if needed
                 dispose();
             }
@@ -48,8 +53,8 @@ public class AddWordPopup extends JDialog {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close only the dialog
     }
 
-    public static void showAddWordDialog() {
-        AddWordPopup popup = new AddWordPopup();
+    public static void showAddWordDialog(Dictionary userDict) {
+        AddWordPopup popup = new AddWordPopup(userDict);
         popup.setVisible(true);
       }
     
