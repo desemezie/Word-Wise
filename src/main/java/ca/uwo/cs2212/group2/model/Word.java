@@ -99,7 +99,7 @@ public class Word {
    *
    * @param option the CorrectionSuggestion object passed to the function
    */
-  public void setOption(CorrectionSuggestions option) {
+  public void addOption(CorrectionSuggestions option) {
     if (options.size() < MAX_NUMBER_OF_CORRECTION_SUGGESTIONS) {
       options.add(option);
     } else {
@@ -112,12 +112,20 @@ public class Word {
    *
    * @return An array of correction suggestions.
    */
-  public String[] getOption() {
+  public String[] getOptionsAsStringArray() {
     String[] arr = new String[MAX_NUMBER_OF_CORRECTION_SUGGESTIONS];
     for (int i = 0; i < options.size(); i++) {
       arr[i] = options.get(i).getWord();
     }
     return arr;
+  }
+
+  public ArrayList<CorrectionSuggestions> getOptions() {
+    return options;
+  }
+
+  public void setOptions(ArrayList<CorrectionSuggestions> options) {
+    this.options = options;
   }
 
   public boolean isBeginning() {

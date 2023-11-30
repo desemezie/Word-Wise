@@ -5,13 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.*;
 
 // Incomplete speller object, currently only has a spellcheck function
 // test
@@ -22,17 +16,17 @@ public class Speller {
    * dictionary dict;
    * Metrics metric;
    */
-  TextProcessor usertext;
-  Dictionary dict;
-  Metrics metric;
-  List<Word> incorrectWords;
-  List<Word> allWords;
+  private TextProcessor usertext;
+  private Dictionary dict;
+  private Metrics metric;
+  private List<Word> incorrectWords;
+  private List<Word> previousIncorrectWords;
+  private List<Word> allWords;
+  private List<Word> uncheckedWords;
 
   public Speller() {
     allWords = new ArrayList<Word>();
     incorrectWords = new ArrayList<Word>();
-
-    // Things I moved
     usertext = new TextProcessor();
     dict = loadDict();
   }
@@ -46,49 +40,51 @@ public class Speller {
   }
 
   public Dictionary getDict() {
-	  return this.dict;
+    return this.dict;
   }
-  public int[] getStats(){
 
-	if(this.usertext == null){
-		System.out.println("Usertext object not found");
-	}
-	// linecount, wordcount, charcountnospace, incorrectwords
-	int[] result = new int[4];
-	result[0] = this.usertext.getLineCount(); //lines
-	result[1] = this.usertext.getWordCount(); //words
-	result[2] = (int)this.usertext.getCharCountNoSpace(); //chars
-	result[3] = incorrectWords.size(); //incorrect words
+  public int[] getStats() {
 
-	return result;
+    if (this.usertext == null) {
+      System.out.println("Usertext object not found");
+    }
+    // linecount, wordcount, charcountnospace, incorrectwords
+    int[] result = new int[4];
+    result[0] = this.usertext.getLineCount(); // lines
+    result[1] = this.usertext.getWordCount(); // words
+    result[2] = (int) this.usertext.getCharCountNoSpace(); // chars
+    result[3] = incorrectWords.size(); // incorrect words
+
+    return result;
   }
+
   public void spellcheck(String inText) {
-    String intext = inText;
     // 1. Create textproccessor object out of given text
     try {
-      // used for testing with local file
-      // TextProcessor testText = process(intext);
-      // usertext = testText;
-
-      usertext.parseString(intext);
-
+      usertext.parseString(inText);
     } catch (Exception x) {
-      System.out.println(String.format("User text file %s not found", intext));
+      System.out.println(String.format("User text file %s not found", inText));
     }
 
-
+    // 2. Reset word arrays
+    this.resetWrongWords();
+    this.resetAllWords();
 
     // 3. Iterate through all words of textproccessor, calling spellcheck on the word
-    List<Word> textWords = usertext.getWords();
+    this.allWords = usertext.getWords();
+    this.uncheckedWords = new ArrayList<>(this.allWords);
+
+    this.loadPreviousIncorrectWordCache();
+
     // mark doubles
-    doubleWords(textWords);
+    doubleWords(this.uncheckedWords);
+
     List<Word> wrongWords = new ArrayList<Word>();
     // STATISTICALS
-    List<Word> midCapped = new ArrayList<Word>();
-    List<Word> misCapped = new ArrayList<Word>();
     List<Word> doubleWords = new ArrayList<Word>();
+
     //
-    for (Word w : textWords) {
+    for (Word w : this.uncheckedWords) {
       // lowercase the word before checking it
       String wc = w.getContent().toLowerCase();
       // Either it is not in the dictionary, OR it is midcapitalized, OR it at start of sentence OR
@@ -99,37 +95,62 @@ public class Speller {
         makeCorrections(w, dict);
         wrongWords.add(w);
 
-        // STATISTICALS
-        // If it is a sentence starter, add it to miscapped
-        if (isMiscapped(w)) {
-          misCapped.add(w);
-        }
-        // If it has capitals in the middle, add it to midcapped
-        if (isMidcapped(w.getContent())) {
-          midCapped.add(w);
-        }
         // If it is a double word, add it to doubleWords
         if (w.getDouble()) {
           doubleWords.add(w);
           // Add a blank correctionsuggestion representing deletion
           CorrectionSuggestions blank = new CorrectionSuggestions("", 0);
-          w.setOption(blank);
+          w.addOption(blank);
         }
 
         // add it to incorrectWords
         this.incorrectWords.add(w);
       }
-      // add it to allWords
-      this.allWords.add(w);
+    }
+  }
+
+  /**
+   * Finds current incorrect words and adds suggestions to them based off the previously cached
+   * incorrect words.
+   *
+   * <p>Why not just load the previous incorrect words into the new incorrect words? First off, they
+   * may have been deleted, second, by matching words by their contents we can match words agnostic
+   * of their position and use the same suggestions for duplicate words as opposed to having to
+   * compute the same suggestions multiple times.
+   */
+  private void loadPreviousIncorrectWordCache() {
+    Map<String, Word> incorrectWordMap = new HashMap<>();
+
+    for (Word incorrectWord : this.previousIncorrectWords) {
+      incorrectWordMap.put(incorrectWord.getContent(), incorrectWord);
     }
 
-    /*
-    //4. For each incorrect word, run Levdam for each word in dictionary, and load correctionsuggestions
-    for(Word w : wrongWords)
-    {
-    	makeCorrections(w, dict);
+    for (Word word : this.allWords) {
+      incorrectWordMap.computeIfPresent(
+          word.getContent(),
+          (key, cachedIncorrectWord) -> {
+            word.setOptions(cachedIncorrectWord.getOptions());
+            word.setCorrect(cachedIncorrectWord.getCorrect());
 
-    }*/
+            if (word.getCorrect()) {
+              System.err.println("Correct word found in wrong words list");
+            }
+
+            this.incorrectWords.add(word);
+            uncheckedWords.remove(word);
+            return cachedIncorrectWord; // You need to return the modified value
+          });
+    }
+  }
+
+  /** Resets the list of incorrect words by moving the current list to the previous list. */
+  private void resetWrongWords() {
+    this.previousIncorrectWords = this.incorrectWords;
+    this.incorrectWords = new ArrayList<Word>();
+  }
+
+  private void resetAllWords() {
+    this.allWords = new ArrayList<>();
   }
 
   // Checks if a word has a starting capital letter where it shouldn't
@@ -221,7 +242,7 @@ public class Speller {
     System.out.println(String.format("CORRECTION OPTIONS FOR %s:", w.getContent()));
     for (int i = 0; i < 4; i++) {
       CorrectionSuggestions cj = options.poll();
-      w.setOption(cj);
+      w.addOption(cj);
       // Sanity Check
       System.out.println(cj.getWord());
     }
@@ -371,23 +392,4 @@ public class Speller {
 
     return dict;
   }
-
-  // testing
-  //
-  //	public static void main(String[] args)
-  //	{
-  //		// Init the speller
-  //		Speller sp = new Speller("inputfile.txt");
-  //
-  //		//Run the spellcheck
-  //		sp.spellcheck();
-  //
-  //		//get all words
-  //		System.out.println(sp.getAllwords());
-  //
-  //		//get incorrect words
-  //		System.out.println(sp.getWrongWords());
-  //
-  //	}
-
 }

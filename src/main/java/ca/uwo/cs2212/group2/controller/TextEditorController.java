@@ -15,6 +15,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.text.*;
 
 /**
@@ -37,6 +39,32 @@ public class TextEditorController {
 
     initSubscriptions();
     attachMouseMotionListener();
+    attachCaretListener();
+  }
+
+  private void attachCaretListener() {
+    JTextPane textPane = textEditor.getTextPane();
+    textPane.addCaretListener(event -> resetCaretStyle(event.getDot()));
+  }
+
+  private void resetCaretStyle(int position) {
+    SwingUtilities.invokeLater(
+        () -> {
+          JTextPane textPane = textEditor.getTextPane();
+          StyledDocument doc = textPane.getStyledDocument();
+          SimpleAttributeSet attrs = new SimpleAttributeSet();
+          StyleConstants.setForeground(attrs, Color.BLACK);
+          StyleConstants.setUnderline(attrs, false);
+
+          try {
+            // Ensure the position is within the document's length
+            if (position < doc.getLength()) {
+              doc.setCharacterAttributes(position, 1, attrs, false);
+            }
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        });
   }
 
   /** Initializes the subscriptions for the text editor. */
@@ -48,8 +76,8 @@ public class TextEditorController {
             .getTextChanges()
             .publish(
                 shared -> {
-                  Observable<String> debounced = shared.debounce(300, TimeUnit.MILLISECONDS);
-                  Observable<String> periodic = shared.sample(5, TimeUnit.SECONDS);
+                  Observable<String> debounced = shared.debounce(200, TimeUnit.MILLISECONDS);
+                  Observable<String> periodic = shared.sample(2, TimeUnit.SECONDS);
 
                   return Observable.merge(debounced, periodic).distinctUntilChanged();
                 });
@@ -58,7 +86,6 @@ public class TextEditorController {
         .observeOn(Schedulers.computation())
         .map(
             text -> {
-              this.speller = new Speller();
               speller.spellcheck(text);
               return speller.getWrongWords();
             })
@@ -160,7 +187,7 @@ public class TextEditorController {
       Rectangle wordRect = textPane.modelToView2D(word.getPosition()).getBounds();
 
       // Get suggestions for the word
-      String[] suggestions = word.getOption();
+      String[] suggestions = word.getOptionsAsStringArray();
       if (suggestions.length > 0) {
         SuggestionsPopup popup =
             new SuggestionsPopup(
@@ -216,7 +243,6 @@ public class TextEditorController {
         return word;
       }
     }
-    System.out.println("Word not found in speller: " + stringUnderMouse);
     return null;
   }
 

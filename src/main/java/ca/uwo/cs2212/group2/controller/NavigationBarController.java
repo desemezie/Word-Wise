@@ -161,22 +161,9 @@ public class NavigationBarController {
     return new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        textEditor.simulateSpellCheck();
+        textEditor.spellCheckClicked();
       }
     };
-    //    return new ActionListener() {
-    //      @Override
-    //      public void actionPerformed(ActionEvent e) {
-    //        JMenuItem source = (JMenuItem) e.getSource();
-    //        System.out.println("SpellCheck menu clicked: " + source.getText());
-    //        if (isSaved == false) {
-    //          SavePopup save = new SavePopup();
-    //          save.showSaveDialog();
-    //        }
-    //
-    //        // Implement your logic for the spell check action
-    //      }
-    //    };
   }
 
   /**
