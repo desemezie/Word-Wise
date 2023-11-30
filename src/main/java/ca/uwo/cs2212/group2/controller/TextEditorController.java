@@ -1,7 +1,6 @@
 package ca.uwo.cs2212.group2.controller;
 
 import ca.uwo.cs2212.group2.model.Speller;
-import ca.uwo.cs2212.group2.model.TextProcessor;
 import ca.uwo.cs2212.group2.model.Word;
 import ca.uwo.cs2212.group2.view.components.SuggestionsPopup;
 import ca.uwo.cs2212.group2.view.components.TextEditor;
@@ -13,17 +12,25 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import javax.swing.text.*;
 
+/**
+ * @author Ryan Hecht
+ *     <p>Controller for the text editor.
+ */
 public class TextEditorController {
   private final TextEditor textEditor;
   private Speller speller;
   private SuggestionsPopup currentPopup;
 
+  /**
+   * Constructor for the text editor controller.
+   *
+   * @param textEditor the text editor
+   */
   public TextEditorController(TextEditor textEditor) {
     this.textEditor = textEditor;
     this.speller = new Speller();
@@ -32,6 +39,7 @@ public class TextEditorController {
     attachMouseMotionListener();
   }
 
+  /** Initializes the subscriptions for the text editor. */
   private void initSubscriptions() {
     Scheduler swingScheduler = Schedulers.from(SwingUtilities::invokeLater);
 
@@ -58,6 +66,7 @@ public class TextEditorController {
         .subscribe(this::underlineMisspelledWords);
   }
 
+  /** Attaches a mouse motion listener to the text pane. */
   private void attachMouseMotionListener() {
     JTextPane textPane = textEditor.getTextPane();
 
@@ -85,6 +94,11 @@ public class TextEditorController {
             .subscribe(this::processMouseMovement);
   }
 
+  /**
+   * Processes the mouse movement event.
+   *
+   * @param e the mouse event
+   */
   private void processMouseMovement(MouseEvent e) {
     JTextPane textPane = textEditor.getTextPane();
     int pos = textPane.viewToModel2D(e.getPoint());
@@ -97,7 +111,7 @@ public class TextEditorController {
         String stringUnderMouse = doc.getText(wordStart, wordEnd - wordStart);
         Word wordUnderMouse = findWordInSpeller(stringUnderMouse);
         if (wordUnderMouse != null) {
-          showSuggestionsDialogAtPosition(wordUnderMouse, e.getPoint());
+          showSuggestionsDialogAtPosition(wordUnderMouse);
         }
       } catch (BadLocationException ex) {
         ex.printStackTrace();
@@ -105,6 +119,14 @@ public class TextEditorController {
     }
   }
 
+  /**
+   * Returns the start position of the word at the given position.
+   *
+   * @param doc the document
+   * @param pos the position
+   * @return the start position of the word
+   * @throws BadLocationException if the position is invalid
+   */
   private int getWordStart(StyledDocument doc, int pos) throws BadLocationException {
     while (pos > 0 && !Character.isWhitespace(doc.getText(pos - 1, 1).charAt(0))) {
       pos--;
@@ -112,6 +134,14 @@ public class TextEditorController {
     return pos;
   }
 
+  /**
+   * Returns the end position of the word at the given position.
+   *
+   * @param doc the document
+   * @param pos the position
+   * @return the end position of the word
+   * @throws BadLocationException if the position is invalid
+   */
   private int getWordEnd(StyledDocument doc, int pos) throws BadLocationException {
     while (pos < doc.getLength() && !Character.isWhitespace(doc.getText(pos, 1).charAt(0))) {
       pos++;
@@ -119,7 +149,12 @@ public class TextEditorController {
     return pos;
   }
 
-  private void showSuggestionsDialogAtPosition(Word word, Point mousePosition) {
+  /**
+   * Shows the suggestions dialog for the given word at the given position.
+   *
+   * @param word the misspelled word
+   */
+  private void showSuggestionsDialogAtPosition(Word word) {
     try {
       JTextPane textPane = textEditor.getTextPane();
       Rectangle wordRect = textPane.modelToView2D(word.getPosition()).getBounds();
@@ -152,6 +187,12 @@ public class TextEditorController {
     }
   }
 
+  /**
+   * Replaces the misspelled word in the text pane with the selected suggestion.
+   *
+   * @param originalWord the misspelled word
+   * @param newWord the suggestion
+   */
   private void replaceWordInTextPane(Word originalWord, String newWord) {
     try {
       JTextPane textPane = textEditor.getTextPane();
@@ -170,15 +211,20 @@ public class TextEditorController {
    * @return
    */
   private Word findWordInSpeller(String stringUnderMouse) {
-    System.out.println("Looking for word: " + stringUnderMouse);
     for (Word word : speller.getWrongWords()) {
       if (word.getContent().equals(stringUnderMouse)) {
         return word;
       }
     }
+    System.out.println("Word not found in speller: " + stringUnderMouse);
     return null;
   }
 
+  /**
+   * Underlines the misspelled words in the text pane.
+   *
+   * @param misspelledWords the list of misspelled words
+   */
   private void underlineMisspelledWords(List<Word> misspelledWords) {
     StyledDocument doc = textEditor.getTextPane().getStyledDocument();
     SimpleAttributeSet attrs = new SimpleAttributeSet();
