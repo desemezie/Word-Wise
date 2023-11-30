@@ -6,6 +6,9 @@ import ca.uwo.cs2212.group2.model.WordIndex;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Ryan Hecht Singleton service that keeps track of words that should be ignored once.
+ */
 public class WordsToIgnoreOnceService {
   private static WordsToIgnoreOnceService instance;
   private Set<WordIndex> wordsToIgnoreOnce;
