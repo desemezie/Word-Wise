@@ -25,7 +25,7 @@ import javax.swing.text.*;
  */
 public class TextEditorController {
   private final TextEditor textEditor;
-  private Speller speller;
+  private final Speller speller;
   private SuggestionsPopup currentPopup;
 
   /**
@@ -35,7 +35,7 @@ public class TextEditorController {
    */
   public TextEditorController(TextEditor textEditor) {
     this.textEditor = textEditor;
-    this.speller = new Speller();
+    this.speller = Speller.getInstance();
 
     initSubscriptions();
     attachMouseMotionListener();

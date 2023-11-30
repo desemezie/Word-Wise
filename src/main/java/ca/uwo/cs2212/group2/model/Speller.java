@@ -7,15 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-// Incomplete speller object, currently only has a spellcheck function
-// test
-
 public class Speller {
-  /*
-   * textproccessor usertext;
-   * dictionary dict;
-   * Metrics metric;
-   */
+  private static Speller instance = null;
   private TextProcessor usertext;
   private Dictionary dict;
   private Metrics metric;
@@ -24,11 +17,24 @@ public class Speller {
   private List<Word> allWords;
   private List<Word> uncheckedWords;
 
-  public Speller() {
+  /** Singleton instance of Speller */
+  private Speller() {
     allWords = new ArrayList<Word>();
     incorrectWords = new ArrayList<Word>();
     usertext = new TextProcessor();
     dict = loadDict();
+  }
+
+  /**
+   * Public static method that lazily loads speller
+   *
+   * @return Singleton instance of Speller
+   */
+  public static Speller getInstance() {
+    if (instance == null) {
+      instance = new Speller();
+    }
+    return instance;
   }
 
   public List<Word> getAllwords() {
@@ -61,7 +67,7 @@ public class Speller {
   public void spellcheck(String inText) {
     // 1. Create textproccessor object out of given text
     try {
-      usertext.parseString(inText);
+      usertext.parseHtmlString(inText);
     } catch (Exception x) {
       System.out.println(String.format("User text file %s not found", inText));
     }

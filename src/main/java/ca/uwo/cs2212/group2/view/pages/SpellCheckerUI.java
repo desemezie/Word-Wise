@@ -19,6 +19,9 @@ import javax.swing.border.MatteBorder;
 
 import static ca.uwo.cs2212.group2.constants.ViewConstants.PRIMARY_COLOUR;
 
+/**
+ * @Deprecated
+ */
 public class SpellCheckerUI {
   // all the colors defined
   private static final Color MARGIN_COLOR = Color.decode("#E3E2D4");
@@ -78,20 +81,20 @@ public class SpellCheckerUI {
         new MatteBorder(10, 345, 10, 345, MARGIN_COLOR)); // top, left, bottom, right
 
     // Adding components to frame finally after initializing
-//    Dimension frameSize = frame.getSize();
-//    NavigationBar navigationBar =
-//        new NavigationBar(
-//            frameSize,
-//            createFileActionListener(),
-//            createSettingActionListener(),
-//            createSpellCheckActionListener(),
-//            createMetricsActionListener(),
-//            createSaveActionListener(),
-//            createHelpActionListener());
-//    frame.add(navigationBar, BorderLayout.NORTH);
-//    frame.add(scrollPane, BorderLayout.CENTER);
-//    frame.setLocationRelativeTo(null);
-//    frame.setVisible(true);
+    //    Dimension frameSize = frame.getSize();
+    //    NavigationBar navigationBar =
+    //        new NavigationBar(
+    //            frameSize,
+    //            createFileActionListener(),
+    //            createSettingActionListener(),
+    //            createSpellCheckActionListener(),
+    //            createMetricsActionListener(),
+    //            createSaveActionListener(),
+    //            createHelpActionListener());
+    //    frame.add(navigationBar, BorderLayout.NORTH);
+    //    frame.add(scrollPane, BorderLayout.CENTER);
+    //    frame.setLocationRelativeTo(null);
+    //    frame.setVisible(true);
   }
 
   private static void openFile(JTextArea textArea) {

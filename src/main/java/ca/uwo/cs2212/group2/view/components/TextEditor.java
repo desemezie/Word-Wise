@@ -16,6 +16,10 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.JTextComponent;
 
+/**
+ * @author Annabel
+ * @author Ryan Hecht
+ */
 public class TextEditor extends JPanel {
 
   private final JTextPane textPane;
