@@ -22,6 +22,8 @@ public class Dictionary {
     }
   }
 
+  
+  
   private void loadDictionaryFromFile(String filename) {
     try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
       String line;
@@ -73,4 +75,18 @@ public class Dictionary {
   public Enumeration<String> getKeys() {
     return this.Dictionary_Hashtable.keys();
   }
+
+  public String toString() {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append("Dictionary Contents:\n");
+
+    Enumeration<String> keys = Dictionary_Hashtable.keys();
+    while (keys.hasMoreElements()) {
+        String key = keys.nextElement();
+        stringBuilder.append(key).append("\n");
+    }
+
+    return stringBuilder.toString();
+}
+
 }

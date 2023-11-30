@@ -3,16 +3,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
+import java.util.HashSet;
 
 import ca.uwo.cs2212.group2.controller.*;
 import ca.uwo.cs2212.group2.model.*;
 
-public class AddWordPopup extends JDialog {
+public class RemoveWordPopUp extends JDialog {
 
-    private static final String MESSAGE_TEXT = "<html><font color = 'white'>Enter a word to add to your dictionary:</font></html>";
+    private static final String MESSAGE_TEXT = "<html><font color = 'white'>Enter a word to remove from your dictionary:</font></html>";
     private Dictionary userDict; // Reference to the user dictionary
 
-    public AddWordPopup(Dictionary userDict){
+    public RemoveWordPopUp(Dictionary userDict){
         this.userDict=userDict; 
         
         // Set up the content panel
@@ -41,9 +43,8 @@ public class AddWordPopup extends JDialog {
                 // Add your logic here to handle the submitted word
                 String word = wordTextField.getText();
                 System.out.println("Submitted word: " + word);
-                userDict.addWord(word); 
-                Speller.getInstance().getUserDict().add(word);
-                System.out.println("HELLLOOO: " + Speller.getInstance().getUserDict());
+                userDict.removeWord(word);
+                
                 // You can close the dialog if needed
                 dispose();
             }
@@ -57,8 +58,8 @@ public class AddWordPopup extends JDialog {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close only the dialog
     }
 
-    public static void showAddWordDialog(Dictionary userDict) {
-        AddWordPopup popup = new AddWordPopup(userDict);
+    public static void showRemoveWordDialog(Dictionary userDict) {
+        RemoveWordPopUp popup = new RemoveWordPopUp(userDict);
         popup.setVisible(true);
       }
     

@@ -12,7 +12,7 @@ import static ca.uwo.cs2212.group2.constants.ViewConstants.*;
 public class NavigationBar extends JMenuBar {
   private static final String[] FILE_ITEMS = {"Open", "Save", "Save As", "New"};
   private static final String[] SETTING_ITEMS = {
-    "View User Dictionary", "Exit Checker", "Add Word To Dictionary"
+    "View User Dictionary", "Exit Checker", "Add Word To Dictionary", "Remove Word From Dictionary"
   };
   private static final String[] METRIC_ITEMS = {
     "Number of Spelling Errors", "Number of Corrections", "Metrics Related to Document"

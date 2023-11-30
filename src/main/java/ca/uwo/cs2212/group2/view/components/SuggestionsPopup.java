@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import ca.uwo.cs2212.group2.model.*;
+
+
 
 public class SuggestionsPopup extends JDialog {
 
@@ -16,11 +19,14 @@ public class SuggestionsPopup extends JDialog {
   private JButton suggestion3Button;
   private JButton suggestion4Button;
   private SuggestionSelectedCallback callback;
-
+  private Speller speller;
+  
   public SuggestionsPopup(
       String sugg1, String sugg2, String sugg3, String sugg4, SuggestionSelectedCallback callback) {
 
+    
     // Set up the content panel
+
     JPanel contentPanel = new JPanel();
     contentPanel.setBackground(new Color(0x993399));
     contentPanel.setPreferredSize(new Dimension(400, 350));
@@ -64,8 +70,11 @@ public class SuggestionsPopup extends JDialog {
 
   // ActionListener implementation
   private static class ButtonClickListener implements ActionListener {
+    
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        Speller speller = Speller.getInstance();
       // Handle button clicks here
       JButton source = (JButton) e.getSource();
       System.out.println("Button clicked: " + source.getText());
@@ -84,7 +93,12 @@ public class SuggestionsPopup extends JDialog {
         System.out.println("Handling Suggestion #4");
       } else if ("Add word to dictionary".equals(source.getText())) {
         // Handle add to dictionary button click
+
         System.out.println("Handling Add word to dictionary");
+        AddWordPopup word = new AddWordPopup(speller.getDict());
+
+        word.showAddWordDialog(speller.getDict());
+        
       } else if ("Ignore once".equals(source.getText())) {
         // Handle ignore once button click
         System.out.println("Handling Ignore once");
