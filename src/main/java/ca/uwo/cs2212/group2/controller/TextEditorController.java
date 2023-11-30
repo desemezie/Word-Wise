@@ -47,6 +47,7 @@ public class TextEditorController {
                 });
 
     textChanges
+        .observeOn(Schedulers.computation())
         .map(
             text -> {
               this.speller = new Speller();
@@ -79,7 +80,7 @@ public class TextEditorController {
 
     Disposable mouseMoveSubscription =
         mouseMoveObservable
-            .debounce(400, TimeUnit.MILLISECONDS, Schedulers.io())
+            .debounce(300, TimeUnit.MILLISECONDS, Schedulers.io())
             .observeOn(Schedulers.from(SwingUtilities::invokeLater))
             .subscribe(this::processMouseMovement);
   }
@@ -90,21 +91,32 @@ public class TextEditorController {
     if (pos >= 0) {
       try {
         StyledDocument doc = textPane.getStyledDocument();
-        Element element = doc.getCharacterElement(pos);
-        AttributeSet as = element.getAttributes();
-        if (StyleConstants.isUnderline(as) && StyleConstants.getForeground(as).equals(Color.RED)) {
-          String stringUnderMouse =
-              doc.getText(
-                  element.getStartOffset(), element.getEndOffset() - element.getStartOffset());
-          Word wordUnderMouse = findWordInSpeller(stringUnderMouse);
-          if (wordUnderMouse != null) {
-            showSuggestionsDialogAtPosition(wordUnderMouse, e.getPoint());
-          }
+        int wordStart = getWordStart(doc, pos);
+        int wordEnd = getWordEnd(doc, pos);
+
+        String stringUnderMouse = doc.getText(wordStart, wordEnd - wordStart);
+        Word wordUnderMouse = findWordInSpeller(stringUnderMouse);
+        if (wordUnderMouse != null) {
+          showSuggestionsDialogAtPosition(wordUnderMouse, e.getPoint());
         }
       } catch (BadLocationException ex) {
         ex.printStackTrace();
       }
     }
+  }
+
+  private int getWordStart(StyledDocument doc, int pos) throws BadLocationException {
+    while (pos > 0 && !Character.isWhitespace(doc.getText(pos - 1, 1).charAt(0))) {
+      pos--;
+    }
+    return pos;
+  }
+
+  private int getWordEnd(StyledDocument doc, int pos) throws BadLocationException {
+    while (pos < doc.getLength() && !Character.isWhitespace(doc.getText(pos, 1).charAt(0))) {
+      pos++;
+    }
+    return pos;
   }
 
   private void showSuggestionsDialogAtPosition(Word word, Point mousePosition) {
@@ -127,7 +139,7 @@ public class TextEditorController {
         Point popupLocation = new Point(wordRect.x, wordRect.y + wordRect.height);
         SwingUtilities.convertPointToScreen(popupLocation, textPane);
         popup.setLocation(popupLocation);
-        popup.setVisible(true);
+        popup.showSuggestionsDialog();
 
         // Before showing the new popup, close the existing one if it's open
         if (currentPopup != null) {
@@ -151,7 +163,14 @@ public class TextEditorController {
     }
   }
 
+  /**
+   * THIS IS WRONG: WE DON'T CHECK FOR POSITION AT ALL HERE!
+   *
+   * @param stringUnderMouse
+   * @return
+   */
   private Word findWordInSpeller(String stringUnderMouse) {
+    System.out.println("Looking for word: " + stringUnderMouse);
     for (Word word : speller.getWrongWords()) {
       if (word.getContent().equals(stringUnderMouse)) {
         return word;
