@@ -3,6 +3,7 @@ package ca.uwo.cs2212.group2.controller;
 import ca.uwo.cs2212.group2.model.Speller;
 import ca.uwo.cs2212.group2.model.Word;
 import ca.uwo.cs2212.group2.model.WordIndex;
+import ca.uwo.cs2212.group2.service.SessionCorrectionStatisticsService;
 import ca.uwo.cs2212.group2.service.WordsToIgnoreOnceService;
 import ca.uwo.cs2212.group2.view.components.SuggestionsPopup;
 import ca.uwo.cs2212.group2.view.components.TextEditor;
@@ -203,6 +204,8 @@ public class TextEditorController {
    */
   private void replaceWordInTextPane(Word originalWord, String newWord) {
     try {
+      SessionCorrectionStatisticsService.getInstance().incrementNumberOfSuggestionsCorrections();
+
       JTextPane textPane = textEditor.getTextPane();
       StyledDocument doc = textPane.getStyledDocument();
       doc.remove(originalWord.getPosition(), originalWord.getContent().length());
