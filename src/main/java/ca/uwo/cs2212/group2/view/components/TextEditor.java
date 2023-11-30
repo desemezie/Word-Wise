@@ -6,16 +6,24 @@ import static ca.uwo.cs2212.group2.constants.ViewConstants.TEXT_BACKGROUND_COLOU
 
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.JTextComponent;
 
+/**
+ * @author Annabel
+ * @author Ryan Hecht
+ */
 public class TextEditor extends JPanel {
 
-  private JTextPane textPane; // JTextPane allows text styling
-  private PublishSubject<String> textChanges = PublishSubject.create();
+  private final JTextPane textPane;
+  private final PublishSubject<String> textChanges = PublishSubject.create();
 
   /** Constructor for the text editor */
   public TextEditor(Dimension frameSize) {
@@ -41,8 +49,58 @@ public class TextEditor extends JPanel {
 
     this.setLayout(new BorderLayout());
     this.add(scrollPane, BorderLayout.CENTER); // Add the scrollPane to this panel
+
+    this.setCustomCaret();
   }
 
+  public void spellCheckClicked() {
+    System.out.println("Spell check clicked");
+  }
+
+  public JTextPane getTextPane() {
+    return textPane;
+  }
+
+  // Method to expose the text changes observable
+  public PublishSubject<String> getTextChanges() {
+    return textChanges;
+  }
+
+  /**
+   * Method to set the caret to a custom caret so that it does not change to red when the user
+   * backspaces over a misspelled word.
+   */
+  private void setCustomCaret() {
+    textPane.setCaret(
+        new DefaultCaret() {
+          @Override
+          public void paint(Graphics g) {
+            JTextComponent comp = getComponent();
+            if (comp == null) {
+              return;
+            }
+
+            try {
+              Rectangle2D r2D = comp.modelToView2D(getDot());
+              if (r2D == null) {
+                return;
+              }
+
+              if (isVisible()) {
+                g.setColor(comp.getCaretColor());
+                int y1 = (int) r2D.getY();
+                int y2 = y1 + (int) r2D.getHeight() - 1;
+                g.drawLine((int) r2D.getX(), y1, (int) r2D.getX(), y2);
+              }
+            } catch (BadLocationException e) {
+              return;
+            }
+          }
+        });
+    textPane.setCaretColor(Color.BLACK);
+  }
+
+  /** Method to initialize the observables for the text editor. */
   private void initObservables() {
     // Attach a document listener to the JTextPane's document
     textPane
@@ -61,19 +119,5 @@ public class TextEditor extends JPanel {
                 // Plain text components do not fire these events
               }
             });
-  }
-
-  // Method to randomly mark words as misspelled and underline them
-  public void simulateSpellCheck() {
-    System.out.println("Simulating spell check");
-  }
-
-  public JTextPane getTextPane() {
-    return textPane;
-  }
-
-  // Method to expose the text changes observable
-  public PublishSubject<String> getTextChanges() {
-    return textChanges;
   }
 }

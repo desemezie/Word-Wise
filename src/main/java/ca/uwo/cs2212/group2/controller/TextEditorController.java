@@ -1,7 +1,6 @@
 package ca.uwo.cs2212.group2.controller;
 
 import ca.uwo.cs2212.group2.model.Speller;
-import ca.uwo.cs2212.group2.model.TextProcessor;
 import ca.uwo.cs2212.group2.model.Word;
 import ca.uwo.cs2212.group2.view.components.SuggestionsPopup;
 import ca.uwo.cs2212.group2.view.components.TextEditor;
@@ -13,25 +12,37 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.text.*;
 
+/**
+ * @author Ryan Hecht
+ *     <p>Controller for the text editor.
+ */
 public class TextEditorController {
   private final TextEditor textEditor;
   private Speller speller;
   private SuggestionsPopup currentPopup;
 
+  /**
+   * Constructor for the text editor controller.
+   *
+   * @param textEditor the text editor
+   */
   public TextEditorController(TextEditor textEditor) {
     this.textEditor = textEditor;
     this.speller = new Speller();
 
     initSubscriptions();
     attachMouseMotionListener();
+    attachCaretListener();
   }
 
+  /** Initializes the subscriptions for the text editor. */
   private void initSubscriptions() {
     Scheduler swingScheduler = Schedulers.from(SwingUtilities::invokeLater);
 
@@ -40,8 +51,8 @@ public class TextEditorController {
             .getTextChanges()
             .publish(
                 shared -> {
-                  Observable<String> debounced = shared.debounce(300, TimeUnit.MILLISECONDS);
-                  Observable<String> periodic = shared.sample(5, TimeUnit.SECONDS);
+                  Observable<String> debounced = shared.debounce(200, TimeUnit.MILLISECONDS);
+                  Observable<String> periodic = shared.sample(2, TimeUnit.SECONDS);
 
                   return Observable.merge(debounced, periodic).distinctUntilChanged();
                 });
@@ -50,7 +61,6 @@ public class TextEditorController {
         .observeOn(Schedulers.computation())
         .map(
             text -> {
-              this.speller = new Speller();
               speller.spellcheck(text);
               return speller.getWrongWords();
             })
@@ -58,6 +68,7 @@ public class TextEditorController {
         .subscribe(this::underlineMisspelledWords);
   }
 
+  /** Attaches a mouse motion listener to the text pane. */
   private void attachMouseMotionListener() {
     JTextPane textPane = textEditor.getTextPane();
 
@@ -85,6 +96,11 @@ public class TextEditorController {
             .subscribe(this::processMouseMovement);
   }
 
+  /**
+   * Processes the mouse movement event.
+   *
+   * @param e the mouse event
+   */
   private void processMouseMovement(MouseEvent e) {
     JTextPane textPane = textEditor.getTextPane();
     int pos = textPane.viewToModel2D(e.getPoint());
@@ -95,9 +111,9 @@ public class TextEditorController {
         int wordEnd = getWordEnd(doc, pos);
 
         String stringUnderMouse = doc.getText(wordStart, wordEnd - wordStart);
-        Word wordUnderMouse = findWordInSpeller(stringUnderMouse);
+        Word wordUnderMouse = findWordAtPosition(stringUnderMouse, wordStart);
         if (wordUnderMouse != null) {
-          showSuggestionsDialogAtPosition(wordUnderMouse, e.getPoint());
+          showSuggestionsDialogAtPosition(wordUnderMouse);
         }
       } catch (BadLocationException ex) {
         ex.printStackTrace();
@@ -105,6 +121,14 @@ public class TextEditorController {
     }
   }
 
+  /**
+   * Returns the start position of the word at the given position.
+   *
+   * @param doc the document
+   * @param pos the position
+   * @return the start position of the word
+   * @throws BadLocationException if the position is invalid
+   */
   private int getWordStart(StyledDocument doc, int pos) throws BadLocationException {
     while (pos > 0 && !Character.isWhitespace(doc.getText(pos - 1, 1).charAt(0))) {
       pos--;
@@ -112,6 +136,14 @@ public class TextEditorController {
     return pos;
   }
 
+  /**
+   * Returns the end position of the word at the given position.
+   *
+   * @param doc the document
+   * @param pos the position
+   * @return the end position of the word
+   * @throws BadLocationException if the position is invalid
+   */
   private int getWordEnd(StyledDocument doc, int pos) throws BadLocationException {
     while (pos < doc.getLength() && !Character.isWhitespace(doc.getText(pos, 1).charAt(0))) {
       pos++;
@@ -119,13 +151,18 @@ public class TextEditorController {
     return pos;
   }
 
-  private void showSuggestionsDialogAtPosition(Word word, Point mousePosition) {
+  /**
+   * Shows the suggestions dialog for the given word at the given position.
+   *
+   * @param word the misspelled word
+   */
+  private void showSuggestionsDialogAtPosition(Word word) {
     try {
       JTextPane textPane = textEditor.getTextPane();
       Rectangle wordRect = textPane.modelToView2D(word.getPosition()).getBounds();
 
       // Get suggestions for the word
-      String[] suggestions = word.getOption();
+      String[] suggestions = word.getOptionsAsStringArray();
       if (suggestions.length > 0) {
         SuggestionsPopup popup =
             new SuggestionsPopup(
@@ -152,6 +189,12 @@ public class TextEditorController {
     }
   }
 
+  /**
+   * Replaces the misspelled word in the text pane with the selected suggestion.
+   *
+   * @param originalWord the misspelled word
+   * @param newWord the suggestion
+   */
   private void replaceWordInTextPane(Word originalWord, String newWord) {
     try {
       JTextPane textPane = textEditor.getTextPane();
@@ -164,21 +207,26 @@ public class TextEditorController {
   }
 
   /**
-   * THIS IS WRONG: WE DON'T CHECK FOR POSITION AT ALL HERE!
+   * Finds the word with the given content and position.
    *
-   * @param stringUnderMouse
-   * @return
+   * @param content the content
+   * @param position the position
+   * @return the word
    */
-  private Word findWordInSpeller(String stringUnderMouse) {
-    System.out.println("Looking for word: " + stringUnderMouse);
+  private Word findWordAtPosition(String content, int position) {
     for (Word word : speller.getWrongWords()) {
-      if (word.getContent().equals(stringUnderMouse)) {
+      if (word.getContent().equals(content) && word.getPosition() == position) {
         return word;
       }
     }
     return null;
   }
 
+  /**
+   * Underlines the misspelled words in the text pane.
+   *
+   * @param misspelledWords the list of misspelled words
+   */
   private void underlineMisspelledWords(List<Word> misspelledWords) {
     StyledDocument doc = textEditor.getTextPane().getStyledDocument();
     SimpleAttributeSet attrs = new SimpleAttributeSet();
@@ -195,5 +243,36 @@ public class TextEditorController {
     for (Word word : misspelledWords) {
       doc.setCharacterAttributes(word.getPosition(), word.getContent().length(), attrs, false);
     }
+  }
+
+  /** Attaches a caret listener to the text pane. */
+  private void attachCaretListener() {
+    JTextPane textPane = textEditor.getTextPane();
+    textPane.addCaretListener(event -> resetCaretStyle(event.getDot()));
+  }
+
+  /**
+   * Resets the caret style at the given position.
+   *
+   * @param position the position
+   */
+  private void resetCaretStyle(int position) {
+    SwingUtilities.invokeLater(
+        () -> {
+          JTextPane textPane = textEditor.getTextPane();
+          StyledDocument doc = textPane.getStyledDocument();
+          SimpleAttributeSet attrs = new SimpleAttributeSet();
+          StyleConstants.setForeground(attrs, Color.BLACK);
+          StyleConstants.setUnderline(attrs, false);
+
+          try {
+            // Ensure the position is within the document's length
+            if (position < doc.getLength()) {
+              doc.setCharacterAttributes(position, 1, attrs, false);
+            }
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        });
   }
 }

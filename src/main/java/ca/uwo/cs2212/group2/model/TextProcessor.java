@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Processes text from a file, providing statistics and manipulations on the text.
@@ -30,6 +32,8 @@ public class TextProcessor {
 
   /**
    * Constructs a TextProcessor and initializes parsing of the provided file.
+   *
+   * @deprecated
    *
    * @param fileName the name of the file to be parsed.
    * @throws FileNotFoundException if the specified file cannot be found.
@@ -79,6 +83,34 @@ public class TextProcessor {
     return this.words;
   }
 
+  public List<Word> parseHtmlString(String text) {
+    this.words = new ArrayList<>();
+    this.lineCount = 0;
+    this.charCountWithSpace = 0;
+    this.charCountNoSpace = 0;
+    this.wordCount = 0;
+
+    String[] lines = text.split("\\r?\\n");
+    int globalIndex = 0;
+
+    for (String line : lines) {
+      this.lineCount++;
+      String noHtmlLine = line.replaceAll("<[^>]*>", ""); // Remove HTML tags
+      this.charCountNoSpace += getNumCharNoSpace(noHtmlLine);
+      this.charCountWithSpace += line.length(); // Count with HTML tags
+
+      String[] lineWords = noHtmlLine.split("\\s+|,|\\;|\\(|\\)|\\{|\\}|\\:");
+      globalIndex = processLineWords(lineWords, globalIndex, line);
+
+      if (globalIndex < text.length()) {
+        globalIndex++; // Account for the newline character
+      }
+    }
+
+    wordsAfterPeriod();
+    return this.words;
+  }
+
   private int processLineWords(String[] lineWords, int startIndex, String line) {
     int localIndex = 0;
     boolean isFirstWord = true;
@@ -103,6 +135,8 @@ public class TextProcessor {
 
   /**
    * Parses the provided file and extracts words and other text statistics.
+   *
+   * @deprecated
    *
    * @param fileName the name of the file to be parsed.
    * @return a List containing words from the file.
