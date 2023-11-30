@@ -151,7 +151,7 @@ public class TextProcessor {
     if(lastFour.equals(".txt") || lastFive.equals(".html")){
       return true;
     }
-
+    return false;
 
   }
   /** Marks words that need to be capitalized (i.e., words after a period) */
