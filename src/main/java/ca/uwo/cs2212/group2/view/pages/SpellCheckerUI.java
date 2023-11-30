@@ -20,7 +20,7 @@ import javax.swing.border.MatteBorder;
 import static ca.uwo.cs2212.group2.constants.ViewConstants.PRIMARY_COLOUR;
 
 /**
- * @deprecated
+ * @Deprecated
  */
 public class SpellCheckerUI {
   // all the colors defined

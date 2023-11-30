@@ -31,9 +31,7 @@ public class TextProcessor {
   private List<String> lines;
 
   /**
-   * Constructs a TextProcessor and initializes parsing of the provided file.
-   *
-   * @deprecated
+   * Constructs a TextProcessor and initializes parsing of the provided file. @Deprecated
    *
    * @param fileName the name of the file to be parsed.
    * @throws FileNotFoundException if the specified file cannot be found.
@@ -134,9 +132,7 @@ public class TextProcessor {
   }
 
   /**
-   * Parses the provided file and extracts words and other text statistics.
-   *
-   * @deprecated
+   * Parses the provided file and extracts words and other text statistics. @Deprecated
    *
    * @param fileName the name of the file to be parsed.
    * @return a List containing words from the file.
