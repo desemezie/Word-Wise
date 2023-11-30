@@ -61,7 +61,7 @@ public class Speller {
   public void spellcheck(String inText) {
     // 1. Create textproccessor object out of given text
     try {
-      usertext.parseString(inText);
+      usertext.parseHtmlString(inText);
     } catch (Exception x) {
       System.out.println(String.format("User text file %s not found", inText));
     }

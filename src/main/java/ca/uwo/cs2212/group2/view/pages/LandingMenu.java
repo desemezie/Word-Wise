@@ -40,12 +40,27 @@ public class LandingMenu extends JPanel {
     fileChooser = new JFileChooser();
   }
 
+  /**
+   * Creates a button with the given text, x, y, width, and height.
+   *
+   * @param text the text of the button
+   * @param x the x coordinate of the button
+   * @param y the y coordinate of the button
+   * @param width the width of the button
+   * @param height the height of the button
+   * @return the button
+   */
   private JButton createButton(String text, int x, int y, int width, int height) {
     JButton button = new JButton(text);
     button.setBounds(x, y, width, height);
     return button;
   }
 
+  /**
+   * Applies the button styles to the given button.
+   *
+   * @param button the button to apply the styles to
+   */
   private void applyButtonStyles(JButton button) {
     Font newButtonFont = new Font(button.getFont().getName(), button.getFont().getStyle(), 20);
     button.setFont(newButtonFont);
@@ -56,6 +71,14 @@ public class LandingMenu extends JPanel {
     button.setBackground(new Color(PRIMARY_COLOUR.getRGB()));
   }
 
+  /**
+   * Creates a radio button with the given text, x, and y coordinates.
+   *
+   * @param text the text of the radio button
+   * @param x the x coordinate of the radio button
+   * @param y the y coordinate of the radio button
+   * @return the radio button
+   */
   private JRadioButton createRadioButton(String text, int x, int y) {
     JRadioButton radioButton = new JRadioButton(text);
     radioButton.setBounds(x, y, 200, 30);
