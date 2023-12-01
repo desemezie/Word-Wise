@@ -42,7 +42,7 @@ public class AddWordPopup extends JDialog {
                 String word = wordTextField.getText();
                 System.out.println("Submitted word: " + word);
                 userDict.addWord(word); 
-                Speller.getInstance().getUserDict().add(word);
+                Speller.getInstance().getUserDict().addWord(word);
                 System.out.println("HELLLOOO: " + Speller.getInstance().getUserDict());
                 // You can close the dialog if needed
                 dispose();

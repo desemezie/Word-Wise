@@ -14,7 +14,6 @@ public class Speller {
   private static Speller instance = null;
   private TextProcessor usertext;
   private Dictionary dict;
-  private List<String> userDict;
   private Metrics metric;
   private List<Word> incorrectWords;
   private List<Word> previousIncorrectWords;
@@ -68,10 +67,6 @@ public class Speller {
     return this.dict;
   }
   
-  public List<String> getUserDict(){
-    return this.userDict;
-  }
-
 
   public int[] getStats() {
 
