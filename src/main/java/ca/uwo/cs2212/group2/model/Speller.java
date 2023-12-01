@@ -1,11 +1,13 @@
 package ca.uwo.cs2212.group2.model;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.io.BufferedWriter;
 import java.io.File;
 
 public class Speller {
@@ -22,6 +24,9 @@ public class Speller {
   private List<Word> midCapped = new ArrayList<Word>();
   private List<Word> misCapped = new ArrayList<Word>();
   private List<Word> doubleWords = new ArrayList<Word>();
+
+  //userdict
+  private Dictionary userdict;
 
 
   /** Singleton instance of Speller */
@@ -42,6 +47,11 @@ public class Speller {
       instance = new Speller();
     }
     return instance;
+  }
+
+  //return the user dict
+  public Dictionary getUserDict(){
+    return this.userdict;
   }
 
   public List<Word> getAllwords() {
@@ -408,10 +418,12 @@ public class Speller {
        if (Files.exists(userDictPath)) {
          Dictionary userDict =
              new Dictionary(userDictPath.toString(), false); // false for a regular file
+             this.userdict = userDict; 
          transferWords(userDict, dict);
          System.out.println("userdict found");
        } else {
            createUserDict(); // Create a new, empty user dictionary file
+           userdict = new Dictionary(userDictPath.toString() ,false);
            System.out.println("Userdict not found, blank userdict created");
         
        }
@@ -439,7 +451,7 @@ public class Speller {
 	  }
 
 	 //make userdirectoryfile
-   public static boolean makeUserDirectoryFile(String dirname){
+   private static boolean makeUserDirectoryFile(String dirname){
     // Get the path to the user's home directory
     String userHome = System.getProperty("user.home");
 
@@ -474,8 +486,34 @@ public class Speller {
       Files.createFile(userDictPath);
       }catch(IOException e){
         System.out.println("something went wrong");
+      }
     }
-      
-    Dictionary dict = null;
-    }
+
+  	public  void writeLineToFile(String line) {
+	    String os = getOS();
+	    Path filePath = null;
+	    switch(os) {
+        	case "mac": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
+        	case "windows": filePath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
+        	case "linux": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
+    	}
+	      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString()))) {
+	          writer.write(line);
+            // write to userdict
+            this.userdict.addWord(line);
+	          System.out.println("Line written to file successfully.");
+	        } catch (IOException e) {
+	          System.err.println("Error writing to file: " + e.getMessage());
+	        }
+	    }
+
+      public void removeWordFromDict(String inword){
+        // Remove the word from the data structure
+        Dictionary mergedict = this.dict;
+        mergedict.removeWord(inword);
+
+        //remove word from the userDict.txt file
+
+      }
+    
 }
