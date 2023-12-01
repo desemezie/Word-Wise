@@ -1,11 +1,13 @@
 package ca.uwo.cs2212.group2.model;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.io.BufferedWriter;
 import java.io.File;
 
 public class Speller {
@@ -430,7 +432,7 @@ public class Speller {
 	  }
 
 	 //make userdirectoryfile
-   public static boolean makeUserDirectoryFile(String dirname){
+   private static boolean makeUserDirectoryFile(String dirname){
     // Get the path to the user's home directory
     String userHome = System.getProperty("user.home");
 
@@ -465,8 +467,24 @@ public class Speller {
       Files.createFile(userDictPath);
       }catch(IOException e){
         System.out.println("something went wrong");
+      }
     }
-      
-    Dictionary dict = null;
-    }
+
+  	public static void writeLineToFile(String line) {
+	    String os = getOS();
+	    Path filePath = null;
+	    switch(os) {
+        	case "mac": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
+        	case "windows": filePath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
+        	case "linux": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
+    	}
+	      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString()))) {
+	          writer.write(line);
+	          System.out.println("Line written to file successfully.");
+	        } catch (IOException e) {
+	          System.err.println("Error writing to file: " + e.getMessage());
+	        }
+	    }
+	  
+    
 }
