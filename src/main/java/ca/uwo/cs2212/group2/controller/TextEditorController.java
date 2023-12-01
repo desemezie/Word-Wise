@@ -97,7 +97,7 @@ public class TextEditorController {
 
     Disposable mouseMoveSubscription =
         mouseMoveObservable
-            .debounce(300, TimeUnit.MILLISECONDS, Schedulers.io())
+            .debounce(400, TimeUnit.MILLISECONDS, Schedulers.io())
             .observeOn(Schedulers.from(SwingUtilities::invokeLater))
             .subscribe(this::processMouseMovement);
   }
@@ -110,7 +110,7 @@ public class TextEditorController {
   private void processMouseMovement(MouseEvent e) {
     JTextPane textPane = textEditor.getTextPane();
     int pos = textPane.viewToModel2D(e.getPoint());
-    if (pos >= 0) {
+    if (pos > 0) {
       try {
         StyledDocument doc = textPane.getStyledDocument();
         int wordStart = getWordStart(doc, pos);
@@ -119,6 +119,8 @@ public class TextEditorController {
         String stringUnderMouse = doc.getText(wordStart, wordEnd - wordStart);
         Word wordUnderMouse = findWordAtPosition(stringUnderMouse, wordStart);
         if (wordUnderMouse != null) {
+          System.out.println("Position of mouse: " + pos);
+          System.out.println("Word under mouse: " + wordUnderMouse.toString());
           showSuggestionsDialogAtPosition(wordUnderMouse);
         }
       } catch (BadLocationException ex) {
