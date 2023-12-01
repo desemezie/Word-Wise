@@ -77,7 +77,7 @@ public class SuggestionsPopup extends JDialog {
     ignoreAlwaysButton.addActionListener(
         event -> {
           if (currentWord!=null){
-            this.speller.getDict().addWord(currentWord.getContent());
+            this.speller.getUserDict().addWord(currentWord.getContent());
             System.out.println("---Ignoring always---");
             this.dispose();
           }

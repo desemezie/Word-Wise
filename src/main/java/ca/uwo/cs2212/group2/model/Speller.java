@@ -35,7 +35,6 @@ public class Speller {
   private Speller() {
     allWords = new ArrayList<Word>();
     incorrectWords = new ArrayList<Word>();
-    userDict = new ArrayList<String>();
     usertext = new TextProcessor();
     dict = loadDict();
   }
@@ -510,8 +509,8 @@ public class Speller {
         	case "windows": filePath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
         	case "linux": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
     	}
-	      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString()))) {
-	          writer.write(line);
+	      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString(), true))) {
+	          writer.write(line + "\n");
             // write to userdict
             this.userdict.addWord(line);
 	          System.out.println("Line written to file successfully.");
