@@ -17,6 +17,11 @@ public class Speller {
   private List<Word> previousIncorrectWords;
   private List<Word> allWords;
   private List<Word> uncheckedWords;
+  private List<Word> wrongWords = new ArrayList<Word>();
+    // STATISTICALS
+  private List<Word> midCapped = new ArrayList<Word>();
+  private List<Word> misCapped = new ArrayList<Word>();
+  private List<Word> doubleWords = new ArrayList<Word>();
 
 
   /** Singleton instance of Speller */
@@ -57,11 +62,13 @@ public class Speller {
       System.out.println("Usertext object not found");
     }
     // linecount, wordcount, charcountnospace, incorrectwords
-    int[] result = new int[4];
+    int[] result = new int[6];
     result[0] = this.usertext.getLineCount(); // lines
     result[1] = this.usertext.getWordCount(); // words
     result[2] = (int) this.usertext.getCharCountNoSpace(); // chars
-    result[3] = incorrectWords.size(); // incorrect words
+    result[3] =  misCapped.size(); //number of miscapitalizations 
+    result[4] = doubleWords.size(); //number of double words
+    result[5] = midCapped.size();//Middle letter capped
 
     return result;
   }
@@ -86,12 +93,6 @@ public class Speller {
 
     // mark doubles
     doubleWords(this.uncheckedWords);
-
-    List<Word> wrongWords = new ArrayList<Word>();
-    // STATISTICALS
-    List<Word> midCapped = new ArrayList<Word>();
-    List<Word> misCapped = new ArrayList<Word>();
-    List<Word> doubleWords = new ArrayList<Word>();
 
     //
     for (Word w : this.uncheckedWords) {
