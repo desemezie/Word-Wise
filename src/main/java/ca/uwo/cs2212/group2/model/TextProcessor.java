@@ -138,6 +138,9 @@ public class TextProcessor {
    * @return a List containing words from the file.
    */
   private List<String> parse(String fileName) throws Exception {
+    if(!fileCheck(fileName)){
+      throw new FileNotFoundException("File must be .html or .txt");
+    }
     List<String> words = new ArrayList<String>();
     this.lineCount = 0;
     try (Scanner scan = new Scanner(new File(fileName))) {
@@ -168,6 +171,19 @@ public class TextProcessor {
     return words;
   }
 
+  // Checks that the path ends in '.txt' or '.html'
+  private static boolean fileCheck(String path){
+    if(path.length() <= 4){
+      return false;
+    }
+    String lastFour = path.substring(path.length() - 4);
+    String lastFive = path.substring(path.length() - 5);
+    if(lastFour.equals(".txt") || lastFive.equals(".html")){
+      return true;
+    }
+    return false;
+
+  }
   /** Marks words that need to be capitalized (i.e., words after a period) */
   private void wordsAfterPeriod() {
     boolean afterPeriod = false;
