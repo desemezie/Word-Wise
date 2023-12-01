@@ -63,7 +63,7 @@ public class SuggestionsPopup extends JDialog {
           }
         });
     ignoreAlwaysButton.addActionListener(new ButtonClickListener());
-    manualCorrectionButton.addActionListener(new ButtonClickListener());
+    manualCorrectionButton.addActionListener(event -> this.dispose());
 
     // Add buttons to the content panel
     contentPanel.add(suggestion1Button);
