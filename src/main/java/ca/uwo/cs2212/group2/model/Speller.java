@@ -1,5 +1,7 @@
 package ca.uwo.cs2212.group2.model;
 
+import ca.uwo.cs2212.group2.service.SessionSettingsService;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,11 +20,10 @@ public class Speller {
   private List<Word> allWords;
   private List<Word> uncheckedWords;
   private List<Word> wrongWords = new ArrayList<Word>();
-    // STATISTICALS
+  // STATISTICALS
   private List<Word> midCapped = new ArrayList<Word>();
   private List<Word> misCapped = new ArrayList<Word>();
   private List<Word> doubleWords = new ArrayList<Word>();
-
 
   /** Singleton instance of Speller */
   private Speller() {
@@ -66,9 +67,9 @@ public class Speller {
     result[0] = this.usertext.getLineCount(); // lines
     result[1] = this.usertext.getWordCount(); // words
     result[2] = (int) this.usertext.getCharCountNoSpace(); // chars
-    result[3] =  misCapped.size(); //number of miscapitalizations 
-    result[4] = doubleWords.size(); //number of double words
-    result[5] = midCapped.size();//Middle letter capped
+    result[3] = misCapped.size(); // number of miscapitalizations
+    result[4] = doubleWords.size(); // number of double words
+    result[5] = midCapped.size(); // Middle letter capped
 
     return result;
   }
@@ -76,7 +77,12 @@ public class Speller {
   public void spellcheck(String inText) {
     // 1. Create textproccessor object out of given text
     try {
-      usertext.parseHtmlString(inText);
+      if (SessionSettingsService.getInstance().isHTMLModeTurnedOn()) {
+        System.out.println("HELLO");
+        usertext.parseHtmlString(inText);
+      } else {
+        usertext.parseString(inText);
+      }
     } catch (Exception x) {
       System.out.println(String.format("User text file %s not found", inText));
     }
@@ -177,7 +183,7 @@ public class Speller {
     String w = inword.getContent();
     boolean isBeginning = inword.isBeginning();
     // Just ignore it if it is "I"
-    if(w.equals("I")){
+    if (w.equals("I")) {
       return false;
     }
     // either it is a starting word with no capitalization, or it is a non starter with a
@@ -394,52 +400,52 @@ public class Speller {
    * @return merged dictionary if the dictionaries were successfully loaded
    */
   private Dictionary loadDict() {
-       // Load the default dictionary from resources
-       Dictionary dict = new Dictionary("dict.txt", true); // true indicates it's a resource
+    // Load the default dictionary from resources
+    Dictionary dict = new Dictionary("dict.txt", true); // true indicates it's a resource
 
-       // Handle the user dictionary
-        String os = getOS();
-        Path userDictPath = null;
-        switch(os) {
-          case "mac": userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-          case "windows": userDictPath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
-          case "linux": userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
+    // Handle the user dictionary
+    String os = getOS();
+    Path userDictPath = null;
+    switch (os) {
+      case "mac":
+        userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
+      case "windows":
+        userDictPath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
+      case "linux":
+        userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
     }
-       if (Files.exists(userDictPath)) {
-         Dictionary userDict =
-             new Dictionary(userDictPath.toString(), false); // false for a regular file
-         transferWords(userDict, dict);
-         System.out.println("userdict found");
-       } else {
-           createUserDict(); // Create a new, empty user dictionary file
-           System.out.println("Userdict not found, blank userdict created");
-        
-       }
-   
-       return dict;
+    if (Files.exists(userDictPath)) {
+      Dictionary userDict =
+          new Dictionary(userDictPath.toString(), false); // false for a regular file
+      transferWords(userDict, dict);
+      System.out.println("userdict found");
+    } else {
+      createUserDict(); // Create a new, empty user dictionary file
+      System.out.println("Userdict not found, blank userdict created");
+    }
+
+    return dict;
   }
 
-	// Get the OS
-	public static String getOS(){
-	  String ret= "";
-	  String os = System.getProperty("os.name");
-		char firstLetter = os.charAt(0);
-		System.out.println(firstLetter);
-		if(firstLetter == 'W') {
-			ret = "windows";
-		}
-		else if(firstLetter == 'M') {
-			ret = "mac";
-		}
-		else {
-			ret = "linux";
-		}
-	    System.out.println(ret);
-	    return ret;
-	  }
+  // Get the OS
+  public static String getOS() {
+    String ret = "";
+    String os = System.getProperty("os.name");
+    char firstLetter = os.charAt(0);
+    System.out.println(firstLetter);
+    if (firstLetter == 'W') {
+      ret = "windows";
+    } else if (firstLetter == 'M') {
+      ret = "mac";
+    } else {
+      ret = "linux";
+    }
+    System.out.println(ret);
+    return ret;
+  }
 
-	 //make userdirectoryfile
-   public static boolean makeUserDirectoryFile(String dirname){
+  // make userdirectoryfile
+  public static boolean makeUserDirectoryFile(String dirname) {
     // Get the path to the user's home directory
     String userHome = System.getProperty("user.home");
 
@@ -452,30 +458,33 @@ public class Speller {
     // Using mkdir() to create a single directory
     boolean success = folder.mkdir();
     return success;
- }
+  }
 
   // Put the userDict in group2/userdict.txt
   private void createUserDict() {
     // Get the current OS
     String os = getOS();
-      
+
     // Make the group2 folder
     makeUserDirectoryFile("group2");
-      
-    //Get the userDict path based on system
+
+    // Get the userDict path based on system
     Path userDictPath = null;
-    switch(os) {
-        case "mac": userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-        case "windows": userDictPath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
-        case "linux": userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
+    switch (os) {
+      case "mac":
+        userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
+      case "windows":
+        userDictPath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
+      case "linux":
+        userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
     }
     // make the file in the folder
     try {
       Files.createFile(userDictPath);
-      }catch(IOException e){
-        System.out.println("something went wrong");
+    } catch (IOException e) {
+      System.out.println("something went wrong");
     }
-      
+
     Dictionary dict = null;
-    }
+  }
 }
