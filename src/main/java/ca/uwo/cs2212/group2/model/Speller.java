@@ -27,9 +27,8 @@ public class Speller {
   private List<Word> misCapped = new ArrayList<Word>();
   private List<Word> doubleWords = new ArrayList<Word>();
 
-  //userdict
+  // userdict
   private Dictionary userdict;
-
 
   /** Singleton instance of Speller */
   private Speller() {
@@ -51,8 +50,8 @@ public class Speller {
     return instance;
   }
 
-  //return the user dict
-  public Dictionary getUserDict(){
+  // return the user dict
+  public Dictionary getUserDict() {
     return this.userdict;
   }
 
@@ -67,7 +66,6 @@ public class Speller {
   public Dictionary getDict() {
     return this.dict;
   }
-  
 
   public int[] getStats() {
 
@@ -450,8 +448,8 @@ public class Speller {
     return ret;
   }
 
-	 //make userdirectoryfile
-   private static boolean makeUserDirectoryFile(String dirname){
+  // make userdirectoryfile
+  private static boolean makeUserDirectoryFile(String dirname) {
     // Get the path to the user's home directory
     String userHome = System.getProperty("user.home");
 
@@ -512,4 +510,9 @@ public class Speller {
 			System.out.println("word" + element + "removed from branch");
 		}
 	}  
+
+  public void resetCache() {
+    this.previousIncorrectWords = new ArrayList<Word>();
+    this.incorrectWords = new ArrayList<Word>();
+  }
 }

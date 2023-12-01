@@ -8,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import ca.uwo.cs2212.group2.model.*;
 
-
-
 public class SuggestionsPopup extends JDialog {
 
   public interface SuggestionSelectedCallback {
@@ -21,18 +19,20 @@ public class SuggestionsPopup extends JDialog {
   private JButton suggestion3Button;
   private JButton suggestion4Button;
   private SuggestionSelectedCallback callback;
+  private SuggestionSelectedCallback callback2;
 
   private Word currentWord; // The word being processed
 
   private Speller speller;
-  
+
   public SuggestionsPopup(
       Word word,
       String sugg1,
       String sugg2,
       String sugg3,
       String sugg4,
-      SuggestionSelectedCallback callback) {
+      SuggestionSelectedCallback callback,
+      SuggestionSelectedCallback callback2) {
 
     this.currentWord = word;
     this.speller = Speller.getInstance();
@@ -51,8 +51,9 @@ public class SuggestionsPopup extends JDialog {
     suggestion4Button = new JButton(sugg4);
     JButton addToDictionaryButton = new JButton("Add word to dictionary");
     JButton ignoreOnceButton = new JButton("Ignore once");
-    JButton ignoreAlwaysButton = new JButton("Ignore always");
+    JButton ignoreForSession = new JButton("Ignore for session");
     JButton manualCorrectionButton = new JButton("Manual correction");
+    JButton removeWordButton = new JButton("Delete");
 
     // Add action listeners to buttons
     suggestion1Button.addActionListener(e -> callback.onSuggestionSelected(sugg1));
@@ -65,8 +66,7 @@ public class SuggestionsPopup extends JDialog {
 
           wordToAdd.showAddWordDialog(speller.getDict());
           this.dispose();
-        }
-    );
+        });
     ignoreOnceButton.addActionListener(
         event -> {
           if (currentWord != null) {
@@ -74,15 +74,19 @@ public class SuggestionsPopup extends JDialog {
             this.dispose();
           }
         });
-    ignoreAlwaysButton.addActionListener(
+    ignoreForSession.addActionListener(
         event -> {
-          if (currentWord!=null){
-            this.speller.getUserDict().addWord(currentWord.getContent());
-            System.out.println("---Ignoring always---");
+          if (currentWord != null) {
+            this.speller.getDict().addWord(currentWord.getContent());
+            this.speller.resetCache();
             this.dispose();
           }
         });
-    manualCorrectionButton.addActionListener(new ButtonClickListener());
+    manualCorrectionButton.addActionListener(event -> this.dispose());
+    removeWordButton.addActionListener(
+        event -> {
+          callback2.onSuggestionSelected(" ");
+        });
 
     // Add buttons to the content panel
     contentPanel.add(suggestion1Button);
@@ -91,59 +95,13 @@ public class SuggestionsPopup extends JDialog {
     contentPanel.add(suggestion4Button);
     contentPanel.add(addToDictionaryButton);
     contentPanel.add(ignoreOnceButton);
-    contentPanel.add(ignoreAlwaysButton);
+    contentPanel.add(ignoreForSession);
     contentPanel.add(manualCorrectionButton);
+    contentPanel.add(removeWordButton);
 
     // Add content panel to the dialog
     this.add(contentPanel);
     this.pack();
-  }
-
-  // ActionListener implementation
-  private static class ButtonClickListener implements ActionListener {
-    
-
-    
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        
-      // Handle button clicks here
-      JButton source = (JButton) e.getSource();
-      System.out.println("Button clicked: " + source.getText());
-      // Handle each button click using if statements
-      if ("Suggestion #1".equals(source.getText())) {
-        // Handle suggestion #1 button click
-        System.out.println("Handling Suggestion #1");
-      } else if ("Suggestion #2".equals(source.getText())) {
-        // Handle suggestion #2 button click
-        System.out.println("Handling Suggestion #2");
-      } else if ("Suggestion #3".equals(source.getText())) {
-        // Handle suggestion #3 button click
-        System.out.println("Handling Suggestion #3");
-      } else if ("Suggestion #4".equals(source.getText())) {
-        // Handle suggestion #4 button click
-        System.out.println("Handling Suggestion #4");
-      } else if ("Add word to dictionary".equals(source.getText())) {
-        // Handle add to dictionary button click
-
-        System.out.println("Handling Add word to dictionary");
-        
-        
-      } else if ("Ignore once".equals(source.getText())) {
-
-        System.out.println("Handling Ignore once");
-      } else if ("Ignore always".equals(source.getText())) {
-        
-        // Handle ignore always button click
-        System.out.println("Handling Ignore always");
-      } else if ("Manual correction".equals(source.getText())) {
-        // Handle manual correction button click
-        System.out.println("Handling Manual correction");
-      } else {
-        System.out.println("Unknown button clicked");
-      }
-    }
   }
 
   public void showSuggestionsDialog() {
