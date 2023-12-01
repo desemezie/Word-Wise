@@ -415,17 +415,8 @@ public class Speller {
     // Load the default dictionary from resources
     Dictionary dict = new Dictionary("dict.txt", true); // true indicates it's a resource
 
-    // Handle the user dictionary
-    String os = getOS();
-    Path userDictPath = null;
-    switch (os) {
-      case "mac":
-        userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-      case "windows":
-        userDictPath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
-      case "linux":
-        userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-    }
+       // Handle the user dictionary
+        Path userDictPath = Paths.get(System.getProperty("user.home"), "group2" + File.separator + "userdict.txt");
        if (Files.exists(userDictPath)) {
          Dictionary userDict =
              new Dictionary(userDictPath.toString(), false); // false for a regular file
@@ -477,54 +468,48 @@ public class Speller {
 
   // Put the userDict in group2/userdict.txt
   private void createUserDict() {
-    // Get the current OS
-    String os = getOS();
-
+    
     // Make the group2 folder
     makeUserDirectoryFile("group2");
-
-    // Get the userDict path based on system
-    Path userDictPath = null;
-    switch (os) {
-      case "mac":
-        userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-      case "windows":
-        userDictPath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
-      case "linux":
-        userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-    }
+    
+    //Get the userDict path based on system
+    Path userDictPath = Paths.get(System.getProperty("user.home"), "group2" + File.separator + "userdict.txt");
     // make the file in the folder
     try {
       Files.createFile(userDictPath);
-      }catch(IOException e){
-        System.out.println("something went wrong");
-      }
+    }catch(IOException e){
+      System.out.println("something went wrong");
     }
+  }
 
-  	public  void writeLineToFile(String line) {
-	    String os = getOS();
-	    Path filePath = null;
-	    switch(os) {
-        	case "mac": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-        	case "windows": filePath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
-        	case "linux": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
-    	}
-	      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString(), true))) {
-	          writer.write(line + "\n");
-            // write to userdict
-            this.userdict.addWord(line);
-	          System.out.println("Line written to file successfully.");
-	        } catch (IOException e) {
-	          System.err.println("Error writing to file: " + e.getMessage());
-	        }
-	    }
+  public static void writeLineToFile(String line, boolean append) {
+    Path filePath = Paths.get(System.getProperty("user.home"), "group2" + File.separator + "userdict.txt");
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString(), append))) {
+          writer.write(line + '\n');
+          System.out.println("Line written to file successfully.");
+      } catch (IOException e) {
+          System.err.println("Error writing to file: " + e.getMessage());
+      }
+  }
 
-      public void removeWordFromDict(String inword){
-        // Remove the word from the data structure
-        Dictionary mergedict = this.dict;
-        mergedict.removeWord(inword);
-
-        //remove word from the userDict.txt file
-
-      }  
+  public void removeWordFromUserDict(String inword) {
+		Path filePath = Paths.get(System.getProperty("user.home"), "group2" + File.separator + "userdict.txt");
+		
+		Dictionary userDict = new Dictionary(filePath.toString(),false);
+		
+		// Remove the word from the dict
+		userDict.removeWord(inword);
+		
+		//overwrite the current userdict with the words
+		writeLineToFile("", false);
+		
+		//write out all the words of userdict into the file
+		Enumeration<String> words = userDict.getKeys();
+		while(words.hasMoreElements()) {
+			String element = words.nextElement();
+			//write to user.txt
+			writeLineToFile(element, true);
+			System.out.println("word" + element + "removed from branch");
+		}
+	}  
 }
