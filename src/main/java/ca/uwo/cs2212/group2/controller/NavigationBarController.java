@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group2.controller;
 
 import ca.uwo.cs2212.group2.model.Speller;
+import ca.uwo.cs2212.group2.service.SessionSettingsService;
 import ca.uwo.cs2212.group2.view.components.*;
 import org.w3c.dom.Text;
 
@@ -39,7 +40,7 @@ public class NavigationBarController {
   private void attachListeners() {
     this.view.addFileMenuListener(createFileActionListener());
     this.view.addSettingsMenuListener(createSettingActionListener());
-    this.view.addSpellCheckMenuMouseListener(createSpellCheckActionListener());
+    this.view.addSpellCheckMenuListener(createSpellCheckActionListener());
     this.view.addMetricsMenuListener(createMetricsActionListener());
     this.view.addSaveMenuListener(createSaveActionListener());
     this.view.addHelpMenuListener(createHelpActionListener());
@@ -159,11 +160,18 @@ public class NavigationBarController {
    *
    * @return the mouse listener
    */
-  private MouseListener createSpellCheckActionListener() {
-    return new MouseAdapter() {
+  private ActionListener createSpellCheckActionListener() {
+    return new ActionListener() {
       @Override
-      public void mouseClicked(MouseEvent e) {
-        textEditor.spellCheckClicked();
+      public void actionPerformed(ActionEvent e) {
+        JMenuItem source = (JMenuItem) e.getSource();
+        if (source.getText().equals("Toggle HTML Mode ON")) {
+          source.setText("Toggle HTML Mode OFF");
+          SessionSettingsService.getInstance().setHTMLModeTurnedOn(true);
+        } else if (source.getText().equals("Toggle HTML Mode OFF")) {
+          source.setText("Toggle HTML Mode ON");
+          SessionSettingsService.getInstance().setHTMLModeTurnedOn(false);
+        }
       }
     };
   }
