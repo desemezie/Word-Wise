@@ -407,13 +407,7 @@ public class Speller {
        Dictionary dict = new Dictionary("dict.txt", true); // true indicates it's a resource
 
        // Handle the user dictionary
-        String os = getOS();
-        Path userDictPath = null;
-        switch(os) {
-          case "mac": userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-          case "windows": userDictPath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
-          case "linux": userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
-    }
+        Path userDictPath = Paths.get(System.getProperty("user.home"), "group2" + File.separator + "userdict.txt");
        if (Files.exists(userDictPath)) {
          Dictionary userDict =
              new Dictionary(userDictPath.toString(), false); // false for a regular file
