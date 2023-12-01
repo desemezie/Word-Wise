@@ -233,6 +233,7 @@ public class NavigationBarController {
           dictpopup.showUserDict();
         } else if (source.getText().equals("Exit Checker")) {
           // exit the checker
+          System.exit(0);
         } else if (source.getText().equals("Add Word To Dictionary")) {
           // add word to user dict
           AddWordPopup word = new AddWordPopup(speller.getDict());
