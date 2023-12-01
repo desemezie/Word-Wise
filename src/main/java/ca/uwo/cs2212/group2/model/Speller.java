@@ -514,7 +514,5 @@ public class Speller {
         //remove word from the userDict.txt file
 
       }
-	  
-      public Dictionary()
     
 }
