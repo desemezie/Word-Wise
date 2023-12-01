@@ -19,7 +19,7 @@ public class NavigationBar extends JMenuBar {
   };
   private static final String[] HELP_ITEMS = {"Help me"};
   private static final String[] SAVE_ITEMS = {"Save my file"};
-  private static final String[] SPELLCHECK_ITEMS = {};
+  private static final String[] SPELLCHECK_ITEMS = {"Toggle HTML Mode ON"};
   private static final int MENU_BAR_HEIGHT = 89;
 
   // Instance variables for each menu
@@ -114,8 +114,10 @@ public class NavigationBar extends JMenuBar {
    *
    * @param listener the mouse listener
    */
-  public void addSpellCheckMenuMouseListener(MouseListener listener) {
-    spellCheckMenu.addMouseListener(listener);
+  public void addSpellCheckMenuListener(ActionListener listener) {
+    for (int i = 0; i < spellCheckMenu.getItemCount(); i++) {
+      spellCheckMenu.getItem(i).addActionListener(listener);
+    }
   }
 
   /**
