@@ -2,14 +2,35 @@ package ca.uwo.cs2212.group2.view.components;
 
 import javax.swing.*;
 
+import ca.uwo.cs2212.group2.model.Speller;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class MetricsPopup extends JDialog {
+    int Linecount = Speller.getInstance().getStats()[0];
+    int Wordcount = Speller.getInstance().getStats()[1];
+    int Charcount = Speller.getInstance().getStats()[2];
+    
 
-    private static final String MESSAGE_TEXT = "<html><font color = 'white'>Metrics Related to Document: 0</font></html>";
+    private  final String MESSAGE_TEXT = "<html>" +
+    "<head>" +
+    "<style>" +
+    "body { font-family: Arial, sans-serif; }" +
+    ".header { font-size: 20px; color: #FFFFFF; }" +
+    ".metric { font-size: 16px; color: #FFFFFF; }" +
+    "</style>" +
+    "</head>" +
+    "<body>" +
+    "<div class='header'>Metrics Related to Document:</div>" +
+    "<div class='metric'>Line Count: " + Linecount + "</div>" +
+    "<div class='metric'>Word Count: " + Wordcount + "</div>" +
+    "<div class='metric'>Character Count: " + Charcount + "</div>" +
+    "</body>" ;
+
+    
 
     /**
    * Constructor for the metrics popup

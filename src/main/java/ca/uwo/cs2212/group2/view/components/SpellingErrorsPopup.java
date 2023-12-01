@@ -1,6 +1,9 @@
 package ca.uwo.cs2212.group2.view.components;
 
 import javax.swing.*;
+
+import ca.uwo.cs2212.group2.model.Speller;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +12,26 @@ import static ca.uwo.cs2212.group2.constants.ViewConstants.PRIMARY_COLOUR;
 
 public class SpellingErrorsPopup extends JDialog{
 
-    private static final String MESSAGE_TEXT = "<html><font color = 'white'>Number of Spelling Errors: 0</font></html> ";
+    int Misspellings = Speller.getInstance().getWrongWords().size();
+    int Miscapitalizations = Speller.getInstance().getStats()[3];
+    int Doublewords = Speller.getInstance().getStats()[4];
+
+
+
+    private  final String MESSAGE_TEXT = "<html>" +
+    "<head>" +
+    "<style>" +
+    "body { font-family: Arial, sans-serif; }" +
+    ".header { font-size: 20px; color: #FFFFFF; }" +
+    ".metric { font-size: 16px; color: #FFFFFF; }" +
+    "</style>" +
+    "</head>" +
+    "<body>" +
+    "<div class='header'>Number of spelling errors:</div>" +
+    "<div class='metric'>Misspellings: " + Misspellings + "</div>" +
+    "<div class='metric'>Miscapitalizations: " + Miscapitalizations + "</div>" +
+    "<div class='metric'>Double word: " + Doublewords + "</div>" +
+    "</body>" ;
 
     /**
    * Constructor for the spelling errors popup
@@ -39,6 +61,7 @@ public class SpellingErrorsPopup extends JDialog{
 
 
     public SpellingErrorsPopup(){
+        
 
         // Set up the content panel
         JPanel contentPanel = new JPanel();

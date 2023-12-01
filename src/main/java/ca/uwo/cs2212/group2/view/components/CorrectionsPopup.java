@@ -2,21 +2,42 @@ package ca.uwo.cs2212.group2.view.components;
 
 import javax.swing.*;
 
+import ca.uwo.cs2212.group2.model.Speller;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import ca.uwo.cs2212.group2.service.SessionCorrectionStatisticsService;
+
 public class CorrectionsPopup extends JDialog {
 
-    private static final String MESSAGE_TEXT = "<html><font color = 'white'>Number of Corrections: 0</font></html>";
+    
+    int manualCorrrections = SessionCorrectionStatisticsService.getInstance().getNumberOfManualCorrections();
+    int acceptedSuggestions = SessionCorrectionStatisticsService.getInstance().getNumberOfSuggestionCorrections();
+    int wordDeletions = SessionCorrectionStatisticsService.getInstance().getNumberOfDeletionCorrections();
+
+    private  final String MESSAGE_TEXT = "<html>" +
+    "<head>" +
+    "<style>" +
+    "body { font-family: Arial, sans-serif; }" +
+    ".header { font-size: 20px; color: #FFFFFF; }" +
+    ".metric { font-size: 16px; color: #FFFFFF; }" +
+    "</style>" +
+    "</head>" +
+    "<body>" +
+    "<div class='header'>Number of Corrections:</div>" +
+    "<div class='metric'>Manual Correction: " + manualCorrrections + "</div>" +
+    "<div class='metric'>Accepted suggestions: " + acceptedSuggestions + "</div>" +
+    "<div class='metric'>Word deletion: " + wordDeletions + "</div>" +
+    "</body>" ;  
 
     /**
    * Constructor for the corrections popup
    *
    * @param parentFrame the frame to display the popup in
    */
-    
+
         public CorrectionsPopup(JFrame parentFrame){
             super(parentFrame, "Corrections", true); // 'true' for modal
     

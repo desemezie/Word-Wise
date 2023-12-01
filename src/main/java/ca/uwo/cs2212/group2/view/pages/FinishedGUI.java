@@ -18,7 +18,7 @@ package ca.uwo.cs2212.group2.view.pages;
 // import static ca.uwo.cs2212.group2.constants.ViewConstants.PRIMARY_COLOUR;
 
 /**
- * @Deprecated
+ * @deprecated
  */
 public class FinishedGUI {
   //

@@ -1,5 +1,7 @@
 package ca.uwo.cs2212.group2.model;
 
+import ca.uwo.cs2212.group2.service.SessionSettingsService;
+
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,6 +21,11 @@ public class Speller {
   private List<Word> previousIncorrectWords;
   private List<Word> allWords;
   private List<Word> uncheckedWords;
+  private List<Word> wrongWords = new ArrayList<Word>();
+  // STATISTICALS
+  private List<Word> midCapped = new ArrayList<Word>();
+  private List<Word> misCapped = new ArrayList<Word>();
+  private List<Word> doubleWords = new ArrayList<Word>();
 
   //userdict
   private Dictionary userdict;
@@ -60,6 +67,7 @@ public class Speller {
   public Dictionary getDict() {
     return this.dict;
   }
+  
 
   public int[] getStats() {
 
@@ -67,11 +75,13 @@ public class Speller {
       System.out.println("Usertext object not found");
     }
     // linecount, wordcount, charcountnospace, incorrectwords
-    int[] result = new int[4];
+    int[] result = new int[6];
     result[0] = this.usertext.getLineCount(); // lines
     result[1] = this.usertext.getWordCount(); // words
     result[2] = (int) this.usertext.getCharCountNoSpace(); // chars
-    result[3] = incorrectWords.size(); // incorrect words
+    result[3] = misCapped.size(); // number of miscapitalizations
+    result[4] = doubleWords.size(); // number of double words
+    result[5] = midCapped.size(); // Middle letter capped
 
     return result;
   }
@@ -79,7 +89,12 @@ public class Speller {
   public void spellcheck(String inText) {
     // 1. Create textproccessor object out of given text
     try {
-      usertext.parseHtmlString(inText);
+      if (SessionSettingsService.getInstance().isHTMLModeTurnedOn()) {
+        System.out.println("HELLO");
+        usertext.parseHtmlString(inText);
+      } else {
+        usertext.parseString(inText);
+      }
     } catch (Exception x) {
       System.out.println(String.format("User text file %s not found", inText));
     }
@@ -96,12 +111,6 @@ public class Speller {
 
     // mark doubles
     doubleWords(this.uncheckedWords);
-
-    List<Word> wrongWords = new ArrayList<Word>();
-    // STATISTICALS
-    List<Word> midCapped = new ArrayList<Word>();
-    List<Word> misCapped = new ArrayList<Word>();
-    List<Word> doubleWords = new ArrayList<Word>();
 
     //
     for (Word w : this.uncheckedWords) {
@@ -186,7 +195,7 @@ public class Speller {
     String w = inword.getContent();
     boolean isBeginning = inword.isBeginning();
     // Just ignore it if it is "I"
-    if(w.equals("I")){
+    if (w.equals("I")) {
       return false;
     }
     // either it is a starting word with no capitalization, or it is a non starter with a
@@ -403,8 +412,8 @@ public class Speller {
    * @return merged dictionary if the dictionaries were successfully loaded
    */
   private Dictionary loadDict() {
-       // Load the default dictionary from resources
-       Dictionary dict = new Dictionary("dict.txt", true); // true indicates it's a resource
+    // Load the default dictionary from resources
+    Dictionary dict = new Dictionary("dict.txt", true); // true indicates it's a resource
 
        // Handle the user dictionary
         Path userDictPath = Paths.get(System.getProperty("user.home"), "group2" + File.separator + "userdict.txt");
@@ -424,24 +433,22 @@ public class Speller {
        return dict;
   }
 
-	// Get the OS
-	public static String getOS(){
-	  String ret= "";
-	  String os = System.getProperty("os.name");
-		char firstLetter = os.charAt(0);
-		System.out.println(firstLetter);
-		if(firstLetter == 'W') {
-			ret = "windows";
-		}
-		else if(firstLetter == 'M') {
-			ret = "mac";
-		}
-		else {
-			ret = "linux";
-		}
-	    System.out.println(ret);
-	    return ret;
-	  }
+  // Get the OS
+  public static String getOS() {
+    String ret = "";
+    String os = System.getProperty("os.name");
+    char firstLetter = os.charAt(0);
+    System.out.println(firstLetter);
+    if (firstLetter == 'W') {
+      ret = "windows";
+    } else if (firstLetter == 'M') {
+      ret = "mac";
+    } else {
+      ret = "linux";
+    }
+    System.out.println(ret);
+    return ret;
+  }
 
 	 //make userdirectoryfile
    private static boolean makeUserDirectoryFile(String dirname){
@@ -457,7 +464,7 @@ public class Speller {
     // Using mkdir() to create a single directory
     boolean success = folder.mkdir();
     return success;
- }
+  }
 
   // Put the userDict in group2/userdict.txt
   private void createUserDict() {
