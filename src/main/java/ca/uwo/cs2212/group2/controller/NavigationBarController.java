@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group2.controller;
 
 import ca.uwo.cs2212.group2.service.SessionSettingsService;
+import ca.uwo.cs2212.group2.service.UploadFileStateService;
 import ca.uwo.cs2212.group2.view.components.*;
 import org.w3c.dom.Text;
 
@@ -31,7 +32,20 @@ public class NavigationBarController {
     this.textEditor = textEditor;
     this.textPane = textEditor.getTextPane();
     attachListeners();
-    System.out.println("constructor");
+
+    UploadFileStateService.getInstance()
+        .getShouldTriggerFileUploadObservable()
+        .subscribe(
+            newShouldTriggerFileUpload -> {
+              if (newShouldTriggerFileUpload) {
+                UploadFileStateService.getInstance().setShouldTriggerFileUpload(false);
+                openFile(textPane);
+              }
+            },
+            throwable -> {
+              // handle error
+              System.err.println("Error: " + throwable.getMessage());
+            });
   }
 
   /** Attaches listeners to the menu items. */
