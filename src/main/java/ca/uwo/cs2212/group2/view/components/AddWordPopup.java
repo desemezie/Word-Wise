@@ -53,8 +53,8 @@ public class AddWordPopup extends JDialog {
                 System.out.println("Submitted word: " + word);
                 userDict.addWord(word); 
                 
-                writeLineToFile(word);
-                System.out.println("HELLLOOO: " + Speller.getInstance().getUserDict());
+                Speller.getInstance().writeLineToFile(word,true);
+                System.out.println(Speller.getInstance().getUserDict());
                 // You can close the dialog if needed
                 dispose();
             }
