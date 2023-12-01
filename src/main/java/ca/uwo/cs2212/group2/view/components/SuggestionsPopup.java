@@ -70,7 +70,6 @@ public class SuggestionsPopup extends JDialog {
     ignoreOnceButton.addActionListener(
         event -> {
           if (currentWord != null) {
-            System.out.println("IGNORING ONCE SET TO TRUE!");
             WordsToIgnoreOnceService.getInstance().ignoreWordOnce(currentWord);
             this.dispose();
           }
