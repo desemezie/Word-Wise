@@ -1,10 +1,24 @@
 package ca.uwo.cs2212.group2.model;
 import java.util.PriorityQueue;
 
+/**
+ * Represents the CorrectionSuggestions class
+ *
+ * @author Shaylan Pratt
+ *     <p>This class tracks a CorrectionSuggestions object and its instance variables, word and distance
+ *     
+ */ 
+
 public class CorrectionSuggestions implements Comparable<CorrectionSuggestions>{
     private String word;
     private int distance;
 
+
+    /**
+   * Constructor
+   * @param word
+   * @param distance 
+   */
     public CorrectionSuggestions(String word, int distance){
         this.word = word;
         this.distance = distance;

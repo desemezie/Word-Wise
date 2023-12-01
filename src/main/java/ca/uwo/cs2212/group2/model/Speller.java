@@ -27,9 +27,8 @@ public class Speller {
   private List<Word> misCapped = new ArrayList<Word>();
   private List<Word> doubleWords = new ArrayList<Word>();
 
-  //userdict
+  // userdict
   private Dictionary userdict;
-
 
   /** Singleton instance of Speller */
   private Speller() {
@@ -51,8 +50,8 @@ public class Speller {
     return instance;
   }
 
-  //return the user dict
-  public Dictionary getUserDict(){
+  // return the user dict
+  public Dictionary getUserDict() {
     return this.userdict;
   }
 
@@ -425,20 +424,19 @@ public class Speller {
       case "linux":
         userDictPath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
     }
-       if (Files.exists(userDictPath)) {
-         Dictionary userDict =
-             new Dictionary(userDictPath.toString(), false); // false for a regular file
-             this.userdict = userDict; 
-         transferWords(userDict, dict);
-         System.out.println("userdict found");
-       } else {
-           createUserDict(); // Create a new, empty user dictionary file
-           userdict = new Dictionary(userDictPath.toString() ,false);
-           System.out.println("Userdict not found, blank userdict created");
-        
-       }
-   
-       return dict;
+    if (Files.exists(userDictPath)) {
+      Dictionary userDict =
+          new Dictionary(userDictPath.toString(), false); // false for a regular file
+      this.userdict = userDict;
+      transferWords(userDict, dict);
+      System.out.println("userdict found");
+    } else {
+      createUserDict(); // Create a new, empty user dictionary file
+      userdict = new Dictionary(userDictPath.toString(), false);
+      System.out.println("Userdict not found, blank userdict created");
+    }
+
+    return dict;
   }
 
   // Get the OS
@@ -458,8 +456,8 @@ public class Speller {
     return ret;
   }
 
-	 //make userdirectoryfile
-   private static boolean makeUserDirectoryFile(String dirname){
+  // make userdirectoryfile
+  private static boolean makeUserDirectoryFile(String dirname) {
     // Get the path to the user's home directory
     String userHome = System.getProperty("user.home");
 
@@ -495,35 +493,43 @@ public class Speller {
     // make the file in the folder
     try {
       Files.createFile(userDictPath);
-      }catch(IOException e){
-        System.out.println("something went wrong");
-      }
+    } catch (IOException e) {
+      System.out.println("something went wrong");
     }
+  }
 
-  	public  void writeLineToFile(String line) {
-	    String os = getOS();
-	    Path filePath = null;
-	    switch(os) {
-        	case "mac": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
-        	case "windows": filePath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
-        	case "linux": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
-    	}
-	      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString()))) {
-	          writer.write(line);
-            // write to userdict
-            this.userdict.addWord(line);
-	          System.out.println("Line written to file successfully.");
-	        } catch (IOException e) {
-	          System.err.println("Error writing to file: " + e.getMessage());
-	        }
-	    }
+  public void writeLineToFile(String line) {
+    String os = getOS();
+    Path filePath = null;
+    switch (os) {
+      case "mac":
+        filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
+      case "windows":
+        filePath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
+      case "linux":
+        filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt");
+    }
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString(), true))) {
+      writer.write(line + "\n");
+      // write to userdict
+      this.userdict.addWord(line);
+      System.out.println("Line written to file successfully.");
+    } catch (IOException e) {
+      System.err.println("Error writing to file: " + e.getMessage());
+    }
+  }
 
-      public void removeWordFromDict(String inword){
-        // Remove the word from the data structure
-        Dictionary mergedict = this.dict;
-        mergedict.removeWord(inword);
+  public void removeWordFromDict(String inword) {
+    // Remove the word from the data structure
+    Dictionary mergedict = this.dict;
+    mergedict.removeWord(inword);
 
-        //remove word from the userDict.txt file
+    // remove word from the userDict.txt file
 
-      }  
+  }
+
+  public void resetCache() {
+    this.previousIncorrectWords = new ArrayList<Word>();
+    this.incorrectWords = new ArrayList<Word>();
+  }
 }

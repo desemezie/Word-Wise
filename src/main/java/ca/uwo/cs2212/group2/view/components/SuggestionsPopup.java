@@ -1,12 +1,12 @@
 package ca.uwo.cs2212.group2.view.components;
 
-import ca.uwo.cs2212.group2.model.Word;
 import ca.uwo.cs2212.group2.service.WordsToIgnoreOnceService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import ca.uwo.cs2212.group2.model.*;
 
 public class SuggestionsPopup extends JDialog {
 
@@ -22,6 +22,8 @@ public class SuggestionsPopup extends JDialog {
 
   private Word currentWord; // The word being processed
 
+  private Speller speller;
+
   public SuggestionsPopup(
       Word word,
       String sugg1,
@@ -31,8 +33,9 @@ public class SuggestionsPopup extends JDialog {
       SuggestionSelectedCallback callback) {
 
     this.currentWord = word;
-
+    this.speller = Speller.getInstance();
     // Set up the content panel
+
     JPanel contentPanel = new JPanel();
     contentPanel.setBackground(new Color(0x993399));
     contentPanel.setPreferredSize(new Dimension(400, 350));
@@ -46,7 +49,7 @@ public class SuggestionsPopup extends JDialog {
     suggestion4Button = new JButton(sugg4);
     JButton addToDictionaryButton = new JButton("Add word to dictionary");
     JButton ignoreOnceButton = new JButton("Ignore once");
-    JButton ignoreAlwaysButton = new JButton("Ignore always");
+    JButton ignoreAlwaysButton = new JButton("Ignore for succession");
     JButton manualCorrectionButton = new JButton("Manual correction");
 
     // Add action listeners to buttons
@@ -54,7 +57,13 @@ public class SuggestionsPopup extends JDialog {
     suggestion2Button.addActionListener(e -> callback.onSuggestionSelected(sugg2));
     suggestion3Button.addActionListener(e -> callback.onSuggestionSelected(sugg3));
     suggestion4Button.addActionListener(e -> callback.onSuggestionSelected(sugg4));
-    addToDictionaryButton.addActionListener(new ButtonClickListener());
+    addToDictionaryButton.addActionListener(
+        event -> {
+          AddWordPopup wordToAdd = new AddWordPopup(this.speller.getDict());
+
+          wordToAdd.showAddWordDialog(speller.getDict());
+          this.dispose();
+        });
     ignoreOnceButton.addActionListener(
         event -> {
           if (currentWord != null) {
@@ -62,7 +71,14 @@ public class SuggestionsPopup extends JDialog {
             this.dispose();
           }
         });
-    ignoreAlwaysButton.addActionListener(new ButtonClickListener());
+    ignoreAlwaysButton.addActionListener(
+        event -> {
+          if (currentWord != null) {
+            this.speller.getDict().addWord(currentWord.getContent());
+            this.speller.resetCache();
+            this.dispose();
+          }
+        });
     manualCorrectionButton.addActionListener(event -> this.dispose());
 
     // Add buttons to the content panel
@@ -82,8 +98,10 @@ public class SuggestionsPopup extends JDialog {
 
   // ActionListener implementation
   private static class ButtonClickListener implements ActionListener {
+
     @Override
     public void actionPerformed(ActionEvent e) {
+
       // Handle button clicks here
       JButton source = (JButton) e.getSource();
       System.out.println("Button clicked: " + source.getText());
@@ -102,11 +120,14 @@ public class SuggestionsPopup extends JDialog {
         System.out.println("Handling Suggestion #4");
       } else if ("Add word to dictionary".equals(source.getText())) {
         // Handle add to dictionary button click
+
         System.out.println("Handling Add word to dictionary");
+
       } else if ("Ignore once".equals(source.getText())) {
 
         System.out.println("Handling Ignore once");
       } else if ("Ignore always".equals(source.getText())) {
+
         // Handle ignore always button click
         System.out.println("Handling Ignore always");
       } else if ("Manual correction".equals(source.getText())) {
