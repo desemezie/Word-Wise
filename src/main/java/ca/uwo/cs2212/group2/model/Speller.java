@@ -67,6 +67,7 @@ public class Speller {
   public Dictionary getDict() {
     return this.dict;
   }
+  
 
   public int[] getStats() {
 
@@ -508,8 +509,8 @@ public class Speller {
         	case "windows": filePath = Paths.get(System.getProperty("user.home"), "group2\\userdict.txt");
         	case "linux": filePath = Paths.get(System.getProperty("user.home"), "group2//userdict.txt"); 
     	}
-	      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString()))) {
-	          writer.write(line);
+	      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString(), true))) {
+	          writer.write(line + "\n");
             // write to userdict
             this.userdict.addWord(line);
 	          System.out.println("Line written to file successfully.");

@@ -8,11 +8,29 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Objects;
 
+
+/**
+ * Represents and manages the dictionary object.
+ *
+ * @author Daniel Esemezie 
+ *     <p>This class manages the dictionary class and includes methods to create a Dictionary object from a file, add word,
+ *     remove word, check if word is in a dictionary, a toString method 
+ */ 
 public class Dictionary {
 
   private Hashtable<String, Boolean> Dictionary_Hashtable;
 
+
+
   // Constructor that takes a filename for a dictionary file and initializes the HashTable
+
+  /**
+   * Constructor 
+   *
+   * @param filename the name of the file that has the dictionary words
+   * @param isResource 
+   
+   */
   public Dictionary(String filename, boolean isResource) {
     Dictionary_Hashtable = new Hashtable<>();
     if (isResource) {
@@ -22,6 +40,10 @@ public class Dictionary {
     }
   }
 
+  
+
+  
+  
   private void loadDictionaryFromFile(String filename) {
     try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
       String line;
@@ -73,4 +95,18 @@ public class Dictionary {
   public Enumeration<String> getKeys() {
     return this.Dictionary_Hashtable.keys();
   }
+
+  public String toString() {
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append("Dictionary Contents:\n");
+
+    Enumeration<String> keys = Dictionary_Hashtable.keys();
+    while (keys.hasMoreElements()) {
+        String key = keys.nextElement();
+        stringBuilder.append(key).append("\n");
+    }
+
+    return stringBuilder.toString();
+}
+
 }

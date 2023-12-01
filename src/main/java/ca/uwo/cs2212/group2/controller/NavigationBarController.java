@@ -1,5 +1,6 @@
 package ca.uwo.cs2212.group2.controller;
 
+import ca.uwo.cs2212.group2.model.Speller;
 import ca.uwo.cs2212.group2.service.SessionSettingsService;
 import ca.uwo.cs2212.group2.service.UploadFileStateService;
 import ca.uwo.cs2212.group2.view.components.*;
@@ -20,6 +21,7 @@ public class NavigationBarController {
   private JTextPane textPane;
   private static String filePath;
   private static Boolean isSaved = false;
+  private Speller speller = Speller.getInstance();
 
   /**
    * Constructor for the navigation bar controller.
@@ -253,10 +255,14 @@ public class NavigationBarController {
           dictpopup.showUserDict();
         } else if (source.getText().equals("Exit Checker")) {
           // exit the checker
+          System.exit(0);
         } else if (source.getText().equals("Add Word To Dictionary")) {
           // add word to user dict
-          AddWordPopup word = new AddWordPopup();
-          word.showAddWordDialog();
+          AddWordPopup word = new AddWordPopup(speller.getDict());
+          word.showAddWordDialog(speller.getDict());
+        }else if (source.getText().equals("Remove Word From Dictionary")){
+          RemoveWordPopUp wordToRemove = new RemoveWordPopUp(speller.getDict());
+          wordToRemove.showRemoveWordDialog(speller.getDict());
         }
       }
     };
