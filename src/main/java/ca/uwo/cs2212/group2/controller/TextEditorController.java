@@ -13,6 +13,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
@@ -44,8 +45,7 @@ public class TextEditorController {
     this.speller = Speller.getInstance();
 
     initSubscriptions();
-    attachMouseMotionListener();
-    attachCaretListener();
+    attachClickListener();
   }
 
   /** Initializes the subscriptions for the text editor. */
@@ -71,43 +71,34 @@ public class TextEditorController {
               return speller.getWrongWords();
             })
         .observeOn(swingScheduler)
-        .subscribe(this::underlineMisspelledWords);
+        .subscribe(
+            this::underlineMisspelledWords,
+            throwable -> {
+              System.err.println("Error in RxJava stream: " + throwable.getMessage());
+              throwable.printStackTrace();
+            });
   }
 
-  /** Attaches a mouse motion listener to the text pane. */
-  private void attachMouseMotionListener() {
+  /** Attaches a mouse click listener to the text pane. */
+  private void attachClickListener() {
     JTextPane textPane = textEditor.getTextPane();
-
-    // Create an Observable for mouse movement events
-    Observable<MouseEvent> mouseMoveObservable =
-        Observable.create(
-            emitter -> {
-              MouseMotionAdapter mouseAdapter =
-                  new MouseMotionAdapter() {
-                    @Override
-                    public void mouseMoved(MouseEvent e) {
-                      emitter.onNext(e);
-                    }
-                  };
-              textPane.addMouseMotionListener(mouseAdapter);
-
-              // Remove the listener when the Observable is disposed
-              emitter.setCancellable(() -> textPane.removeMouseMotionListener(mouseAdapter));
-            });
-
-    Disposable mouseMoveSubscription =
-        mouseMoveObservable
-            .debounce(400, TimeUnit.MILLISECONDS, Schedulers.io())
-            .observeOn(Schedulers.from(SwingUtilities::invokeLater))
-            .subscribe(this::processMouseMovement);
+    textPane.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 1) { // Single click
+              processMouseClick(e);
+            }
+          }
+        });
   }
 
   /**
-   * Processes the mouse movement event.
+   * Processes the mouse click event.
    *
    * @param e the mouse event
    */
-  private void processMouseMovement(MouseEvent e) {
+  private void processMouseClick(MouseEvent e) {
     JTextPane textPane = textEditor.getTextPane();
     int pos = textPane.viewToModel2D(e.getPoint());
     if (pos > 0) {
@@ -119,14 +110,22 @@ public class TextEditorController {
         String stringUnderMouse = doc.getText(wordStart, wordEnd - wordStart);
         Word wordUnderMouse = findWordAtPosition(stringUnderMouse, wordStart);
         if (wordUnderMouse != null) {
-          System.out.println("Position of mouse: " + pos);
-          System.out.println("Word under mouse: " + wordUnderMouse.toString());
           showSuggestionsDialogAtPosition(wordUnderMouse);
         }
       } catch (BadLocationException ex) {
         ex.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Returns true if the given character is a word boundary.
+   *
+   * @param ch the character
+   * @return true if the character is a word boundary
+   */
+  private boolean isWordBoundary(char ch) {
+    return Character.isWhitespace(ch) || ch == ',' || ch == '.' || ch == '!' || ch == '?';
   }
 
   /**
@@ -138,7 +137,14 @@ public class TextEditorController {
    * @throws BadLocationException if the position is invalid
    */
   private int getWordStart(StyledDocument doc, int pos) throws BadLocationException {
-    while (pos > 0 && !Character.isWhitespace(doc.getText(pos - 1, 1).charAt(0))) {
+    while (pos > 0) {
+      String charBefore = doc.getText(pos - 1, 1);
+      if (pos > doc.getLength()) {
+        break;
+      }
+      if (isWordBoundary(charBefore.charAt(0))) {
+        break;
+      }
       pos--;
     }
     return pos;
@@ -153,7 +159,14 @@ public class TextEditorController {
    * @throws BadLocationException if the position is invalid
    */
   private int getWordEnd(StyledDocument doc, int pos) throws BadLocationException {
-    while (pos < doc.getLength() && !Character.isWhitespace(doc.getText(pos, 1).charAt(0))) {
+    while (pos < doc.getLength()) {
+      String charAtPos = doc.getText(pos, 1);
+      if (pos < 0) {
+        break;
+      }
+      if (isWordBoundary(charAtPos.charAt(0))) {
+        break;
+      }
       pos++;
     }
     return pos;
@@ -260,14 +273,16 @@ public class TextEditorController {
     }
   }
 
-  /** Attaches a caret listener to the text pane. */
+  /**
+   * @deprecated Attaches a caret listener to the text pane.
+   */
   private void attachCaretListener() {
     JTextPane textPane = textEditor.getTextPane();
     textPane.addCaretListener(event -> resetCaretStyle(event.getDot()));
   }
 
   /**
-   * Resets the caret style at the given position.
+   * @deprecated Resets the caret style at the given position.
    *
    * @param position the position
    */
@@ -289,5 +304,62 @@ public class TextEditorController {
             ex.printStackTrace();
           }
         });
+  }
+
+  /**
+   * @deprecated Attaches a mouse motion listener to the text pane.
+   */
+  private void attachMouseMotionListener() {
+    JTextPane textPane = textEditor.getTextPane();
+
+    // Create an Observable for mouse movement events
+    Observable<MouseEvent> mouseMoveObservable =
+        Observable.create(
+            emitter -> {
+              MouseMotionAdapter mouseAdapter =
+                  new MouseMotionAdapter() {
+                    @Override
+                    public void mouseMoved(MouseEvent e) {
+                      emitter.onNext(e);
+                    }
+                  };
+              textPane.addMouseMotionListener(mouseAdapter);
+
+              // Remove the listener when the Observable is disposed
+              emitter.setCancellable(() -> textPane.removeMouseMotionListener(mouseAdapter));
+            });
+
+    Disposable mouseMoveSubscription =
+        mouseMoveObservable
+            .debounce(400, TimeUnit.MILLISECONDS, Schedulers.io())
+            .observeOn(Schedulers.from(SwingUtilities::invokeLater))
+            .subscribe(this::processMouseMovement);
+  }
+
+  /**
+   * @deprecated Processes the mouse movement event.
+   *
+   * @param e the mouse event
+   */
+  private void processMouseMovement(MouseEvent e) {
+    JTextPane textPane = textEditor.getTextPane();
+    int pos = textPane.viewToModel2D(e.getPoint());
+    if (pos > 0) {
+      try {
+        StyledDocument doc = textPane.getStyledDocument();
+        int wordStart = getWordStart(doc, pos);
+        int wordEnd = getWordEnd(doc, pos);
+
+        String stringUnderMouse = doc.getText(wordStart, wordEnd - wordStart);
+        Word wordUnderMouse = findWordAtPosition(stringUnderMouse, wordStart);
+        if (wordUnderMouse != null) {
+          System.out.println("Position of mouse: " + pos);
+          System.out.println("Word under mouse: " + wordUnderMouse.toString());
+          showSuggestionsDialogAtPosition(wordUnderMouse);
+        }
+      } catch (BadLocationException ex) {
+        ex.printStackTrace();
+      }
+    }
   }
 }
