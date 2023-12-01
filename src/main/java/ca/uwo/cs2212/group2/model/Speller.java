@@ -482,7 +482,7 @@ public class Speller {
     }
   }
 
-  public static void writeLineToFile(String line, boolean append) {
+  public void writeLineToFile(String line, boolean append) {
     Path filePath = Paths.get(System.getProperty("user.home"), "group2" + File.separator + "userdict.txt");
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString(), append))) {
           writer.write(line + '\n');
