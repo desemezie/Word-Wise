@@ -34,4 +34,3 @@ mvn exec:java
 
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
->>>>>>> c4019e52074f367dd44d88537445eb5850b5a94d
