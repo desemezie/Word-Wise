@@ -11,22 +11,20 @@ A word processor built with Java/Swing.
 
 # Set up
 
-To Test out the application.
+#### To Test out the application:
 
-Open  _ ______ _to view it in your browser.
+Open link to view it in your browser.
 
 
-To set up Word Wise on your local machine, follow these instructions:
+#### To set up Word Wise on your local machine, follow these instructions:
 
 Clone the repository on your local system
 
 git clone https://github.com/yourusername/WordWise.git
 
-cd into the project directory 
+cd into the project directory on your ide
 
-Compile and Run the application:
-
-Then run the command 
+Compile and Run the application using:
 
 mvn compile 
 
